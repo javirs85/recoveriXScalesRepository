@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[Masurement]
+(
+	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
+    [PatientID] UNIQUEIDENTIFIER NOT NULL, 
+    [MeasurementDate] DATETIME NOT NULL, 
+    [ScaleID] UNIQUEIDENTIFIER NOT NULL, 
+    [SerializedData] TEXT NOT NULL
+)

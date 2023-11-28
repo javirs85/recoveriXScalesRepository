@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rXCompanionApp", "rXCompanionApp\rXCompanionApp.csproj", "{B340D257-14F2-4B4F-84DF-6A1CBEB23ADB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rXCompanionApp", "rXCompanionApp\rXCompanionApp.csproj", "{B340D257-14F2-4B4F-84DF-6A1CBEB23ADB}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "gtecDB", "gtecDB\gtecDB.sqlproj", "{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,17 @@ Global
 		{B340D257-14F2-4B4F-84DF-6A1CBEB23ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B340D257-14F2-4B4F-84DF-6A1CBEB23ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B340D257-14F2-4B4F-84DF-6A1CBEB23ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF18D94E-2D6F-45E3-8B86-9D9229DD2425}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EACD7E71-AD9E-4942-AA55-2F21D088CBB4}
 	EndGlobalSection
 EndGlobal
