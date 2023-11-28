@@ -1,0 +1,17 @@
+﻿@page "/"
+@inject IConfiguration Config
+
+<PageTitle>Index</PageTitle>
+<p class="h4">
+	Default connection string = @defaultConnectionString
+</p>
+
+
+@code{
+	private string defaultConnectionString = "";
+
+	protected override void OnParametersSet()
+	{
+		defaultConnectionString = Config.GetConnectionString("Default") ?? "Unknown";
+	}
+}
