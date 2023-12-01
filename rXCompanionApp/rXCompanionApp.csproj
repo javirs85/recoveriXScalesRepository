@@ -15,4 +15,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CompanionAppShared\CompanionAppShared.csproj" />
+    <ProjectReference Include="..\DataBaseConnector\DataBaseConnector.csproj" />
+    <ProjectReference Include="..\rXCompanonAppComponents\rXCompanionAppComponents.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,51 @@
+﻿<img style="@style"
+	class="@FilterColor"
+	 src="_content/rXCompanionAppComponents/Icons/@IconPath" />
+
+@code {
+	public enum Icons { None, Patient, Add, Revert, Bin, Cancel, Save, Next, Back, Tick, Scale, Edit };
+	[Parameter] public Icons IconName { get; set; } = Icons.Patient;
+	[Parameter] public float IconWidth { get; set; } = 25;
+	[Parameter] public Colors Color { get; set; } = Colors.white;
+
+	string FilterColor
+	{
+		get
+		{
+			return Color switch
+			{
+				Colors.white => "FilterWhite",
+				Colors.black => "FilterBlack",
+				Colors.blue => "FilterBlue",
+				Colors.green => "FilterGreen",
+				Colors.red => "FilterRed",
+				Colors.gray => "GrayFilter",
+				_ => ""
+			};
+		}
+	}
+
+	string style => $"width:{IconWidth}px; height:{IconWidth}px;";
+
+	string IconPath
+	{
+		get
+		{
+			return IconName switch
+			{
+				Icons.Patient => "Patient.svg",
+				Icons.Add => "Add.svg",
+				Icons.Revert => "Revert.svg",
+				Icons.Bin => "Bin.svg",
+				Icons.Cancel => "Cancel.svg",
+				Icons.Save => "Save.svg",
+				Icons.Next => "Next.svg",
+				Icons.Back => "Back.svg",
+				Icons.Tick => "Tick.svg",
+				Icons.Scale => "Scale.svg",
+				Icons.Edit => "Edit.svg",
+				_ => ""
+			};
+		}
+	}
+}

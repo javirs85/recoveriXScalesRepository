@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spMeasurement_Delete]
-	@Id int
+	@Id uniqueidentifier
 AS
 begin
 	delete

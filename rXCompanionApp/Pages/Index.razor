@@ -1,17 +1,70 @@
 ﻿@page "/"
-@inject IConfiguration Config
+@inject DataBase DB;
 
-<PageTitle>Index</PageTitle>
-<p class="h4">
-	Default connection string = @defaultConnectionString
-</p>
+@if (CurrentMode == Modes.PatientSelection)
+{
+	<PatientList 
+		SelectedPatient="SelectedPatient" 
+		AddNewPatientRequested="AddNewPatientRequested"
+		PatientSelected="PatientSelected" />
+}
+else if(CurrentMode == Modes.PatientEditor)
+{
+	<PatientEditor PatientToEdit="SelectedPatient" 
+		ChangesSaved="EditorFinished"/>
+}
+else if(CurrentMode == Modes.PatientViewer)
+{
+	<PatientViewer
+		SelectedPatient="SelectedPatient"
+		EditPatientRequested="@(()=>{CurrentMode = Modes.PatientEditor;})"
+		AddSessionToTherapy="@(()=>{CurrentMode = Modes.SessionEditor;})"
+		Exit="ExitRequested"/>
+}
+else if(CurrentMode == Modes.SessionEditor)
+{
+	<SessionEditor 
+		Patient="SelectedPatient" 
+		Therapy="SelectedTherapy" 
+		Session="null"/>
+}
 
 
 @code{
-	private string defaultConnectionString = "";
+	enum Modes {PatientSelection, PatientEditor, PatientViewer, SessionViewer, SessionEditor};
+	Modes CurrentMode = Modes.PatientSelection;
 
-	protected override void OnParametersSet()
+	Patient? SelectedPatient = null;
+	Therapy? SelectedTherapy = null;
+
+	void AddNewPatientRequested()
 	{
-		defaultConnectionString = Config.GetConnectionString("Default") ?? "Unknown";
+		SelectedPatient = null;
+		CurrentMode = Modes.PatientEditor;
+	}
+
+	async Task PatientSelected(Patient p)
+	{		
+		if(! p.IsFullyLoadedFromDB)
+			p = await DB.GetPatient(p.Id) ?? new Patient { PatientLabel = "Not Found" };
+
+		SelectedPatient = p;
+		CurrentMode = Modes.PatientViewer;
+	}
+
+	async Task EditorFinished()
+	{
+		if (SelectedPatient is null)
+			CurrentMode = Modes.PatientSelection;
+		else
+			CurrentMode = Modes.PatientViewer;
+
+		await DB.LoadListOfPatients();
+	}
+
+	void ExitRequested()
+	{
+		SelectedPatient = null;
+		CurrentMode = Modes.PatientSelection;
 	}
 }

@@ -1,0 +1,46 @@
+﻿.RoundButton{
+    height:54px;
+    width:300px;
+    border-radius: 50px;
+    font-size:14px;
+    cursor:pointer;
+}
+.GreenSolid {
+    background: #0B6633;
+    color: white;
+}
+.BlueSolid {
+    background: #174AC9;
+    color: white;
+}
+.RedSolid {
+    background: #AE0909;
+    color: white;
+}
+.GreenOutline {
+    background: transparent;
+    border: 1px solid #80CAA0;
+    color: #80CAA0;
+}
+.BlueOutline {
+    background: transparent;
+    border: 1px solid #7EC2E8;
+    color: #7EC2E8;
+}
+.RedSOutline {
+    background: transparent;
+    border: 1px solid #F4AEAE;
+    color: #F4AEAE;
+}
+
+.disabledOutline {
+    border: 1px solid gray;
+    color: gray;
+    opacity: 0.5;
+}
+
+.disabledSolid {
+    background: #515151;
+    opacity: 0.25;
+    border: 1px solid #a1a1a1;
+}

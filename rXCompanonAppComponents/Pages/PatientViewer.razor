@@ -1,0 +1,78 @@
+﻿@inject DataBase DB;
+
+<PageTitle>Patients list</PageTitle>
+
+<div class="d-flex gap-1 h-100">
+	<div class="d-flex flex-column DarkBackground">
+		<div class="Header rel">
+			<h1 class="mb-0">@SelectedPatient.PatientLabel</h1>
+			<h2 class="ms-0">Parkinson</h2>
+			<div class="Exit" @onclick=Exit>
+				<RXIcon IconName="RXIcon.Icons.Cancel" Color="Colors.white" IconWidth="30"/>
+			</div>
+		</div>
+
+		<LeftMenuBigList 
+			ItemSelected="SessionClick" 
+			Mode="LeftMenuBigList.ListingModes.Sessions"
+			Sessions="SessionsOnScreen" />
+
+		<div class="ButtonsSpace d-flex flex-column gap-2" style="padding:24px;">
+			<RoundButton ButtonColor="Colors.blue"
+						 ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Edit"
+						 Title="Edit patient"
+						 ShowPlusSymbol="false"
+						 Clicked="EditPatientRequested" />
+
+			<RoundButton ButtonColor="Colors.blue"
+						 ButtonStyle="RoundButton.ButtonStyles.solid"
+						 Icon="RXIcon.Icons.Scale"
+						 Title="Add new session"
+						 ShowPlusSymbol="true"
+						 Clicked="AddSessionToTherapy" />
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public EventCallback<Session> SessionSelected { get; set; }
+	[Parameter] public EventCallback AddSessionToTherapy { get; set; }
+	[Parameter] public EventCallback EditPatientRequested { get; set; }
+	[Parameter] public EventCallback Exit { get; set; }
+	[Parameter]	public Patient SelectedPatient { get; set; }
+
+	private bool IsSelected(Patient p) => SelectedPatient == p;
+	Therapy? SelectedTherapy = null;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		DB.UIUpdateRequestedFromDB -= Update;
+		DB.UIUpdateRequestedFromDB += Update;
+
+		if(!SelectedPatient.IsFullyLoadedFromDB)
+			SelectedPatient = await DB.GetPatient(SelectedPatient.Id) ?? new Patient { PatientLabel = "Not Found" };
+
+		SelectedTherapy = SelectedPatient.Therapies[0]; //Hardcoded for parkinson study
+	}
+	private void Update(object? sender, EventArgs e)
+	{
+		InvokeAsync(() => { StateHasChanged(); });
+	}
+
+	List<Session> SessionsOnScreen
+	{
+		get
+		{
+			if (SelectedPatient.Therapies.Count > 0)
+				return SelectedPatient.Therapies[0].Sessions;
+			else
+				return new List<Session>();
+		}
+	}
+
+	void SessionClick(object o)
+	{
+		if (o is Session) SessionSelected.InvokeAsync(o as Session);
+	}
+}

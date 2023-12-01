@@ -1,0 +1,68 @@
+﻿.LeftMenuItem {
+    font-family: Roboto;
+    font-size: 14px;
+    color: white;
+    display: flex;
+    gap: 0px;
+    height: 47px;
+    align-items: center;
+    margin-left:24px;
+}
+
+.Decoration {
+    height: 100%;
+    width: 35px;
+    position: relative;
+}
+.DottedLine {
+    top: 0;
+    left: 11px;
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    border: 0px;
+    border-left: 1px dashed #0D6835;
+}
+.Sphere {
+    top: 17px;
+    left: 6px;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 20px;
+}
+    .Sphere.green {
+        background-color: #148F4A;
+    }
+    .Sphere.blue {
+        background-color: #DE2424;
+    }
+    .Sphere.red {
+        background-color: #174AC9;
+    }
+
+.SelectedUpperDecoration{
+    height:10px;
+    border-radius: 0 0 10px 0;
+}
+.SelectedCenter {
+    height: 50px;
+    color: black;
+    font-size: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.SelectedLowerDecoration {
+    height: 10px;
+    border-radius: 0 10px 0 0;
+}
+
+.Detail {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    opacity: 0.25;
+    font-size: 14px;
+    font-weight: 200;
+}

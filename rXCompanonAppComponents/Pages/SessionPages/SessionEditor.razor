@@ -1,0 +1,67 @@
+﻿<div class="d-flex h-100">
+	<div class="DarkBackground LeftColumMenu">
+		<div class="Header">
+			<h1 class="mb-0">@Patient.PatientLabel</h1>
+			<h2 class="ms-0">Parkinson</h2>
+		</div>
+		<div class="flex-grow-1 d-flex flex-column justify-content-center">
+			<div style="margin-bottom:50%;">
+				<LeftMenuItem Title="@Session?.Date.ToShortDateString()"
+						  Color="LeftMenuItem.AvailableColors.green"
+						  IsSingleItem="true"
+						  IsSelected="true"/>
+			</div>
+		</div>
+		<div class ="Header gap-2">
+			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
+						 Title="Cancel and delete data" />
+			<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Tick" Clicked="Cancel"
+						 Title="Store intermediate results" />
+		</div>		
+	</div>
+	<div class="MainContainer flex-grow-1 h-100">
+		<div class="SessionHeader">
+			<div class="SessionModeSelector d-flex justify-content-center align-items-center w-100">
+				<div class="d-flex gap-3 flex-grow-1 justify-content-center">
+					<div class="SessionModeItem @(Session.SessionKind == SessionKinds.Pre?"Active":"")"
+						@onclick=@(()=>{Session.SessionKind = SessionKinds.Pre;})>
+						Pre
+					</div>
+					<div class="SessionModeItem @(Session.SessionKind == SessionKinds.Intermediate?"Active":"")"
+						@onclick=@(()=>{Session.SessionKind = SessionKinds.Intermediate;})>
+						Intermediate
+					</div>
+					<div class="SessionModeItem @(Session.SessionKind == SessionKinds.Post?"Active":"")"
+					@onclick=@(()=>{Session.SessionKind = SessionKinds.Post;})>
+						Post
+					</div>
+				</div>
+				<EditForm Model="Session" class="me-3">
+					<InputDate class="form-control" @bind-Value=Session.Date />
+				</EditForm>
+			</div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public Patient Patient { get; set; } = new Patient();
+	[Parameter] public Therapy Therapy { get; set; } = new Therapy();
+	[Parameter] public Session? Session { get; set; } = null;
+
+	bool AreWeCreatingANewSession = false;
+
+	protected override void OnParametersSet()
+	{
+		if(Session is null)
+		{
+			AreWeCreatingANewSession = true;
+			Session = new Session();
+		}
+	}
+
+	void Cancel(){}
+	void StoreAndFinish(){}
+}

@@ -1,0 +1,190 @@
+﻿@inject DataBase DB;
+
+<div class="DarkBackground LeftColumMenu">
+	
+	<div class="ItemsList">
+		<div style="margin: 0px 24px; position:relative;">
+			<EditForm Model="@this">
+				<InputText class="form-control" 
+				Value="@FilteringToken"
+				ValueChanged="@FilteringTokenChanged"
+				ValueExpression="@(() => FilteringToken)"
+						   style="outline:none; box-shadow:none!important; background:black; color:#9b9999; border: 1px solid #6d6262;" />
+			</EditForm>
+			<div style="position:absolute; right:10px; top:9px; color:#9b9999">
+				<i class="bi bi-search"></i>
+			</div>
+		</div>
+		
+		@if(Mode == ListingModes.Patients)
+		{
+			<div class="d-flex gap-1" style="margin-left:35px;">
+				<div class="Option @(SelectedSorting == AvailableSorting.label?"Selected":"")"
+					@onclick=SortByLabel>
+					Label
+				</div>
+				<div class="Option @(SelectedSorting == AvailableSorting.label?"":"Selected")"
+					@onclick=SortByDate>
+					Date
+					</div>
+			</div> 
+		}
+		
+		<div class="d-flex flex-column gap-0 mt-3">
+			@if(DB.IsLoading)
+			{
+				<div class="ms-3 opacity-50"><small>Loading data...</small></div>
+			}
+			else
+			{
+				@if(Mode == ListingModes.Patients)
+				{
+					@foreach (var p in PatientsOnScreen)
+					{
+						<LeftMenuItem Title="@p.PatientLabel"
+									  Color="LeftMenuItem.AvailableColors.green"
+									  SelectableItem="p"
+									  IsSelected="IsSelected(p)"
+									  Details="GenerateDetailsForPatient(p)"
+									  Exit="ExitCliked"
+									  Clicked="ItemClicked" />
+					}
+				}
+				else if(Mode == ListingModes.Sessions)
+				{
+					@foreach (var s in Sessions)
+					{
+						<LeftMenuItem Title="@s.Date.ToShortDateString()"
+								  Color="LeftMenuItem.AvailableColors.green"
+								  SelectableItem="s"
+								  IsSelected="IsSelected(s)"
+								  Details="GenerateDetailsSession(s)"
+								  Exit="ExitCliked"
+								  Clicked="ItemClicked" />
+					}
+				}
+			}			
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public EventCallback<object?> ItemSelected { get; set; }
+	[Parameter] public ListingModes Mode { get; set; } = ListingModes.Patients;
+	[Parameter] public List<Session> Sessions { get; set; } = new();
+
+
+	public enum ListingModes { Patients, Sessions };
+
+	protected override void OnParametersSet()
+	{
+		if (Mode == ListingModes.Patients)
+		{
+			PatientsOnScreen.Clear();
+			foreach (var p in DB.Patients) PatientsOnScreen.Add(p);
+			SelectedSorting = AvailableSorting.label;
+			PatientsOnScreen.OrderBy(x => x.PatientLabel);
+		}
+		else if(Mode == ListingModes.Sessions)
+		{
+
+		}
+
+		DB.UIUpdateRequestedFromDB -= Update;
+		DB.UIUpdateRequestedFromDB += Update;
+	}
+	private void Update(object? sender, EventArgs e)
+	{
+		InvokeAsync(() => { StateHasChanged(); });
+	}
+
+	List<Patient> PatientsOnScreen 
+	{
+		get {
+			if (SelectedSorting == AvailableSorting.label)
+				return DB.Patients.OrderBy(x => x.PatientLabel)
+									.Where(x => x.PatientLabel.ToLower().Contains(FilteringToken.ToLower()))
+									.ToList();
+			else
+				return DB.Patients.OrderBy(x => x.BirthDate)
+									.Where(x => x.PatientLabel.ToLower().Contains(FilteringToken.ToLower()))
+									.ToList();
+		} 
+	}
+
+
+	object? SelectedItem = null;
+	string FilteringToken = "";
+
+	enum AvailableSorting {label, date};
+	AvailableSorting SelectedSorting = AvailableSorting.label;
+
+
+	private List<Tuple<string,string>> GenerateDetailsForPatient(Patient p)
+	{
+		var result = new List<Tuple<string, string>>();
+		if (p.LastMeasurement is not null)
+			result.Add(new Tuple<string, string>(
+							"Last session",
+							((DateTime)p.LastMeasurement).ToString("dd.MM.yyyy") ?? "-"
+						));
+		else
+			result.Add(new Tuple<string, string>(
+							"Last",
+							"-"
+						));
+
+		result.Add(new Tuple<string, string>(
+							"sessions",
+							p.Measurements?.Count.ToString() ?? "0"
+						));
+
+		return result;
+	}
+
+	private List<Tuple<string, string>> GenerateDetailsSession(Session s)
+	{
+		var result = new List<Tuple<string, string>>();
+		return result;
+	}
+
+	private bool IsSelected(object item)
+	{
+		if (SelectedItem is null) return false;
+		if(item is Patient)
+			return (item as Patient).PatientLabel == (SelectedItem as Patient).PatientLabel;
+
+		return SelectedItem is not null && SelectedItem == item;
+	}
+
+	private void ItemClicked(object item)
+	{
+		SelectedItem = item;
+		StateHasChanged();
+		ItemSelected.InvokeAsync(SelectedItem);
+	}
+
+	private void ExitCliked()
+	{
+		SelectedItem = null;
+		ItemSelected.InvokeAsync(SelectedItem);
+	}
+
+	private void FilteringTokenChanged(string s)
+	{
+		FilteringToken = s;
+	}
+
+	
+
+	private void SortByLabel()
+	{
+		SelectedSorting = AvailableSorting.label;
+		PatientsOnScreen.OrderBy(x => x.PatientLabel);
+	}
+	private void SortByDate()
+	{
+		SelectedSorting = AvailableSorting.date;
+		PatientsOnScreen.OrderBy(x => x.BirthDate);
+	}
+}

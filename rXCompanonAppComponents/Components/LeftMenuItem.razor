@@ -1,0 +1,60 @@
+﻿<div @onclick=ClickedInternal style="@(IsSingleItem?"":"cursor:pointer;")">
+	@if(!IsSelected)
+	{
+		<div class="LeftMenuItem">
+			<div class="Decoration">
+				<div class="DottedLine"></div>
+				<div class="Sphere @Color.ToString()"></div>
+			</div>
+			<div class="flex-grow-1">
+				@Title
+			</div>
+			<div class="Details d-flex gap-2">
+				@foreach(var info in Details)
+				{
+					<div class="Detail me-4">
+						<div>@info.Item1</div>
+						<div>@info.Item2</div>
+					</div>
+				}
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="d-flex flex-column gap-0 UltraLightBackground">
+			<div class="SelectedUpperDecoration DarkBackground"></div>
+			<div class="SelectedCenter" style="@(IsSingleItem?"height:70px!important":"")">
+				@if(!IsSingleItem)
+				{
+					<i class="bi bi-x-lg ms-3" @onclick=Exit @onclick:stopPropagation></i>
+				}
+				else
+				{
+					<div style="width:50px;"></div>
+				}
+				@Title
+			</div>
+			<div class="SelectedLowerDecoration DarkBackground"></div>
+		</div>
+	}
+
+</div>
+
+@code {
+	[Parameter] public object SelectableItem { get; set; } = new();
+	[Parameter] public string Title { get; set; } = "Title not set";
+	[Parameter] public List<Tuple<string, string>> Details { get; set; } = new();
+	[Parameter] public AvailableColors Color { get; set; } = AvailableColors.green;
+	[Parameter] public bool IsSelected { get; set; } = false;
+	[Parameter] public bool IsSingleItem { get; set; } = false;
+	[Parameter] public EventCallback<object> Clicked { get; set; }
+	[Parameter] public EventCallback Exit { get; set; }
+
+	
+
+	private void ClickedInternal() => Clicked.InvokeAsync(SelectableItem);
+
+	public enum AvailableColors {green, blue, red};
+
+}

@@ -1,0 +1,49 @@
+﻿@inject DataBase DB;
+
+<PageTitle>Patients list</PageTitle>
+
+<div class="d-flex gap-1 h-100">
+	<div class="d-flex flex-column DarkBackground">
+		<div class="Header">
+			<h1 class="mb-0">Clinical study</h1>
+			<h2 class="ms-0">Parkinson</h2>
+		</div>
+		<LeftMenuBigList ItemSelected="PatientClick" />
+		<div class="ButtonsSpace d-flex flex-column gap-2" style="padding:24px;">
+			<RoundButton ButtonColor="Colors.green"
+						 ButtonStyle="RoundButton.ButtonStyles.solid"
+						 Icon="RXIcon.Icons.Patient"
+						 Title="Add new patient" 
+						 ShowPlusSymbol="true"
+						 Clicked="AddNewPatientRequested" />
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public EventCallback<Patient?> PatientSelected { get; set; }
+	[Parameter] public EventCallback AddNewPatientRequested { get; set; }
+	[Parameter]	public Patient? SelectedPatient { get; set; }
+
+	private bool IsSelected(Patient p) => SelectedPatient == p;
+
+	protected override void OnParametersSet()
+	{
+		DB.UIUpdateRequestedFromDB -= Update;
+		DB.UIUpdateRequestedFromDB += Update;
+		DB.Init();
+	}
+	private void Update(object? sender, EventArgs e)
+	{
+		InvokeAsync(() => { StateHasChanged(); });
+	}
+	private void PatientClick(object? o)
+	{
+		Patient p = o as Patient;
+
+		if (SelectedPatient == p) SelectedPatient = null;
+		else SelectedPatient = p;
+
+		PatientSelected.InvokeAsync(SelectedPatient);
+	}
+}

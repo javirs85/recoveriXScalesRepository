@@ -1,0 +1,67 @@
+﻿.CriteriaBox {
+    padding: 10px;
+}
+.WrongCriteria {
+    background: #ffbebe!important;
+}
+
+.CriteriaBox:hover {
+    background: #e8e9ed;
+}
+.GreenTick {
+    background: #0D6835;
+    border-radius: 15px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    user-select: none;
+}
+
+.GreenBig {
+    opacity: 0.75;
+}
+.GreenBig:hover {
+    opacity: 1;
+}
+
+.GreenSmall {
+    background: #AFAFAF;
+    opacity: 0.4;
+    width:25px;
+    height:25px;
+}
+
+.RedTick {
+    background: #EB8F91;
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all .3s;
+    user-select: none;
+}
+
+
+.RedBig {
+    opacity: 0.75;
+}
+
+    .RedBig:hover {
+        opacity: 1;
+    }
+
+.RedSmall {
+    background: #AFAFAF;
+    width: 25px;
+    height: 25px;
+    border-radius:3px;
+    opacity: .4;
+}
+
