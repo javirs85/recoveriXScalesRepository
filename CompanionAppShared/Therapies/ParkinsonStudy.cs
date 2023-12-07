@@ -32,5 +32,7 @@ public class ParkinsonStudy : Therapy
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Stable neurological condition" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Able to sign the informed consent" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Able to follow the study protocol" });
+
+        Scales = new List<ScalesIDs> { ScalesIDs.NineHPT, ScalesIDs.BnBT, ScalesIDs.FMAUE };
     }
 }

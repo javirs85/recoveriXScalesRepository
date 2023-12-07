@@ -12,12 +12,22 @@ public class DataBase
 	public event EventHandler UIUpdateRequestedFromDB;
 	public List<Patient> Patients = new List<Patient>();
 	public bool IsLoading = false;
+	public bool HasError = false;
+	public string errorMessage = string.Empty;
 
 	private readonly ISQLDataAccess db;
 
-	public DataBase(ISQLDataAccess db)
+	public DataBase(ISQLDataAccess _db)
 	{
-		this.db = db;
+		db = _db;
+		db.OnNewError += HandleError;
+	}
+
+	private void HandleError(object? sender, Exception e)
+	{
+		IsLoading = false;
+		HasError = true;
+		errorMessage = e.Message;
 	}
 
 	private bool AlreadyInitialized = false;

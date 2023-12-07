@@ -1,8 +1,4 @@
-﻿
-
-using System.Text.Json.Serialization;
-
-namespace CompanionAppShared.Scales;
+﻿namespace CompanionAppShared.Scales;
 
 
 public class NineHolePegTest : ScaleBase

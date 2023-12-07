@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="gtecDB_GTECLOCAL.publish.xml" />
+    <None Include="gtecDB_CASA.publish.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="gtecDB.refactorlog" />

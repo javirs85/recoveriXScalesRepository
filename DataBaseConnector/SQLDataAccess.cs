@@ -9,6 +9,9 @@ public class SQLDataAccess : ISQLDataAccess
 {
 	private readonly IConfiguration config;
 
+	public event EventHandler<Exception> OnNewError;
+
+
 	public SQLDataAccess(IConfiguration config)
 	{
 		this.config = config;
@@ -19,11 +22,17 @@ public class SQLDataAccess : ISQLDataAccess
 		U parameters,
 		string connectonID = "Default")
 	{
-		using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectonID));
-		return await connection.QueryAsync<T>(
-			storedProcedure,
-			parameters,
-			commandType: CommandType.StoredProcedure);
+		try
+		{
+			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectonID));
+			return await connection.QueryAsync<T>(
+				storedProcedure,
+				parameters,
+				commandType: CommandType.StoredProcedure);
+		}catch(Exception ex) {
+			OnNewError?.Invoke(this, ex);
+			return Enumerable.Empty<T>();
+		}
 	}
 
 	public async Task SaveData<T>(
@@ -31,10 +40,18 @@ public class SQLDataAccess : ISQLDataAccess
 		T parameters,
 		string connectonID = "Default")
 	{
-		using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectonID));
-		await connection.ExecuteAsync(
-			storedProcedure,
-			parameters,
-			commandType: CommandType.StoredProcedure);
+		try
+		{
+			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectonID));
+			await connection.ExecuteAsync(
+				storedProcedure,
+				parameters,
+				commandType: CommandType.StoredProcedure);
+		}
+		catch (Exception ex)
+		{
+			OnNewError?.Invoke(this, ex);
+			throw;
+		}
 	}
 }

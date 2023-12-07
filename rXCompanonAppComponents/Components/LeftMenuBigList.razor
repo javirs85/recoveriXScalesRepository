@@ -35,6 +35,11 @@
 			{
 				<div class="ms-3 opacity-50"><small>Loading data...</small></div>
 			}
+			else if (DB.HasError)
+			{
+				<div class="ms-3 opacity-50"><small>Data Base error:</small></div>
+				<div class="ms-3 opacity-50"><small>@DB.errorMessage</small></div>
+			}
 			else
 			{
 				@if(Mode == ListingModes.Patients)
