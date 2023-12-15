@@ -1,11 +1,12 @@
 ﻿CREATE PROCEDURE [dbo].[spPatient_Insert]
-	@ID UNIQUEIDENTIFIER,
+	@Id uniqueidentifier,
+	@GymCode nvarchar(10),
 	@PatientLabel nvarchar(50),
-	@NumberOfMeasurements int,
-	@LastMeasurement Date,
+	@NumberOfMeasurementsInLastTherapy int,
+	@LastMeasurementInLastTherapy Date,
 	@SerializedData TEXT
 AS
 begin
-	insert into dbo.Patient (Id, PatientLabel, NumberOfMeasurements, LastMeasurement, SerializedData)
-	values (@ID, @PatientLabel, @NumberOfMeasurements, @LastMeasurement, @SerializedData)
+	insert into dbo.Patient (Id, GymCode, PatientLabel, NumberOfMeasurementsInLastTherapy, LastMeasurementInLastTherapy, SerializedData)
+	values (@Id, @GymCode, @PatientLabel, @NumberOfMeasurementsInLastTherapy, @LastMeasurementInLastTherapy, @SerializedData)
 end

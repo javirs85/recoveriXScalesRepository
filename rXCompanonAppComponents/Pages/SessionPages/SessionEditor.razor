@@ -1,12 +1,15 @@
-﻿<div class="d-flex h-100">
+﻿@inject ScalesService Scales
+@inject IToastService Toaster
+
+<div class="d-flex h-100">
 	<div class="DarkBackground LeftColumMenu">
 		<div class="Header">
 			<h1 class="mb-0">@Patient.PatientLabel</h1>
-			<h2 class="ms-0">Parkinson</h2>
+			<h2 class="ms-0">@Therapy.Name</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
 			<div style="margin-bottom:50%;">
-				<LeftMenuItem Title="@Session?.Date.ToShortDateString()"
+				<LeftMenuItem Title="@ColumnTittle"
 						  Color="LeftMenuItem.AvailableColors.green"
 						  IsSingleItem="true"
 						  IsSelected="true"/>
@@ -21,7 +24,7 @@
 						 Title="Store intermediate results" />
 		</div>		
 	</div>
-	<div class="MainContainer flex-grow-1 h-100">
+	<div class="d-flex flex-column flex-grow-1 h-100">
 		<div class="SessionHeader">
 			<div class="SessionModeSelector d-flex justify-content-center align-items-center w-100">
 				<div class="d-flex gap-3 flex-grow-1 justify-content-center">
@@ -43,25 +46,101 @@
 				</EditForm>
 			</div>
 		</div>
+		<div class="MainArea p-4">
+			@foreach(var scale in Session.Scales)
+			{
+				@if (!scale.IsMeasured)
+				{
+					<div class="ScaleBox NotMeasured">
+						<div class="flex-grow-1">
+							<div class="scaleBoxTitle">@scale.Name (@scale.ShortName)</div>
+						</div>
+						<RoundButton ButtonColor="Colors.green" 
+							ButtonStyle="RoundButton.ButtonStyles.solid" 
+							Icon="RXIcon.Icons.Scale" Title="Run scale"
+							Clicked=@(async()=>{await EditScale(scale);}) />
+					</div>
+				}
+				else
+				{
+					<div class="ScaleBox Finished">
+						<div>
+							<div class="scaleBoxTitle">@scale.Name (@scale.ShortName)</div>
+							<div class="scaleBoxDetails">
+								@foreach(var detail in scale.Details)
+								{
+									<div>@detail</div>
+								}
+							</div>
+						</div>
+						<div class="scaleBoxScoresBox">
+							<div class="ScaleBoxScore">@(scale.ScoreNormalized+"%")</div>
+							<div class="ScaleBoxDelta">@(scale.ScoreNormalized + "%")</div>
+						</div>
+						<div class="scaleBoxButtonsContainer">
+							<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Edit" Title="Edit results" />
+							<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Revert" Title="Repeat assessment" />
+							<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Bin" Title="Detelet assessment" />
+						</div>
+					</div>
+				}
+			}
+		</div>
 	</div>
 </div>
 
 @code {
 	[Parameter] public Patient Patient { get; set; } = new Patient();
-	[Parameter] public Therapy Therapy { get; set; } = new Therapy();
+	[Parameter] public string TherapyID { get; set; } = "Therapy ID not set";
 	[Parameter] public Session? Session { get; set; } = null;
+	[Parameter] public EventCallback Exit { get; set; }
+	[Parameter] public EventCallback<IScale> OpenScaleEditor { get; set; }
+
+	Therapy Therapy;
+	Session Backup;
 
 	bool AreWeCreatingANewSession = false;
 
 	protected override void OnParametersSet()
 	{
-		if(Session is null)
+		if (Session is null)
 		{
 			AreWeCreatingANewSession = true;
 			Session = new Session();
+			Session.SessionKind = SessionKinds.Pre;
+		}
+
+		Therapy = Patient.GetTherapy(TherapyID);
+		if (Session.Scales.Count == 0) Session.Init(Therapy, Scales);
+
+		Backup = Session.Clone();
+	}
+
+
+	string ColumnTittle {
+		get
+		{
+			string title = "";
+			if (Session.SessionKind == SessionKinds.Pre) title = "[PRE]";
+			else if (Session.SessionKind == SessionKinds.Intermediate) title = "[INT]";
+			else if (Session.SessionKind == SessionKinds.Post) title = "[POST]";
+			title += " "+Session?.Date.ToShortDateString();
+			return title;
 		}
 	}
 
-	void Cancel(){}
-	void StoreAndFinish(){}
+
+	async Task Cancel()
+	{
+		Session = Backup.Clone();
+		await Exit.InvokeAsync();
+	}
+
+	async Task StoreAndFinish()
+	{
+		Toaster.ShowInfo("Saving data is not yet implemented");
+		await Exit.InvokeAsync();
+	}
+
+	async Task EditScale(IScale scale) => await OpenScaleEditor.InvokeAsync(scale);
 }

@@ -123,10 +123,10 @@
 	private List<Tuple<string,string>> GenerateDetailsForPatient(Patient p)
 	{
 		var result = new List<Tuple<string, string>>();
-		if (p.LastMeasurement is not null)
+		if (p.LastSession is not null)
 			result.Add(new Tuple<string, string>(
 							"Last session",
-							((DateTime)p.LastMeasurement).ToString("dd.MM.yyyy") ?? "-"
+							((DateTime)p.LastSession).ToString("dd.MM.yyyy") ?? "-"
 						));
 		else
 			result.Add(new Tuple<string, string>(
@@ -136,7 +136,7 @@
 
 		result.Add(new Tuple<string, string>(
 							"sessions",
-							p.Measurements?.Count.ToString() ?? "0"
+							p.Sessions?.Count.ToString() ?? "0"
 						));
 
 		return result;

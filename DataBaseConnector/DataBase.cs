@@ -12,8 +12,11 @@ public class DataBase
 	public event EventHandler UIUpdateRequestedFromDB;
 	public List<Patient> Patients = new List<Patient>();
 	public bool IsLoading = false;
+	public event EventHandler<Exception> ErrorOccurred;
 
 	private readonly ISQLDataAccess db;
+
+	#region init
 
 	public DataBase(ISQLDataAccess db)
 	{
@@ -29,6 +32,9 @@ public class DataBase
 		AlreadyInitialized = true;
 		Task.Run(async () => await LoadListOfPatients());
 	}
+	#endregion
+
+	#region patients
 
 	public async Task LoadListOfPatients()
 	{
@@ -49,7 +55,7 @@ public class DataBase
 	public Task<IEnumerable<Patient>> GetPatients() => db.LoadData<Patient, dynamic>("dbo.spPatient_GetAll", new { });
 
 	/// <summary>
-	/// Gets ALL the serialized data for a given patient's ID and deserializes it into a fully fledged patient.
+	/// Gets ALL the serialized data for a given patient's TherapyLabel and deserializes it into a fully fledged patient.
 	/// </summary>
 	/// <param name="id"></param>
 	/// <returns></returns>
@@ -58,47 +64,92 @@ public class DataBase
 		var results = await db.LoadData<Patient, dynamic>("dbo.spPatient_Get", new { Id = id });
 		var r = results.FirstOrDefault();
 		var p = Patient.FromJson(r.SerializedData);
+		var sessions = await GetAllMeasurementsOfTherapy(p.TherapyLabels[0]);
+		p.ReconstructTherapyWithSeasons(sessions, p.TherapyLabels[0]);
 		p.IsFullyLoadedFromDB = true;
 		return p;
+	}
+
+	public async Task<bool> CheckIfNameIsAlreadyTaken(Patient p)
+	{
+		ErrorOccurred?.Invoke(this, new Exception("CheckIfNameIsAlreadyTaken is not yet implemented, defaulting to false"));
+		return false;
 	}
 
 	public async Task InsertPatient(Patient patient)
 	{
 		var serialized = patient.Serialize();
-		await db.SaveData("dbo.spPatient_Insert",
-		new
+		try
 		{
-			patient.Id,
-			patient.PatientLabel,
-			patient.NumberOfMeasurements,
-			patient.LastMeasurement,
-			SerializedData = serialized
-		});
+			await db.SaveData("dbo.spPatient_Insert",
+			new
+			{
+				Id = patient.Id,
+				GymCode = patient.GymCode,
+				PatientLabel = patient.PatientLabel,
+				NumberOfMeasurementsInLastTherapy = patient.NumberOfSessions,
+				LastMeasurementInLastTherapy = patient.LastSession,
+				SerializedData = serialized
+			});
+		}catch(Exception ex) { 
+			ErrorOccurred?.Invoke(this, ex);
+		}
 	}
 
-	public Task UpdatePatient(Patient patient) => db.SaveData("dbo.spPatient_Update", new { 
-		Id = patient.Id,
-		Label = patient.PatientLabel,
-		NumberOfMeasurements = patient.NumberOfMeasurements,
-		LastMeasurement = patient.LastMeasurement,
-		SerializedData = patient.Serialize()
-	});
+	public async Task UpdatePatient(Patient patient)
+	{
+		try
+		{
+			await db.SaveData("dbo.spPatient_Update", new
+			{
+				Id = patient.Id,
+				Label = patient.PatientLabel,
+				NumberOfMeasurementsInLastTherapy = patient.NumberOfSessions,
+				LastMeasurementInLastTherapy = patient.LastSession,
+				SerializedData = patient.Serialize()
+			});
+		}
+		catch(Exception e)
+		{
+			ErrorOccurred?.Invoke(this, e);	
+		}
+	}
 	public Task DeletePatient(Guid id) => db.SaveData("dbo.spPatient_Delete", new { Id = id });
 
+	public async Task GeneratePatientLabelForSelectedGym(Patient p)
+	{
+		try
+		{
+			var query = $"SELECT COUNT(*) FROM dbo.Patient WHERE GymCode = '{p.Gym.ToString()}'";
+			int existingPatients = await db.Count(query);
+			p.PatientLabel = PatientLabelTools.FormLabel(p.Gym, existingPatients);
+		}catch(Exception e)
+		{
+			ErrorOccurred?.Invoke(this, e);
+		}
+	}
 
-	public Task<IEnumerable<Measurement>> GetAllMeasurementsOfPatient(Guid patientID) =>
-		db.LoadData<Measurement, dynamic>("dbo.spMeasurement_GetAllFromPatient", new { PatientID = patientID });
+	#endregion
 
-	public async Task InsertMeasurement(Measurement measurement)
+	#region measurements
+	public Task<IEnumerable<Session>> GetAllMeasurementsOfTherapy(string therapyID) =>
+		db.LoadData<Session, dynamic>("dbo.spMeasurement_GetAllSessionHighlightsFromTherapy", new { TherapyID = therapyID });
+
+	public async Task InsertMeasurement(Session measurement)
 	{
 		await db.SaveData("spMeasurement_Insert",
 		new
 		{
-			measurement.Id,
+			measurement.Id ,
 			measurement.PatientID,
 			measurement.Date,
-			measurement.ScaleID,
+			measurement.TherapyID,
+			measurement.Tag,
+			measurement.AccuracyTag,
 			measurement.SerializedData
 		});
 	}
+	#endregion
+
+
 }

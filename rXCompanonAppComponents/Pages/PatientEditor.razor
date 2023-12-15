@@ -1,5 +1,6 @@
 ﻿@using CompanionAppShared.Therapies;
 @inject DataBaseConnector.DataBase DB
+@inject Blazored.Toast.Services.IToastService Toaster
 
 <div class="d-flex gap-0 h-100 overflow-auto">
 	<div class="LeftColumMenu DarkBackground">
@@ -9,7 +10,7 @@
 		</div>
 		<div class="flex-grow-1 d-flex flex-column gap-2 justify-content-center align-items-end m-2 p-4">
 			<div class="MenuSection @(CurrentPage == Pages.PatientInfo?"Active":"")" @onclick=@(()=>{CurrentPage = Pages.PatientInfo;})>
-				@if(string.IsNullOrEmpty(PatientToEdit.PatientLabel))
+				@if(!IsInfoFilledIn)
 				{
 					<RXIcon IconName="RXIcon.Icons.Cancel" Color="Colors.red"/>
 				}
@@ -19,8 +20,8 @@
 				}
 				Patient details
 			</div>
-			<div class="MenuSection @(CurrentPage == Pages.ExclusionInclusion?"Active":"")" @onclick=@(()=>{CurrentPage = Pages.ExclusionInclusion;})>
-				@if (PatientToEdit.Therapies.Count != 0 && !PatientToEdit.Therapies[0].AreAllCriteriaMeet)
+			<div class="MenuSection @(CurrentPage == Pages.ExclusionInclusion?"Active":"")" @onclick=GoToInclusionExclusion>
+				@if (!IsAllCriteriaMeet)
 				{
 					<RXIcon IconName="RXIcon.Icons.Cancel" Color="Colors.red" />
 				}
@@ -53,12 +54,24 @@
 				<div class="d-flex gap-0 flex-grow-1">
 					<div class="FormColumn BlueBar">
 						<div class="d-flex flex-column">
-							<label>Patient label</label>
+							<label>Gym</label>
+							<InputSelect class="form-select" @bind-Value=@PatientToEdit.Gym>
+								@foreach (var op in Enum.GetValues(typeof(Gyms)))
+								{
+									<option value="@op">@op</option>
+								}
+							</InputSelect>
+						</div>
+						<div class="d-flex flex-column">
+							<div class="d-flex gap-2 mb-1 align-items-center">
+								<label>Patient label</label>
+								<button class="btn btn-primary" @onclick=@(async()=>{ await DB.GeneratePatientLabelForSelectedGym(PatientToEdit);})>Generate</button>
+							</div>
 							<InputText class="form-control" @bind-Value=@PatientToEdit.PatientLabel></InputText>
 						</div>
 						<div class="d-flex flex-column">
 							<label>Sex</label>
-							<InputSelect class="form-control" @bind-Value=@PatientToEdit.Sex>
+							<InputSelect class="form-select" @bind-Value=@PatientToEdit.Sex>
 								@foreach (var op in Enum.GetValues(typeof(AvailbleSex)))
 								{
 									<option value="@op">@op</option>
@@ -88,7 +101,7 @@
 					<div class="FormColumn BlueBar">
 						<div class="d-flex flex-column">
 							<label>Is already on a rehabilitation plan?</label>
-							<InputSelect class="form-control" @bind-Value=@IsPatientOnTherapy>
+							<InputSelect class="form-select" @bind-Value=@IsPatientOnTherapy>
 								@foreach (var op in Enum.GetValues(typeof(YesNo)))
 								{
 									<option value="@op">@op</option>
@@ -111,60 +124,73 @@
 							<InputTextArea class="form-control" @bind-Value=@PatientToEdit.Notes></InputTextArea>
 						</div>
 					</div>
-					<div class="FormColumn"></div>
+					<div class="FormColumn">
+						<button class="btn btn-primary" @onclick=@(()=>{PatientToEdit.AddTherapy(new ParkinsonStudy());})>Add Parkinson's desease study</button>
+						<div class="d-flex flex-column gap-2">
+							<h4>Therapies</h4>
+							@foreach(var t in PatientToEdit.TherapyLabels)
+							{
+								<div class="ms-5">@t</div>
+							}
+						</div>
+					</div>
 				</div>
 			</EditForm>
 			<div class="w-100 d-flex justify-content-end p-4">
+
 				<RoundButton Title="Inclusion / exclusion" 
 					ButtonColor="Colors.green" 
 					Icon="RXIcon.Icons.Next"
 					ButtonStyle="RoundButton.ButtonStyles.solid" 
-					Clicked="@(()=>{CurrentPage = Pages.ExclusionInclusion;})"/>
+					Clicked="GoToInclusionExclusion"/>
 			</div>
 		</div>
 	}
 	else if(CurrentPage == Pages.ExclusionInclusion)
 	{
 		<div class="d-flex flex-column w-100 h-100">
-			<div class="d-flex flex-grow-1 overflow-auto">
-				<div class="d-flex w-50 flex-column p-5 pe-0 gap-1 h-100">
-					<h4>Exclusion criteria <small class="opacity-25 fs-5">(all must be red)</small></h4>
-					<div class="d-flex flex-column gap-1 overflow-auto">
-						@foreach(var p in PatientToEdit?.Therapies.FirstOrDefault()?.ExclusionCriteria)
-						{
-							<InclusionExclusionCriteriaViewer Criteria="p"
-								UpdateRequested="Update"
-								CriteriaType="InclusionExclusionCriteriaViewer.CriteriaTypes.Exclusion"/>
-						}
+			@if (PatientToEdit.HasTherapies)
+			{
+				<div class="d-flex flex-grow-1 overflow-auto">
+					<div class="d-flex w-50 flex-column p-5 pe-0 gap-1 h-100">
+						<h4>Exclusion criteria <small class="opacity-25 fs-5">(all must be red)</small></h4>
+						<div class="d-flex flex-column gap-1 overflow-auto">
+							<div class="btn btn-info" @onclick=FakeClicks>FakeClicks</div>
+							@foreach (var p in PatientToEdit?.GetParkinsonTherapy()?.ExclusionCriteria)
+							{
+								<InclusionExclusionCriteriaViewer Criteria="p"
+																  UpdateRequested="Update"
+																  CriteriaType="InclusionExclusionCriteriaViewer.CriteriaTypes.Exclusion" />
+							}
+						</div>
+					</div>
+					<div class="d-flex w-50 flex-column m-5 mb-4 me-4 ps-5">
+						<h4>Inclusion criteria <small class="opacity-25 fs-5">(all must be green)</small></h4>
+						<div class="d-flex flex-column gap-1 flex-grow-1 overflow-auto">
+							@foreach (var p in PatientToEdit?.GetParkinsonTherapy()?.InclusionCriteria)
+							{
+								<InclusionExclusionCriteriaViewer Criteria="p"
+																  UpdateRequested="Update"
+																  CriteriaType="InclusionExclusionCriteriaViewer.CriteriaTypes.Inclusion" />
+							}
+						</div>
+						<div class="w-100 d-flex justify-content-end p-4 pb-0 pe-0">
+							<RoundButton Title="Patient details"
+										 ButtonColor="Colors.green"
+										 Icon="RXIcon.Icons.Back"
+										 ButtonStyle="RoundButton.ButtonStyles.solid"
+										 Clicked="@(()=>{CurrentPage = Pages.PatientInfo;})" />
+						</div>
 					</div>
 				</div>
-				<div class="d-flex w-50 flex-column m-5 mb-4 me-4 ps-5">
-					<h4>Inclusion criteria <small class="opacity-25 fs-5">(all must be green)</small></h4>
-					<div class="d-flex flex-column gap-1 flex-grow-1 overflow-auto">
-						@foreach (var p in PatientToEdit?.Therapies.FirstOrDefault()?.InclusionCriteria)
-						{
-							<InclusionExclusionCriteriaViewer Criteria="p" 
-								UpdateRequested="Update"
-								CriteriaType="InclusionExclusionCriteriaViewer.CriteriaTypes.Inclusion"/>
-						}
-					</div>
-					<div class="w-100 d-flex justify-content-end p-4 pb-0 pe-0">
-						<RoundButton Title="Patient details"
-									 ButtonColor="Colors.green"
-									 Icon="RXIcon.Icons.Back"
-									 ButtonStyle="RoundButton.ButtonStyles.solid"
-									 Clicked="@(()=>{CurrentPage = Pages.PatientInfo;})" />
-					</div>
-				</div>
-			</div>
-			
+			}
 		</div>
 	}
 </div>
 
 @code {
 	[Parameter] public Patient PatientToEdit { get; set; } = new();
-	[Parameter] public EventCallback ChangesSaved { get; set; }
+	[Parameter] public EventCallback<Patient> ChangesSaved { get; set; }
 	[Parameter] public EventCallback PatientDeleted { get; set; }
 
 	enum Pages {PatientInfo, ExclusionInclusion}
@@ -180,7 +206,6 @@
 		if(PatientToEdit is null)
 		{
 			PatientToEdit = new Patient();
-			PatientToEdit.Therapies.Add(new ParkinsonStudy());
 			AreWeCreatingANewPatient = true;
 		}
 		else if(!PatientToEdit.IsFullyLoadedFromDB)
@@ -207,14 +232,34 @@
 		}
 	}	
 
+	bool IsInfoFilledIn
+	{
+		get
+		{
+			if(string.IsNullOrEmpty(PatientToEdit.PatientLabel)) return false;
+			if (!PatientToEdit.HasTherapies) return false;
+			return true;
+		}
+	}
+
+	bool IsAllCriteriaMeet
+	{
+		get
+		{
+			var t = PatientToEdit.GetParkinsonTherapy();
+			if (t is null) return false;
+
+			if (!t.AreAllCriteriaMeet) return false;
+			else return true;
+		}
+	}
+
 	bool IsPatientReady
 	{
 		get
 		{
-			if (string.IsNullOrEmpty(PatientToEdit.PatientLabel)) return false;
-			if (PatientToEdit.Therapies.Count == 0) return false;
-			if (!PatientToEdit.Therapies.FirstOrDefault().AreAllCriteriaMeet) return false;
-			else return true;
+			if (IsInfoFilledIn && IsAllCriteriaMeet) return true;
+			else return false;
 		}
 	}
 
@@ -225,27 +270,38 @@
 			if (IsPatientReady)
 			{
 				if (AreWeCreatingANewPatient) return "Save new patient";
-				else return "Save changes";
+				else return "Save patient";
 			}
 			else
 				return "Please finish the formular before saving the changes";
 		}		
 	}
 
+	private async Task GoToInclusionExclusion()
+	{
+		if (string.IsNullOrEmpty(PatientToEdit.PatientLabel)) Toaster.ShowError("Please generate patient label");
+		else if (!PatientToEdit.HasTherapies) Toaster.ShowError("Please add at least one therapy to the patient");
+		else if (await DB.CheckIfNameIsAlreadyTaken(PatientToEdit)) Toaster.ShowError("The selected Patient Label is already existing");
+		else
+			CurrentPage = Pages.ExclusionInclusion;
+	}
+
 	private async Task Save()
 	{
 		if (AreWeCreatingANewPatient)
+		{
 			await DB.InsertPatient(PatientToEdit);
+		}
 		else
 			await DB.UpdatePatient(PatientToEdit);
-		ChangesSaved.InvokeAsync();
+		await ChangesSaved.InvokeAsync(PatientToEdit);
 	}
 
 	private async Task Delete()
 	{
 		await DB.DeletePatient(PatientToEdit.Id);
 		PatientToEdit = null;
-		ChangesSaved.InvokeAsync();
+		await PatientDeleted.InvokeAsync();
 	}
 
 	private void RevertChanges()
@@ -254,4 +310,10 @@
 	}
 
 	void Update() => InvokeAsync(() => { StateHasChanged(); });
+
+	void FakeClicks()
+	{
+		PatientToEdit.GetParkinsonTherapy().ExclusionCriteria.ForEach(x => x.Value = false);
+		PatientToEdit.GetParkinsonTherapy().InclusionCriteria.ForEach(x => x.Value = true);
+	}
 }

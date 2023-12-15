@@ -8,6 +8,8 @@ namespace CompanionAppShared;
 
 public class Therapy
 {
+	public string KeyCode { get; set; } = "KNS"; //Key not set
+	public string TherapyLabel { get; set; } = "GYM_PID_KeyKode_N";
 	public string Name { get; set; } = string.Empty;
 	public List<InclusionExclusionCriteria> ExclusionCriteria { get; set; } = new();
 	public List<InclusionExclusionCriteria> InclusionCriteria { get; set; } = new();

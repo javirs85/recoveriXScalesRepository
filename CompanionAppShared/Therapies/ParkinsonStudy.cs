@@ -11,6 +11,8 @@ public class ParkinsonStudy : Therapy
     public ParkinsonStudy()
     {
         Name = "Parkinson study";
+        KeyCode = "PS";
+
         ExclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Other neurological diseases" });
         ExclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Severe depression" });
         ExclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Uncontrolled diabetes" });
@@ -26,11 +28,29 @@ public class ParkinsonStudy : Therapy
         InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Diagnosis of PD" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "HY stage between 1 to 3" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "MMSE > 24" });
-		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Age between 40\r\n80 years old" });
+		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Age between 40 and 80 years old" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Ability to walk independently" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "stable medication usage" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Stable neurological condition" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Able to sign the informed consent" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Able to follow the study protocol" });
+
+        Scales = new List<ScalesIDs> {
+            ScalesIDs.UPDRSI,
+            ScalesIDs.UPDRSII,
+            ScalesIDs.UPDRSIII,
+            ScalesIDs.UPDRSIV,
+			ScalesIDs.HYClass,
+            ScalesIDs.SEADL,
+            ScalesIDs.PDQ39,
+            ScalesIDs.MFIS,
+            ScalesIDs.NineHPT,
+            ScalesIDs.TUG,
+            ScalesIDs.TENMWT,
+            ScalesIDs.miniBESTest,
+            ScalesIDs.FOGQ,
+            ScalesIDs.ERP,
+            ScalesIDs.ATA,
+		};
     }
 }

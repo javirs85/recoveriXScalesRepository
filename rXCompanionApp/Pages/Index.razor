@@ -1,5 +1,9 @@
 ﻿@page "/"
+@using rXCompanionAppComponents.Pages.ScalesEditors
 @inject DataBase DB;
+@inject Blazored.Toast.Services.IToastService Toaster;
+
+<BlazoredToasts/>
 
 @if (CurrentMode == Modes.PatientSelection)
 {
@@ -10,12 +14,13 @@
 }
 else if(CurrentMode == Modes.PatientEditor)
 {
-	<PatientEditor PatientToEdit="SelectedPatient" 
-		ChangesSaved="EditorFinished"/>
+	<PatientEditor PatientToEdit="SelectedPatient"
+		PatientDeleted="PatientDeleted"
+		ChangesSaved="PatientModified"/>
 }
-else if(CurrentMode == Modes.PatientViewer)
+else if(CurrentMode == Modes.TherapyViewer)
 {
-	<PatientViewer
+	<TherapyViewer
 		SelectedPatient="SelectedPatient"
 		EditPatientRequested="@(()=>{CurrentMode = Modes.PatientEditor;})"
 		AddSessionToTherapy="@(()=>{CurrentMode = Modes.SessionEditor;})"
@@ -25,17 +30,39 @@ else if(CurrentMode == Modes.SessionEditor)
 {
 	<SessionEditor 
 		Patient="SelectedPatient" 
-		Therapy="SelectedTherapy" 
+		TherapyID=@SelectedTherapy.TherapyLabel
+		OpenScaleEditor="OpenScaleEditor"
+		Exit="ExitSessionEditor"
 		Session="null"/>
+}
+else if(CurrentMode == Modes.ScaleEditor)
+{
+	@if(SelectedScale is not null)
+	{
+		@if(SelectedScale is NineHolePegTest)
+		{
+			<AutoScale Patient="SelectedPatient" Therapy="SelectedTherapy" Scale="SelectedScale"/>
+		}
+		else
+		{
+			<div>This scale is not yet supported</div>
+		}
+	}
 }
 
 
 @code{
-	enum Modes {PatientSelection, PatientEditor, PatientViewer, SessionViewer, SessionEditor};
+	enum Modes {PatientSelection, PatientEditor, TherapyViewer, SessionViewer, SessionEditor, ScaleEditor};
 	Modes CurrentMode = Modes.PatientSelection;
 
 	Patient? SelectedPatient = null;
 	Therapy? SelectedTherapy = null;
+	IScale SelectedScale;
+
+	protected override void OnParametersSet()
+	{
+		DB.ErrorOccurred += (o, e) => Toaster.ShowError(e.Message);
+	}
 
 	void AddNewPatientRequested()
 	{
@@ -49,16 +76,22 @@ else if(CurrentMode == Modes.SessionEditor)
 			p = await DB.GetPatient(p.Id) ?? new Patient { PatientLabel = "Not Found" };
 
 		SelectedPatient = p;
-		CurrentMode = Modes.PatientViewer;
+		SelectedTherapy = SelectedPatient.GetTherapy(p.TherapyLabels[0]);
+		CurrentMode = Modes.TherapyViewer;
 	}
 
-	async Task EditorFinished()
+	async Task PatientModified(Patient p)
 	{
-		if (SelectedPatient is null)
-			CurrentMode = Modes.PatientSelection;
-		else
-			CurrentMode = Modes.PatientViewer;
+		SelectedPatient = p;
+		CurrentMode = Modes.TherapyViewer;
 
+		await DB.LoadListOfPatients();
+	}
+
+	async Task PatientDeleted()
+	{
+		SelectedPatient = null;
+		CurrentMode = Modes.PatientSelection;
 		await DB.LoadListOfPatients();
 	}
 
@@ -66,5 +99,16 @@ else if(CurrentMode == Modes.SessionEditor)
 	{
 		SelectedPatient = null;
 		CurrentMode = Modes.PatientSelection;
+	}
+
+	void ExitSessionEditor()
+	{
+		CurrentMode = Modes.TherapyViewer;
+	}
+
+	void OpenScaleEditor(IScale scale)
+	{
+		SelectedScale = scale;
+		CurrentMode = Modes.ScaleEditor;
 	}
 }

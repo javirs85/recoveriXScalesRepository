@@ -22,3 +22,21 @@
         background: #265BE7;
         color:white;
     }
+
+.MainArea {
+    display:flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
+
+}
+
+.ScaleBox {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+.NotMeasured {
+    background: #fbe8e840;
+    border-bottom: 1px solid #e7262633;
+}

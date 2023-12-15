@@ -14,4 +14,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="PatientLabel" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="6e2089c7-b22a-4ab6-ba7a-e03b23756375" ChangeDateTime="12/14/2023 14:56:14">
+    <Property Name="ElementName" Value="[dbo].[Patient].[NumberOfMeasurements]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Patient]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NumberOfMeasurementsInLastTherapy" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e378aa2b-ec33-4506-b318-558a4523bb29" ChangeDateTime="12/14/2023 14:56:16">
+    <Property Name="ElementName" Value="[dbo].[Patient].[LastMeasurement]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Patient]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LastMeasurementInLastTherapy" />
+  </Operation>
 </Operations>

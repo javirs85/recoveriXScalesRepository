@@ -65,17 +65,16 @@
   <ItemGroup>
     <Build Include="dbo\Tables\Masurement.sql" />
     <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_Delete.sql" />
-    <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_Get.sql" />
-    <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_GetAll.sql" />
+    <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_GetWithData.sql" />
     <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_Insert.sql" />
     <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_Update.sql" />
-    <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_GetAllFromPatient.sql" />
     <Build Include="dbo\Tables\Patient.sql" />
     <Build Include="dbo\StoredProcedures\Patient\spPatient_Delete.sql" />
     <Build Include="dbo\StoredProcedures\Patient\spPatient_Get.sql" />
     <Build Include="dbo\StoredProcedures\Patient\spPatient_GetAll.sql" />
     <Build Include="dbo\StoredProcedures\Patient\spPatient_Insert.sql" />
     <Build Include="dbo\StoredProcedures\Patient\spPatient_Update.sql" />
+    <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_GetAllSessionhighlightsFromTherapy.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gtecDB_GTECLOCAL.publish.xml" />

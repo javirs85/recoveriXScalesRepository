@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CompanionAppShared.Therapies;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -8,9 +9,22 @@ namespace CompanionAppShared;
 public class Patient
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
-
+	public Gyms Gym { get; set; }
+	public string GymCode => Gym.ToString();
+	private string _patientLabel = string.Empty;
 	[Required]
-	public string PatientLabel { get; set; } = string.Empty;
+	public string PatientLabel {
+		get
+		{
+			return _patientLabel;
+		}
+		set
+		{
+			if (_patientLabel != value) { 
+				_patientLabel = value;
+			}
+		}
+	} 
 	public AvailbleSex Sex { get; set; } = AvailbleSex.Male;
 	public DateTime? BirthDate { get; set; }	= DateTime.Now;
 	public DateTime? DateOfDiagnosis { get; set; }	= DateTime.Now;
@@ -22,7 +36,31 @@ public class Patient
 	public string Notes { get; set;} = string.Empty;
 
 
-	public List<Therapy> Therapies { get; set; } = new();
+	[JsonIgnore]
+	private List<Therapy> Therapies { get; set; } = new();
+
+	public List<string> TherapyLabels { get; set; } = new();
+
+
+	public void AddTherapy(Therapy therapy)
+	{
+		string name = PatientLabel + "." + therapy.KeyCode;
+
+		int count = TherapyLabels.Count(x => PatientLabelTools.GetTherapyKeyCode(x) == therapy.KeyCode);
+		name += "." + count.ToString();
+
+		therapy.TherapyLabel = name;
+		Therapies.Add(therapy);
+		TherapyLabels.Add(name);
+	}
+
+	public Therapy GetParkinsonTherapy() {
+		var t = Therapies.Find(x => x.KeyCode == "PS");
+		return t; 
+	}
+
+	public bool HasTherapies => Therapies.Count > 0;
+	public Therapy GetTherapy(string therapyID) => Therapies.Find(x => x.TherapyLabel == therapyID);
 
 	[JsonIgnore]
 	public bool IsFullyLoadedFromDB { get; set; } = false;
@@ -32,31 +70,31 @@ public class Patient
 
 
 
-	public List<Measurement>? Measurements { get; set; } = null;
-	private int _numberOfMeasurements = 0;
-	public int NumberOfMeasurements
+	public List<Session>? Sessions { get; set; } = null;
+	private int _numberOfSessions = 0;
+	public int NumberOfSessions
 	{
 		get 
 		{ 
-			if (Measurements is null) return _numberOfMeasurements;
-			else return Measurements.Count;
+			if (Sessions is null) return _numberOfSessions;
+			else return Sessions.Count;
 		}
-		set { _numberOfMeasurements = value; }
+		set { _numberOfSessions = value; }
 	}
 
-	private DateTime? _lastMeasurement;
-	public DateTime? LastMeasurement
+	private DateTime? _lastSession;
+	public DateTime? LastSession
 	{
-		set { _lastMeasurement = value; }
+		set { _lastSession = value; }
 		get 
 		{
-			if (Measurements is null)
+			if (Sessions is null)
 			{
-				if(_lastMeasurement is not null) return _lastMeasurement;
+				if(_lastSession is not null) return _lastSession;
 				else return null;
 			}
 
-			return Measurements.OrderBy(x=>x.Date).First().Date; 
+			return Sessions.OrderBy(x=>x.Date).First().Date; 
 		}
 	}
 
@@ -83,5 +121,15 @@ public class Patient
 		}
 
 		return p;
+	}
+
+	public void ReconstructTherapyWithSeasons(IEnumerable<Session> sessions, string v)
+	{
+		var t = new ParkinsonStudy();
+		t.TherapyLabel = v;
+		t.Sessions = sessions.ToList();
+		foreach (var c in t.ExclusionCriteria) c.Value = false;
+		foreach (var c in t.InclusionCriteria) c.Value = true;
+		Therapies.Add(t);
 	}
 }

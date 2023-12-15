@@ -1,11 +1,13 @@
 ﻿CREATE PROCEDURE [dbo].[spMeasurement_Insert]
 	@Id uniqueidentifier,
-	@PatientID UNIQUEIDENTIFIER,
+	@PatientID nvarchar(50),
 	@MeasurementDate DATETIME,
-	@ScaleID UNIQUEIDENTIFIER,
-	@SerializedData TEXT
+	@TherapyID nvarchar(50),
+	@SerializedData TEXT,
+	@Tag nvarchar(50),
+	@AccuracyTag nvarchar(50)
 AS
 begin
-	insert into dbo.Masurement (Id, PatientID, MeasurementDate, ScaleID, SerializedData)
-	values (@Id, @PatientID, @MeasurementDate, @ScaleID, @SerializedData)
+	insert into dbo.Masurement (Id, PatientID, MeasurementDate, TherapyID, Tag, AccuracyTag, SerializedData)
+	values (@Id, @PatientID, @MeasurementDate, @TherapyID, @Tag, @AccuracyTag, @SerializedData)
 end

@@ -4,14 +4,14 @@ using System.Text.Json.Serialization;
 
 namespace CompanionAppShared.Scales;
 
-
-public class NineHolePegTest : ScaleBase
+public class FOGQ : ScaleBase
 {
-    public NineHolePegTest()
+    public FOGQ()
     {
-		Id = ScalesIDs.NineHPT;
-		Name = "Nine hole peg test";
-		ShortName = "9HPT";
+		Id = ScalesIDs.FOGQ;
+		Name = "Freezing Of Gait Questionnaire";
+		ShortName = "FOGQ";
+		AreaOfStudy = "Freezing of gait";
     }
 
     public int TimeInSecondsPareticHand { get; set; }
@@ -22,4 +22,10 @@ public class NineHolePegTest : ScaleBase
 	public TimeOnly TimeHealthy => TimeOnly.FromTimeSpan(TimeSpan.FromSeconds(TimeInSecondsHealthyHand));
 	public string TimePareticUI => TimeParetic.ToShortTimeString();
 	public string TimeHealthyUI => TimeHealthy.ToShortTimeString();
+
+
+
+	public override void GenerateScore()
+	{
+	}
 }

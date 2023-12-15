@@ -2,7 +2,7 @@
 	@Id uniqueidentifier
 AS
 begin
-	select Id, PatientLabel, SerializedData
+	select PatientLabel, LastMeasurementInLastTherapy, NumberOfMeasurementsInLastTherapy, SerializedData
 	from dbo.Patient
 	where Id = @Id;
 end

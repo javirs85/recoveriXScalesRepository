@@ -1,3 +1,5 @@
+using Blazored.Toast;
+using CompanionAppShared.Scales;
 using DataBaseConnector;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -38,10 +40,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-builder.Services.AddSingleton<WeatherForecastService>();
+
 
 builder.Services.AddSingleton<ISQLDataAccess, SQLDataAccess>();
 builder.Services.AddSingleton<DataBase>();
+builder.Services.AddSingleton<ScalesService>();
+builder.Services.AddBlazoredToast();
+
 
 var app = builder.Build();
 

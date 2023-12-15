@@ -53,7 +53,7 @@
 		if(!SelectedPatient.IsFullyLoadedFromDB)
 			SelectedPatient = await DB.GetPatient(SelectedPatient.Id) ?? new Patient { PatientLabel = "Not Found" };
 
-		SelectedTherapy = SelectedPatient.Therapies[0]; //Hardcoded for parkinson study
+		SelectedTherapy = SelectedPatient.GetParkinsonTherapy();
 	}
 	private void Update(object? sender, EventArgs e)
 	{
@@ -64,8 +64,8 @@
 	{
 		get
 		{
-			if (SelectedPatient.Therapies.Count > 0)
-				return SelectedPatient.Therapies[0].Sessions;
+			if (SelectedPatient.HasTherapies)
+				return SelectedPatient.GetParkinsonTherapy().Sessions;
 			else
 				return new List<Session>();
 		}
