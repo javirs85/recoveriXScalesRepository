@@ -1,0 +1,126 @@
+﻿@inject ScalesService Scales
+@inject DataBase DB
+
+<div class="d-flex h-100">
+	<div class="DarkBackground LeftColumMenu">
+		<div class="Header">
+			<h1 class="mb-0">@Patient.PatientLabel</h1>
+			<h2 class="ms-0">@Therapy.Name</h2>
+		</div>
+		<div class="flex-grow-1 d-flex flex-column justify-content-center">
+			<div style="margin-bottom:50%;">
+				<LeftMenuItem Title="@($"{Session.Date.ToShortDateString()} / {Scale.ShortName}")"
+							  Color="LeftMenuItem.AvailableColors.green"
+							  IsSingleItem="true"
+							  IsSelected="true" />
+			</div>
+		</div>
+		<div class="Header gap-2">
+			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
+						 Title="Cancel and delete data" />
+			@if(Scale.IsMeasured)
+			{
+				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Save" Clicked="Store"
+				Title="Store intermediate results" />
+			}
+			else
+			{
+				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Icon="RXIcon.Icons.Tick" Clicked="Scale.GenerateScore"
+							 Title="Generate score" />
+			}
+			
+		</div>
+	</div>
+	<div class="MainContainer d-flex flex-grow-1 h-100">
+		<div class="FormPanel h-100">
+			<div class="FormPanelDiv d-flex flex-column gap-3">
+				<div class=" d-flex align-items-center">
+					<div class="Score">@(Scale.ScoreNormalized)%</div>
+					<div class="ScoreComment">score calculated automatically</div>
+				</div>
+				@foreach (var item in ScaleItems)
+				{
+					@if(item is StringItem)
+					{
+						<StringItemViewer Value="@(item as StringItem)"/>
+					}
+					else if(item is IntItem)
+					{
+						<IntItemViewer Value="@(item as IntItem)"/>
+					}
+					else if(item is FloatItem)
+					{
+						<FloatItemViewer Value="@(item as FloatItem)"/>
+					}
+					else if (item is OptionsItem)
+					{
+						<OptionsItemViewer Value="@(item as OptionsItem)" />
+					}
+					else if (item is TimeSpanItem)
+					{
+						<TimeSpanItemViewer Value="@(item as TimeSpanItem)" />
+					}
+					else
+					{
+						<div>@item.Label</div>
+					}				
+				}
+			</div>
+		</div>
+		<div class="FormPanel h-100">
+			
+		</div>
+		<div class="FormPanel h-100">
+			
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter] public Patient Patient { get; set; } = new Patient();
+	[Parameter] public Therapy Therapy { get; set; } = new ParkinsonStudy();
+	[Parameter] public Session Session { get; set; } = new Session();
+	[Parameter] public IScale Scale { get; set; }
+	[Parameter] public EventCallback ExitAutoScale { get; set; }
+
+	List<ScaleItem> ScaleItems = new();
+
+	protected override void OnParametersSet()
+	{
+		if(ScaleItems.Count == 0)
+		{
+			ScaleItems.Clear();
+			foreach (var property in Scale.GetType().GetProperties())
+			{
+				if (typeof(ScaleItem).IsAssignableFrom(property.GetValue(Scale).GetType()))
+				{
+					ScaleItem customItem = (ScaleItem)property.GetValue(Scale);
+					if (customItem is not null)
+						ScaleItems.Add(customItem);
+				}
+			}
+		}
+
+		Scale.UpdateNeeded -= Update;
+		Scale.UpdateNeeded += Update;
+	}
+
+	private void Update(object? sender, EventArgs e) => InvokeAsync(() => StateHasChanged());
+
+	private async Task Cancel()
+	{
+		Scale.Reset();
+		await ExitAutoScale.InvokeAsync();
+	}
+
+	private async Task Store()
+	{
+		Session.Scales.Add(Scale);
+		await DB.InsertMeasurement(Session);
+		await ExitAutoScale.InvokeAsync();
+	}
+}

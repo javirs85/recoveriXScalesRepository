@@ -13,20 +13,48 @@ public class NineHolePegTest : ScaleBase
 		Name = "Nine hole peg test";
 		ShortName = "9HPT";
 		AreaOfStudy = "Dexterity";
+
+		ScoreNormalized = 0;
 	}
 
-    public int TimeInSecondsPareticHand { get; set; }
-	public int TimeInSecondsHealthyHand { get; set; }
+	public TimeSpanItem TimePareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:"};
+	public TimeSpanItem TimeHealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:"};
 
-
-	public TimeOnly TimeParetic => TimeOnly.FromTimeSpan(TimeSpan.FromSeconds(TimeInSecondsPareticHand));
-	public TimeOnly TimeHealthy => TimeOnly.FromTimeSpan(TimeSpan.FromSeconds(TimeInSecondsHealthyHand));
-	public string TimePareticUI => TimeParetic.ToShortTimeString();
-	public string TimeHealthyUI => TimeHealthy.ToShortTimeString();
-
-
-
-	public override void GenerateScore()
+	public StringItem StringItem { get; set; } = new StringItem { Label="Test string", StringValue = "Default value" };
+	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
+	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };
+	public OptionsItem OptionsItem { get; set; } = new OptionsItem
 	{
+		Options = new List<string> { "option 1", "option 2", "option 3" },
+		Label = "Select your option:"
+	};
+
+
+	protected override bool GenerateScoreInternal()
+	{
+		Details.Clear();
+		Details.Add($"Paretic hand: {TimePareticHand.StringValue}");
+		Details.Add($"healthy hand: {TimeHealthyHand.StringValue}");
+		var floatscore = (TimeHealthyHand.Value.TotalSeconds / TimePareticHand.Value.TotalSeconds) * 100;
+		ScoreNormalized = (int)Math.Round(floatscore);
+
+		if(ScoreNormalized < 0) ScoreNormalized = 0;
+		if(ScoreNormalized > 100) ScoreNormalized = 100;	
+ 
+		return true;
+	}
+
+	protected override void ResetInternal()
+	{
+		TimePareticHand = new TimeSpanItem { Label = "Paretic hand:" };
+		TimeHealthyHand = new TimeSpanItem { Label = "Healthy hand:" };
+		StringItem = new StringItem { Label = "Test string", StringValue = "Default value" };
+		IntItem = new IntItem { Label = "Test int", StringValue = "12" };
+		FloatItem = new FloatItem { Label = "Test float", StringValue = "3,14" };
+		OptionsItem = new OptionsItem
+		{
+			Options = new List<string> { "option 1", "option 2", "option 3" },
+			Label = "Select your option:"
+		};
 	}
 }

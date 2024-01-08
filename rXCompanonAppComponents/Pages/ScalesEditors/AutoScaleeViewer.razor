@@ -74,7 +74,7 @@
 	[Parameter] public Patient Patient { get; set; } = new Patient();
 	[Parameter] public Therapy Therapy { get; set; } = new ParkinsonStudy();
 	[Parameter] public Session Session { get; set; } = new Session();
-	[Parameter] public IScale Scale { get; set; } = new ScaleBase();
+	[Parameter] public IScale Scale { get; set; }
 
 	private void Cancel() { }
 }

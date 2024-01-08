@@ -1,0 +1,75 @@
+﻿@using System.Timers
+
+<EditForm Model="this">
+	<div class="d-flex flex-column gap-0">
+		<label>@Value.Label</label>
+		<div class="d-flex gap-2">
+			<InputText class="form-control" @bind-Value=Value.StringValue />
+			@if(!timerRunning)
+			{
+				<button class="btn btn-primary" style="width: 300px;" @onclick=StartTimer>Start</button>
+			}
+			else
+			{
+				<button class="btn btn-secondary" style="width: 300px;" disabled>Recording...</button>
+			}
+
+			@if (!timerRunning)
+			{
+				<button disabled class="btn btn-secondary" @onclick=StartTimer>Pause</button>
+			}
+			else
+			{
+				<button class="btn btn-primary" @onclick=StopTimer>Pause</button>
+			}
+			
+			<button class="btn btn-danger" @onclick=ResetTimer>Reset</button>
+		</div>
+	</div>
+	
+</EditForm>
+
+@code {
+	[Parameter] public TimeSpanItem Value { get; set; } = new();
+
+	private bool timerRunning = false;
+	private System.Timers.Timer  timer;
+
+	protected override void OnInitialized()
+	{
+		timer = new Timer(1000);
+		timer.Elapsed += TimerElapsed;
+	}
+
+	private void StartTimer()
+	{
+		timer.Start();
+		timerRunning = true;
+	}
+
+	private void StopTimer()
+	{
+		timer.Stop();
+		timerRunning = false;
+	}
+
+	private void ResetTimer()
+	{
+		timerRunning = false;
+		timer.Stop();
+		Value.Value = TimeSpan.FromSeconds(0);
+
+		InvokeAsync(StateHasChanged);
+	}
+
+	private void TimerElapsed(object sender, ElapsedEventArgs e)
+	{
+		Value.Value = Value.Value.Add(TimeSpan.FromSeconds(1));
+		InvokeAsync(StateHasChanged);
+	}
+
+	private string formatTime()
+	{
+		return $"{Value.Value.Hours:D2}:{Value.Value.Minutes:D2}:{Value.Value.Seconds:D2}";
+	}
+}

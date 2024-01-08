@@ -41,7 +41,10 @@ else if(CurrentMode == Modes.ScaleEditor)
 	{
 		@if(SelectedScale is NineHolePegTest)
 		{
-			<AutoScale Patient="SelectedPatient" Therapy="SelectedTherapy" Scale="SelectedScale"/>
+			<AutoScaleeEditor Patient="SelectedPatient" 
+				Therapy="SelectedTherapy" 
+				Scale="SelectedScale" 
+				ExitAutoScale="@(()=>{CurrentMode = Modes.SessionEditor;})"/>
 		}
 		else
 		{

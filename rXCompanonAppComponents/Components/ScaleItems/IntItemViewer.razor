@@ -1,0 +1,29 @@
+﻿@inject IToastService Toaster
+
+<EditForm Model="this">
+	<ValidationSummary/>
+	<div class="d-flex flex-column gap-0">
+		<label>@Value.Label</label>
+		<div class="d-flex gap-1">
+			<button class="btn btn-primary" style="width: 38px;" @onclick=Value.Subtract>-</button>
+			<InputText class="form-control" @bind-Value=Value.StringValue />
+			<button class="btn btn-primary" style="width: 38px;" @onclick=Value.Add>+</button>
+		</div>
+	</div>
+</EditForm>
+
+@code {
+	[Parameter] public IntItem Value { get; set; } = new();
+
+	protected override void OnParametersSet()
+	{
+		Value.FormatError -= ReportError;
+		Value.FormatError += ReportError;
+	}
+
+	void ReportError(object? sender, string error)
+	{
+		Toaster.ShowError(error);
+	}
+
+}

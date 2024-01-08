@@ -7,26 +7,30 @@ namespace CompanionAppShared.Scales;
 
 public class UPDRSIII : ScaleBase
 {
-    public UPDRSIII()
-    {
+	public UPDRSIII()
+	{
 		Id = ScalesIDs.UPDRSIII;
 		Name = "Unified Parkinson's Disease Rating Scale - Section III";
 		ShortName = "UPDRSIII";
 		AreaOfStudy = "Motor examination";
-    }
+	}
 
-    public int TimeInSecondsPareticHand { get; set; }
-	public int TimeInSecondsHealthyHand { get; set; }
+	public TimeSpanItem TimePareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:" };
+	public TimeSpanItem TimeHealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:" };
 
-
-	public TimeOnly TimeParetic => TimeOnly.FromTimeSpan(TimeSpan.FromSeconds(TimeInSecondsPareticHand));
-	public TimeOnly TimeHealthy => TimeOnly.FromTimeSpan(TimeSpan.FromSeconds(TimeInSecondsHealthyHand));
-	public string TimePareticUI => TimeParetic.ToShortTimeString();
-	public string TimeHealthyUI => TimeHealthy.ToShortTimeString();
-
-
-
-	public override void GenerateScore()
+	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
+	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
+	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };
+	public OptionsItem OptionsItem { get; set; } = new OptionsItem
+	{
+		Options = new List<string> { "option 1", "option 2", "option 3" },
+		Label = "Select your option:"
+	};
+	protected override bool GenerateScoreInternal()
+	{
+		return true;
+	}
+	protected override void ResetInternal()
 	{
 	}
 }

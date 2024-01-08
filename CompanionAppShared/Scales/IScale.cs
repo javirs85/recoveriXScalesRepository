@@ -11,8 +11,13 @@
         int ScoreDelta { get; }
         bool IsMeasured { get; set; } 
         int ReferenceScoreNormalized { get; set; }
+        event EventHandler UpdateNeeded;
 
-        string Serialize();
+        string SerializedData { get; set; }
+
+
+		string Serialize();
         void GenerateScore();
-    }
+		void Reset();
+	}
 }

@@ -1,0 +1,11 @@
+﻿<EditForm Model="this">
+	<div class="d-flex flex-column gap-0">
+		<label>@Value.Label</label>
+		<InputText class="form-control" @bind-Value=Value.Value />
+	</div>
+	
+</EditForm>
+
+@code {
+	[Parameter] public StringItem Value { get; set; } = new();
+}

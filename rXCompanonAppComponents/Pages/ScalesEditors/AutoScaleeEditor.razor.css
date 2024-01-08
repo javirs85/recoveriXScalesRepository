@@ -1,0 +1,32 @@
+﻿.SessionHeader {
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 12px #00000040;
+    height: 63px;
+    border-bottom: 1px solid #C8DFEC;
+    display: flex;
+}
+
+.MainContainer{
+}
+
+.FormPanel {
+    flex: 1;
+    padding: 20px;
+    padding-right: 0;
+}
+
+.FormPanelDiv {
+    border-right: 1px solid #79C7FF;
+    padding: 20px;
+}
+
+.Score{
+    font-size:59px;
+}
+.ScoreComment {
+    font-size: 16px;
+    opacity: 0.3;
+    width: 60px;
+    line-height: 18px;
+}

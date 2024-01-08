@@ -18,8 +18,7 @@ public class Session
 	public string Tag { get; set; } = "Unknown";
 	public string AccuracyTag { get; set; } = "Unknown";
 	public DateTime Date { get; set; }	= DateTime.Now;
-	[JsonIgnore]
-	public List<IScale> Scales { get; set; } = new();
+	public List<ScaleBase> Scales { get; set; } = new();
 	public string SerializedData { get; set; } = string.Empty;
 	public SessionKinds SessionKind { get; set; } = SessionKinds.Intermediate;
 
@@ -32,8 +31,11 @@ public class Session
 		}
 	}
 
+	public void Serialize() => SerializedData = JsonSerializer.Serialize(this);
+
 	public Session Clone()
 	{
-		return JsonSerializer.Deserialize<Session>(JsonSerializer.Serialize(this));
+		var str = JsonSerializer.Serialize(this);
+		return JsonSerializer.Deserialize<Session>(str);
 	}
 }

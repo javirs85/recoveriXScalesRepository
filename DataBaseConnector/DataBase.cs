@@ -137,17 +137,25 @@ public class DataBase
 
 	public async Task InsertMeasurement(Session measurement)
 	{
-		await db.SaveData("spMeasurement_Insert",
-		new
+		try
 		{
-			measurement.Id ,
-			measurement.PatientID,
-			measurement.Date,
-			measurement.TherapyID,
-			measurement.Tag,
-			measurement.AccuracyTag,
-			measurement.SerializedData
-		});
+			measurement.Serialize();
+			await db.SaveData("spMeasurement_Insert",
+			new
+			{
+				measurement.Id ,
+				measurement.PatientID,
+				measurement.Date,
+				measurement.TherapyID,
+				measurement.Tag,
+				measurement.AccuracyTag,
+				measurement.SerializedData
+			});
+		}
+		catch (Exception e)
+		{
+			ErrorOccurred?.Invoke(this, e);
+		}
 	}
 	#endregion
 
