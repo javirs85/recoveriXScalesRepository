@@ -12,6 +12,7 @@ public class DataBase
 	public event EventHandler UIUpdateRequestedFromDB;
 	public List<Patient> Patients = new List<Patient>();
 	public bool IsLoading = false;
+<<<<<<< HEAD
 	public event EventHandler<Exception> ErrorOccurred;
 
 	private readonly ISQLDataAccess db;
@@ -19,8 +20,24 @@ public class DataBase
 	#region init
 
 	public DataBase(ISQLDataAccess db)
+=======
+	public bool HasError = false;
+	public string errorMessage = string.Empty;
+
+	private readonly ISQLDataAccess db;
+
+	public DataBase(ISQLDataAccess _db)
+>>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec
 	{
-		this.db = db;
+		db = _db;
+		db.OnNewError += HandleError;
+	}
+
+	private void HandleError(object? sender, Exception e)
+	{
+		IsLoading = false;
+		HasError = true;
+		errorMessage = e.Message;
 	}
 
 	private bool AlreadyInitialized = false;

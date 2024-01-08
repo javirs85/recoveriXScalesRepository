@@ -10,6 +10,9 @@ public class SQLDataAccess : ISQLDataAccess
 {
 	private readonly IConfiguration config;
 
+	public event EventHandler<Exception> OnNewError;
+
+
 	public SQLDataAccess(IConfiguration config)
 	{
 		this.config = config;
@@ -20,11 +23,25 @@ public class SQLDataAccess : ISQLDataAccess
 		U parameters,
 		string connectionID = "Default")
 	{
+<<<<<<< HEAD
 		using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectionID));
 		return await connection.QueryAsync<T>(
 			storedProcedure,
 			parameters,
 			commandType: CommandType.StoredProcedure);
+=======
+		try
+		{
+			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectonID));
+			return await connection.QueryAsync<T>(
+				storedProcedure,
+				parameters,
+				commandType: CommandType.StoredProcedure);
+		}catch(Exception ex) {
+			OnNewError?.Invoke(this, ex);
+			return Enumerable.Empty<T>();
+		}
+>>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec
 	}
 
 	public async Task SaveData<T>(
@@ -32,11 +49,27 @@ public class SQLDataAccess : ISQLDataAccess
 		T parameters,
 		string connectionID = "Default")
 	{
+<<<<<<< HEAD
 		using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectionID));
 		await connection.ExecuteAsync(
 			storedProcedure,
 			parameters,
 			commandType: CommandType.StoredProcedure);
+=======
+		try
+		{
+			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectonID));
+			await connection.ExecuteAsync(
+				storedProcedure,
+				parameters,
+				commandType: CommandType.StoredProcedure);
+		}
+		catch (Exception ex)
+		{
+			OnNewError?.Invoke(this, ex);
+			throw;
+		}
+>>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec
 	}
 
 	public async Task<int> Count(string query, string connectionID = "Default")

@@ -8,6 +8,7 @@ namespace CompanionAppShared.Scales;
 
 public class ScalesService
 {
+<<<<<<< HEAD
 	//When registering a new Scale here, don't forget to add the JsonDerive at the ScaleBase
 	public IScale GenerateScale(ScalesIDs scalesIDs)
 	{
@@ -32,4 +33,11 @@ public class ScalesService
 			_ => throw new Exception($"The scale '{scalesIDs}' has not been registered at the ScalesService, don't forget to add the JsonDerived at ScaleBase")
 		} ;
 	}
+=======
+	public List<IScale> Scales { get; set; } = new List<IScale>
+	{
+		new NineHolePegTest(),
+
+	};
+>>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec
 }
