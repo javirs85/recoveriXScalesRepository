@@ -4,23 +4,7 @@ using static System.Formats.Asn1.AsnWriter;
 
 namespace CompanionAppShared.Scales;
 
-[JsonDerivedType(typeof(NineHolePegTest), typeDiscriminator: "NineHolePegTest")]
-[JsonDerivedType(typeof(ATA), typeDiscriminator: "ATA")]
-[JsonDerivedType(typeof(ERP), typeDiscriminator: "ERP")]
-[JsonDerivedType(typeof(FOGQ), typeDiscriminator: "FOGQ")]
-[JsonDerivedType(typeof(HYClass), typeDiscriminator: "HYClass")]
-[JsonDerivedType(typeof(MFIS), typeDiscriminator: "MFIS")]
-[JsonDerivedType(typeof(miniBESTest), typeDiscriminator: "miniBESTest")]
-[JsonDerivedType(typeof(PDQ39), typeDiscriminator: "PDQ39")]
-[JsonDerivedType(typeof(SEADL), typeDiscriminator: "SEADL")]
-[JsonDerivedType(typeof(TENMWT), typeDiscriminator: "TENMWT")]
-[JsonDerivedType(typeof(TUG), typeDiscriminator: "TUG")]
-[JsonDerivedType(typeof(UPDRSI), typeDiscriminator: "UPDRSI")]
-[JsonDerivedType(typeof(UPDRSII), typeDiscriminator: "UPDRSII")]
-[JsonDerivedType(typeof(UPDRSIII), typeDiscriminator: "UPDRSIII")]
-[JsonDerivedType(typeof(UPDRSIV), typeDiscriminator: "UPDRSIV")]
 
-//When adding a new scale here, don't forget to add the entry in the ScaleService
 
 public abstract class ScaleBase : IScale
 {
@@ -73,6 +57,7 @@ public abstract class ScaleBase : IScale
 	public List<string> Details { get; set; } = new List<string>();
 
     public List<ScaleItem> Items { get; set; } = new();
+    public string SerializedData { get; set; } = string.Empty;
 
 	
 

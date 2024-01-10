@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-<<<<<<< HEAD
 using System.Text.RegularExpressions;
-=======
->>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec
 using System.Threading.Tasks;
 
 namespace CompanionAppShared.Scales;
 
-<<<<<<< HEAD
 public class ScaleItem
 {
     public ScaleBase ParentScale;
@@ -191,31 +187,3 @@ public class OptionsItem : ScaleItem
         }
     }
 }
-=======
-public abstract class ScaleItem
-{
-	public enum ItemTypes { NotSet, Time, String, Int};
-	public string Title { get; set; }= string.Empty;
-	public ItemTypes ItemType { get; set; } = ItemTypes.NotSet;
-	public abstract string ToString();
-}
-
-public class ScaleItemInt : ScaleItem
-{
-	public int Value { get; set; }
-	public override string ToString()
-	{
-		return Value.ToString();
-	}
-}
-
-public class ScaleItemTime : ScaleItem
-{
-	public int Seconds { get; set; }
-	public override string ToString()
-	{
-		var ts = TimeSpan.FromSeconds(Seconds);
-		return ts.ToString();
-	}
-}
->>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec

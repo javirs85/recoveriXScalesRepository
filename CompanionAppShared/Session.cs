@@ -18,7 +18,7 @@ public class Session
 	public string Tag { get; set; } = "Unknown";
 	public string AccuracyTag { get; set; } = "Unknown";
 	public DateTime Date { get; set; }	= DateTime.Now;
-	public List<ScaleBase> Scales { get; set; } = new();
+	public List<IScale> Scales { get; set; } = new();
 	public string SerializedData { get; set; } = string.Empty;
 	public SessionKinds SessionKind { get; set; } = SessionKinds.Intermediate;
 

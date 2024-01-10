@@ -1,6 +1,26 @@
-﻿namespace CompanionAppShared.Scales
+﻿using System.Text.Json.Serialization;
+
+namespace CompanionAppShared.Scales
 {
-    public interface IScale
+	[JsonDerivedType(typeof(NineHolePegTest), typeDiscriminator: "NineHolePegTest")]
+	[JsonDerivedType(typeof(ATA), typeDiscriminator: "ATA")]
+	[JsonDerivedType(typeof(ERP), typeDiscriminator: "ERP")]
+	[JsonDerivedType(typeof(FOGQ), typeDiscriminator: "FOGQ")]
+	[JsonDerivedType(typeof(HYClass), typeDiscriminator: "HYClass")]
+	[JsonDerivedType(typeof(MFIS), typeDiscriminator: "MFIS")]
+	[JsonDerivedType(typeof(miniBESTest), typeDiscriminator: "miniBESTest")]
+	[JsonDerivedType(typeof(PDQ39), typeDiscriminator: "PDQ39")]
+	[JsonDerivedType(typeof(SEADL), typeDiscriminator: "SEADL")]
+	[JsonDerivedType(typeof(TENMWT), typeDiscriminator: "TENMWT")]
+	[JsonDerivedType(typeof(TUG), typeDiscriminator: "TUG")]
+	[JsonDerivedType(typeof(UPDRSI), typeDiscriminator: "UPDRSI")]
+	[JsonDerivedType(typeof(UPDRSII), typeDiscriminator: "UPDRSII")]
+	[JsonDerivedType(typeof(UPDRSIII), typeDiscriminator: "UPDRSIII")]
+	[JsonDerivedType(typeof(UPDRSIV), typeDiscriminator: "UPDRSIV")]
+
+	//When adding a new scale here, don't forget to add the entry in the ScaleService
+
+	public interface IScale
     {
         string Name { get; set; }
         ScalesIDs Id { get; set; }

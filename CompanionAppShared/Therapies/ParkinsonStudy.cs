@@ -35,7 +35,6 @@ public class ParkinsonStudy : Therapy
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Able to sign the informed consent" });
 		InclusionCriteria.Add(new InclusionExclusionCriteria { Title = "Able to follow the study protocol" });
 
-<<<<<<< HEAD
         Scales = new List<ScalesIDs> {
             ScalesIDs.UPDRSI,
             ScalesIDs.UPDRSII,
@@ -53,8 +52,5 @@ public class ParkinsonStudy : Therapy
             ScalesIDs.ERP,
             ScalesIDs.ATA,
 		};
-=======
-        Scales = new List<ScalesIDs> { ScalesIDs.NineHPT, ScalesIDs.BnBT, ScalesIDs.FMAUE };
->>>>>>> b6ba10a4a19e560fbdd16c842b54e789c89c5bec
     }
 }
