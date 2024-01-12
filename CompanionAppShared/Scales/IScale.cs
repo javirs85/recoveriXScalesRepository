@@ -17,6 +17,7 @@ namespace CompanionAppShared.Scales
 	[JsonDerivedType(typeof(UPDRSII), typeDiscriminator: "UPDRSII")]
 	[JsonDerivedType(typeof(UPDRSIII), typeDiscriminator: "UPDRSIII")]
 	[JsonDerivedType(typeof(UPDRSIV), typeDiscriminator: "UPDRSIV")]
+	[JsonDerivedType(typeof(BlocksAndBlocksTest), typeDiscriminator: "BnBT")]
 
 	//When adding a new scale here, don't forget to add the entry in the ScaleService
 
@@ -33,11 +34,8 @@ namespace CompanionAppShared.Scales
         int ReferenceScoreNormalized { get; set; }
         event EventHandler UpdateNeeded;
 
-        string SerializedData { get; set; }
-
-
-		string Serialize();
         void GenerateScore();
 		void Reset();
+		void FixEvents();
 	}
 }

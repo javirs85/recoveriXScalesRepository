@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Net.NetworkInformation;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Formats.Asn1.AsnWriter;
 
@@ -10,6 +11,11 @@ public abstract class ScaleBase : IScale
 {
     public ScaleBase() 
     {
+		FixEvents();
+	}
+
+	public void FixEvents()
+	{
 		Items.Clear();
 		foreach (var property in this.GetType().GetProperties())
 		{
@@ -17,19 +23,19 @@ public abstract class ScaleBase : IScale
 			{
 				ScaleItem customItem = (ScaleItem)property.GetValue(this);
 				if (customItem is not null)
-                {
+				{
 					Items.Add(customItem);
-                    customItem.ParentScale = this;
-                    customItem.UpdateNeeded -= Update;
-                    customItem.UpdateNeeded += Update;
-                    customItem.FormatError -= Invalidate;
-                    customItem.FormatError += Invalidate;
+					customItem.ParentScale = this;
+					customItem.UpdateNeeded -= Update;
+					customItem.UpdateNeeded += Update;
+					customItem.FormatError -= Invalidate;
+					customItem.FormatError += Invalidate;
 				}
 			}
 		}
 	}
 
-    private void Update(object? sender, EventArgs e)
+	private void Update(object? sender, EventArgs e)
     {
         GenerateScore();
         UpdateNeeded?.Invoke(this, EventArgs.Empty);
@@ -44,7 +50,7 @@ public abstract class ScaleBase : IScale
     public string Name { get; set; } = string.Empty;
     public string ShortName { get; set; } = string.Empty;
     public string AreaOfStudy { get; set; } = string.Empty;
-    public int ScoreNormalized { get; internal set; } = -1;
+    public int ScoreNormalized { get; set; } = -1;
     public int ScoreDelta
     {
         get {
@@ -56,20 +62,10 @@ public abstract class ScaleBase : IScale
 	public int ScoreRaw { get; set; }
 	public List<string> Details { get; set; } = new List<string>();
 
+    [JsonIgnore]
     public List<ScaleItem> Items { get; set; } = new();
-    public string SerializedData { get; set; } = string.Empty;
 
 	
-
-	public string Serialize()
-    {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-        };
-        return JsonSerializer.Serialize(this, options);
-    }
-
 	public void GenerateScore()
 	{
         IsMeasured = GenerateScoreInternal();
@@ -82,4 +78,5 @@ public abstract class ScaleBase : IScale
         ResetInternal();
     }
     protected abstract void ResetInternal();
+
 }

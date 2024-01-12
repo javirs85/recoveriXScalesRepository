@@ -21,7 +21,8 @@ public enum ScalesIDs { NineHPT, NotSet,
 	FOGQ,
 	ERP,
 	ATA,
-	SEADL
+	SEADL,
+	BnBT
 }
 
 public enum  Gyms { SCH, BCN }

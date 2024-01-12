@@ -15,8 +15,6 @@ public class UPDRSII : ScaleBase
 		AreaOfStudy = "Activities in Daily Living";
     }
 
-	public TimeSpanItem TimePareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:" };
-	public TimeSpanItem TimeHealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:" };
 
 	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
 	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };

@@ -1,11 +1,12 @@
 ﻿@inject ScalesService Scales
+@inject DataBase DB
 @inject IToastService Toaster
 
 <div class="d-flex h-100">
 	<div class="DarkBackground LeftColumMenu">
 		<div class="Header">
-			<h1 class="mb-0">@Patient.PatientLabel</h1>
-			<h2 class="ms-0">@Therapy.Name</h2>
+			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
+			<h2 class="ms-0">@Current.SelectedTherapy.Name</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
 			<div style="margin-bottom:50%;">
@@ -16,38 +17,39 @@
 			</div>
 		</div>
 		<div class ="Header gap-2">
-			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
-						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
-						 Title="Cancel and delete data" />
 			<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
-						 Icon="RXIcon.Icons.Tick" Clicked="Cancel"
-						 Title="Store intermediate results" />
+						 Icon="RXIcon.Icons.Save" Clicked="Cancel"
+						 Title="Store current state" />
+
+			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.solid"
+						 Icon="RXIcon.Icons.Bin" Clicked="Cancel" NeedsConfirmation=true
+						 Title="Delete session" />			
 		</div>		
 	</div>
 	<div class="d-flex flex-column flex-grow-1 h-100">
 		<div class="SessionHeader">
 			<div class="SessionModeSelector d-flex justify-content-center align-items-center w-100">
 				<div class="d-flex gap-3 flex-grow-1 justify-content-center">
-					<div class="SessionModeItem @(Session.SessionKind == SessionKinds.Pre?"Active":"")"
-						@onclick=@(()=>{Session.SessionKind = SessionKinds.Pre;})>
+					<div class="SessionModeItem @(Current.SelectedSession.SessionKind == SessionKinds.Pre?"Active":"")"
+					@onclick=@(()=>{Current.SelectedSession.SessionKind = SessionKinds.Pre;})>
 						Pre
 					</div>
-					<div class="SessionModeItem @(Session.SessionKind == SessionKinds.Intermediate?"Active":"")"
-						@onclick=@(()=>{Session.SessionKind = SessionKinds.Intermediate;})>
+					<div class="SessionModeItem @(Current.SelectedSession.SessionKind == SessionKinds.Intermediate?"Active":"")"
+					@onclick=@(()=>{Current.SelectedSession.SessionKind = SessionKinds.Intermediate;})>
 						Intermediate
 					</div>
-					<div class="SessionModeItem @(Session.SessionKind == SessionKinds.Post?"Active":"")"
-					@onclick=@(()=>{Session.SessionKind = SessionKinds.Post;})>
+					<div class="SessionModeItem @(Current.SelectedSession.SessionKind == SessionKinds.Post?"Active":"")"
+					@onclick=@(()=>{Current.SelectedSession.SessionKind = SessionKinds.Post;})>
 						Post
 					</div>
 				</div>
-				<EditForm Model="Session" class="me-3">
-					<InputDate class="form-control" @bind-Value=Session.Date />
+				<EditForm Model="Current.SelectedSession" class="me-3">
+					<InputDate class="form-control" @bind-Value=Current.SelectedSession.Date />
 				</EditForm>
 			</div>
 		</div>
 		<div class="MainArea p-4">
-			@foreach(var scale in Session.Scales)
+			@foreach (var scale in Current.SelectedSession.Scales)
 			{
 				@if (!scale.IsMeasured)
 				{
@@ -64,23 +66,31 @@
 				else
 				{
 					<div class="ScaleBox Finished">
-						<div>
-							<div class="scaleBoxTitle">@scale.Name (@scale.ShortName)</div>
-							<div class="scaleBoxDetails">
-								@foreach(var detail in scale.Details)
-								{
-									<div>@detail</div>
-								}
+						<div class="d-flex flex-grow-1">
+							<div>
+								<div class="scaleBoxTitle">@scale.Name (@scale.ShortName)</div>
+								<div class="scaleBoxDetails">
+									@foreach(var detail in scale.Details)
+									{
+										<div>@detail</div>
+									}
+								</div>
+							</div>
+							<div class="scaleBoxScoresBox">
+								<div class="ScaleBoxScore">@GetScore(scale)</div>
+								<div class="ScaleBoxDelta @IsPositive(scale.ScoreDelta)">@ToNice(scale.ScoreDelta)</div>
 							</div>
 						</div>
-						<div class="scaleBoxScoresBox">
-							<div class="ScaleBoxScore">@(scale.ScoreNormalized+"%")</div>
-							<div class="ScaleBoxDelta">@(scale.ScoreNormalized + "%")</div>
-						</div>
 						<div class="scaleBoxButtonsContainer">
-							<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Edit" Title="Edit results" />
-							<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Revert" Title="Repeat assessment" />
-							<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Bin" Title="Detelet assessment" />
+							<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined"
+										 Icon="RXIcon.Icons.Edit" Title="Edit results" Width="200" 
+										 Clicked="@(async()=>{ await EditResults(scale);})" />
+							<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined" 
+									     Icon="RXIcon.Icons.Revert" Title="Repeat assessment" Width="200" NeedsConfirmation=true
+										 Clicked="@(async()=>{ await RepeatMeasurement(scale);})" />
+							<RoundButton ButtonColor="Colors.DarkRed" ButtonStyle="RoundButton.ButtonStyles.outlined"
+										 Icon="RXIcon.Icons.Bin" Title="Delete assessment" Width="200" NeedsConfirmation=true
+										 Clicked="@(async()=>{ await DeleteMeasurement(scale);})" />
 						</div>
 					</div>
 				}
@@ -90,30 +100,28 @@
 </div>
 
 @code {
-	[Parameter] public Patient Patient { get; set; } = new Patient();
-	[Parameter] public string TherapyID { get; set; } = "Therapy ID not set";
-	[Parameter] public Session? Session { get; set; } = null;
+	[Parameter] public SelectedItems Current { get; set; }
 	[Parameter] public EventCallback Exit { get; set; }
 	[Parameter] public EventCallback<IScale> OpenScaleEditor { get; set; }
 
-	Therapy Therapy;
 	Session Backup;
 
 	bool AreWeCreatingANewSession = false;
 
 	protected override void OnParametersSet()
 	{
-		if (Session is null)
+		if (Current.SelectedSession is null)
 		{
 			AreWeCreatingANewSession = true;
-			Session = new Session();
-			Session.SessionKind = SessionKinds.Pre;
+			Current.SelectedSession = new Session();
+			Current.SelectedSession.CreateSessionLabel(Current.SelectedPatient.PatientLabel, Current.SelectedTherapy);
+			Current.SelectedSession.SessionKind = SessionKinds.Pre;
 		}
 
-		Therapy = Patient.GetTherapy(TherapyID);
-		if (Session.Scales.Count == 0) Session.Init(Therapy, Scales);
 
-		Backup = Session.Clone();
+		if (Current.SelectedSession.Scales.Count == 0) Current.SelectedSession.Init(Current.SelectedTherapy, Scales);
+
+		Backup = Current.SelectedSession.Clone();
 	}
 
 
@@ -121,18 +129,31 @@
 		get
 		{
 			string title = "";
-			if (Session.SessionKind == SessionKinds.Pre) title = "[PRE]";
-			else if (Session.SessionKind == SessionKinds.Intermediate) title = "[INT]";
-			else if (Session.SessionKind == SessionKinds.Post) title = "[POST]";
-			title += " "+Session?.Date.ToShortDateString();
+			if (Current.SelectedSession.SessionKind == SessionKinds.Pre) title = "[PRE]";
+			else if (Current.SelectedSession.SessionKind == SessionKinds.Intermediate) title = "[INT]";
+			else if (Current.SelectedSession.SessionKind == SessionKinds.Post) title = "[POST]";
+			title += " " + Current.SelectedSession?.Date.ToShortDateString();
 			return title;
 		}
 	}
 
+	public string IsPositive(float f)
+	{
+		if (f >= 0) return "PositiveScoreDelta";
+		else return "NegativeScoreDelta";
+	}
+
+	public string ToNice(float f)
+	{
+		if (f >= 0) return "+"+f.ToString()+"%";
+		else return "-" + f.ToString()+"%";
+	}
+
+	public string GetScore(IScale scale) => $"{scale.ScoreNormalized}%";
 
 	async Task Cancel()
 	{
-		Session = Backup.Clone();
+		Current.SelectedSession = Backup.Clone();
 		await Exit.InvokeAsync();
 	}
 
@@ -143,4 +164,23 @@
 	}
 
 	async Task EditScale(IScale scale) => await OpenScaleEditor.InvokeAsync(scale);
+
+	async Task EditResults(IScale scale)
+	{
+		Current.SelectedScale = scale;
+		await EditScale(scale);
+	}
+	async Task RepeatMeasurement(IScale scale)
+	{
+		Current.SelectedScale = scale;
+		Current.SelectedScale.Reset();
+		await EditScale(scale);
+	}
+
+	async Task DeleteMeasurement(IScale scale)
+	{
+		Current.SelectedScale = scale;
+		Current.SelectedScale.Reset();
+		await DB.InsertOrUpdateMeasurement(Current, Current.SelectedScale);
+	}
 }

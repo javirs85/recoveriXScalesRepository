@@ -1,34 +1,38 @@
-﻿@inject ScalesService Scales
+﻿@using System.Text.Json;
+@inject ScalesService Scales
 @inject DataBase DB
 
 <div class="d-flex h-100">
 	<div class="DarkBackground LeftColumMenu">
 		<div class="Header">
-			<h1 class="mb-0">@Patient.PatientLabel</h1>
-			<h2 class="ms-0">@Therapy.Name</h2>
+			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
+			<h2 class="ms-0">@Current.SelectedTherapy.Name</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
 			<div style="margin-bottom:50%;">
-				<LeftMenuItem Title="@($"{Session.Date.ToShortDateString()} / {Scale.ShortName}")"
+				<LeftMenuItem Title="@($"{Current.SelectedSession.Date.ToShortDateString()} / {Current.SelectedScale.ShortName}")"
 							  Color="LeftMenuItem.AvailableColors.green"
 							  IsSingleItem="true"
 							  IsSelected="true" />
 			</div>
 		</div>
 		<div class="Header gap-2">
+			
 			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
-						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
-						 Title="Cancel and delete data" />
-			@if(Scale.IsMeasured)
+							Icon="@(CurrentMode == Modes.NewScaleMode?RXIcon.Icons.Cancel:RXIcon.Icons.Revert)" Clicked="Cancel"
+							Title="@(CurrentMode == Modes.NewScaleMode?"Cancel and delete data":"Revert changes and exit")" />
+			
+			
+			@if (Current.SelectedScale.IsMeasured)
 			{
 				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.solid"
 							 Icon="RXIcon.Icons.Save" Clicked="Store"
-				Title="Store intermediate results" />
+							 Title="Store intermediate results" />
 			}
 			else
 			{
 				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
-							 Icon="RXIcon.Icons.Tick" Clicked="Scale.GenerateScore"
+							 Icon="RXIcon.Icons.Tick" Clicked="Current.SelectedScale.GenerateScore"
 							 Title="Generate score" />
 			}
 			
@@ -38,7 +42,7 @@
 		<div class="FormPanel h-100">
 			<div class="FormPanelDiv d-flex flex-column gap-3">
 				<div class=" d-flex align-items-center">
-					<div class="Score">@(Scale.ScoreNormalized)%</div>
+					<div class="Score">@(LifeCopy.ScoreNormalized)%</div>
 					<div class="ScoreComment">score calculated automatically</div>
 				</div>
 				@foreach (var item in ScaleItems)
@@ -81,46 +85,64 @@
 
 
 @code {
-	[Parameter] public Patient Patient { get; set; } = new Patient();
-	[Parameter] public Therapy Therapy { get; set; } = new ParkinsonStudy();
-	[Parameter] public Session Session { get; set; } = new Session();
-	[Parameter] public IScale Scale { get; set; }
+	[Parameter] public SelectedItems Current { get; set; }
 	[Parameter] public EventCallback ExitAutoScale { get; set; }
 
+	enum Modes {NewScaleMode, EditScaleMode};
+	Modes CurrentMode = Modes.NewScaleMode;
+
 	List<ScaleItem> ScaleItems = new();
+	IScale LifeCopy;
 
 	protected override void OnParametersSet()
 	{
+		var str = JsonSerializer.Serialize(Current.SelectedScale);
+		LifeCopy = JsonSerializer.Deserialize<IScale>(str);
+		LifeCopy.FixEvents();
+
+		if (Current.SelectedScale.IsMeasured) 
+		{
+			CurrentMode = Modes.EditScaleMode;
+		}
+
 		if(ScaleItems.Count == 0)
 		{
 			ScaleItems.Clear();
-			foreach (var property in Scale.GetType().GetProperties())
+			foreach (var property in LifeCopy.GetType().GetProperties())
 			{
-				if (typeof(ScaleItem).IsAssignableFrom(property.GetValue(Scale).GetType()))
+				if (typeof(ScaleItem).IsAssignableFrom(property.GetValue(LifeCopy).GetType()))
 				{
-					ScaleItem customItem = (ScaleItem)property.GetValue(Scale);
-					if (customItem is not null)
+					ScaleItem customItem = (ScaleItem)property.GetValue(LifeCopy);
+					if (customItem is not null){
 						ScaleItems.Add(customItem);
+					}
 				}
 			}
 		}
 
-		Scale.UpdateNeeded -= Update;
-		Scale.UpdateNeeded += Update;
+		LifeCopy.GenerateScore();
+
+		LifeCopy.UpdateNeeded -= Update;
+		LifeCopy.UpdateNeeded += Update;
 	}
 
 	private void Update(object? sender, EventArgs e) => InvokeAsync(() => StateHasChanged());
 
 	private async Task Cancel()
 	{
-		Scale.Reset();
+		if(CurrentMode == Modes.NewScaleMode)
+		{
+			Current.SelectedScale.Reset();
+		}
+		else
+		{
+		}
 		await ExitAutoScale.InvokeAsync();
 	}
 
 	private async Task Store()
 	{
-		Session.Scales.Add(Scale);
-		await DB.InsertMeasurement(Session);
+		await DB.InsertOrUpdateMeasurement(Current, LifeCopy);
 		await ExitAutoScale.InvokeAsync();
 	}
 }

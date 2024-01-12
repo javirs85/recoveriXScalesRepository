@@ -15,9 +15,6 @@ public class UPDRSI : ScaleBase
 		AreaOfStudy = "Mentation, Behavior Mood";
     }
 
-	public TimeSpanItem TimePareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:" };
-	public TimeSpanItem TimeHealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:" };
-
 	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
 	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
 	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };

@@ -28,13 +28,12 @@ public class ScalesService
 			ScalesIDs.UPDRSII => new UPDRSII(),
 			ScalesIDs.UPDRSIII => new UPDRSIII(),
 			ScalesIDs.UPDRSIV => new UPDRSIV(),
+			ScalesIDs.BnBT => new BlocksAndBlocksTest(),
 
 			_ => throw new Exception($"The scale '{scalesIDs}' has not been registered at the ScalesService, don't forget to add the JsonDerived at ScaleBase")
 		} ;
 	}
 	public List<IScale> Scales { get; set; } = new List<IScale>
 	{
-		new NineHolePegTest(),
-
 	};
 }

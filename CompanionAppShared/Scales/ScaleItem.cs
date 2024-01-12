@@ -104,6 +104,10 @@ public class StringItem : ScaleItem
 
 public class TimeSpanItem : ScaleItem
 {
+    public TimeSpanItem()
+    {
+        
+    }
     private TimeSpan _value;
 
     public TimeSpan Value
@@ -161,7 +165,7 @@ public class TimeSpanItem : ScaleItem
 
 public class OptionsItem : ScaleItem
 {
-    public List<string> Options = new List<string>();
+    public List<string> Options { get; set; } = new List<string>();
     private string _selectedOption = string.Empty;
     public string SelectedOption
     {

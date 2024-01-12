@@ -4,7 +4,10 @@
     border-radius: 50px;
     font-size:14px;
     cursor:pointer;
+    position: relative;
+    overflow:hidden;
 }
+
 .GreenSolid {
     background: #0B6633;
     color: white;
@@ -32,6 +35,21 @@
     border: 1px solid #F4AEAE;
     color: #F4AEAE;
 }
+.DarkBlueOutline {
+    background: transparent;
+    border: 1px solid #376CF1;
+    color: #376CF1;
+}
+.DarkGreenOutline {
+    background: transparent;
+    border: 1px solid #0B6633;
+    color: #0B6633;
+}
+.DarkRedOutline {
+    background: transparent;
+    border: 1px solid #DE2424;
+    color: #DE2424;
+}
 
 .disabledOutline {
     border: 1px solid gray;
@@ -44,4 +62,30 @@
     opacity: 0.25;
     border: 1px solid #a1a1a1;
     color:white;
+}
+
+.ConfirmationPanel {
+    position: absolute;
+    background: #650909;
+    color:white;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: -100%;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.ShowingConfirmationPanel{
+    left: 0%;
+}
+
+.ConfirmItem{
+    opacity: 0.5;
+}
+.ConfirmItem:hover{
+    opacity: 1;
 }

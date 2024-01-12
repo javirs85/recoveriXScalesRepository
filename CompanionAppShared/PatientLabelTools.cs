@@ -11,16 +11,35 @@ public static class PatientLabelTools
 	//Gym.Patient.Therapy.#rep therapy_session
 	//BCN.23.RxU.0_14
 
-	public static string GetGymLabel(string label)
+	/// <summary>
+	/// given ABC.23.Rxu.0_17 returns ABC
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public static Gyms GetGymLabel(string label)
 	{
 		var tokens = label.Split('.');
 		if(tokens.Length >= 2)
 		{
-			if (IsLetter(tokens[0])) return tokens[0];
+			if (IsLetter(tokens[0]))
+			{
+				var gymCodeStr = tokens[0];
+				foreach(var code in Enum.GetValues(typeof(Gyms)))
+				{
+					if (code.ToString() == gymCodeStr) return (Gyms)code;
+				}
+			}
 		}
 		throw new Exception("Gym not found in patient label");
 	}
 
+	/// <summary>
+	/// given ABC.23.Rxu.0_17 returns 23
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	public static string GetPatientNumber(string label)
 	{
 		var tokens = label.Split('.');
@@ -31,16 +50,28 @@ public static class PatientLabelTools
 		throw new Exception("Patient number not found in patient label");
 	}
 
+	/// <summary>
+	/// given ABC.23.Rxu.0_17 returns ABC.23
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	public static string GetPatientLabel(string label)
 	{
 		var tokens = label.Split('.');
 		if (tokens.Length >= 2)
 		{
-			if (IsLetter(tokens[0]) && IsDigit(tokens[1])) return tokens[0] + tokens[1];
+			if (IsLetter(tokens[0]) && IsDigit(tokens[1])) return tokens[0] + "." + tokens[1];
 		}
 		throw new Exception("Patient Label not found in patient label");
 	}
 
+	/// <summary>
+	/// given ABC.23.Rxu.0_17 returns ABC.23.Rxu
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	public static string GetTherapyLabel(string label)
 	{
 		var tokens = label.Split('.');
@@ -54,13 +85,19 @@ public static class PatientLabelTools
 				var items = tokens[3].Split('_');
 				if(items.Length > 0 && IsDigit(items[0])) 
 				{
-					return tokens[0] + tokens[1] + tokens[2] + items[0];
+					return tokens[0] + "." + tokens[1] + "." + tokens[2] + "." + items[0];
 				}
 			}				
 		}
 		throw new Exception("therapy Label not found in patient label");
 	}
 
+	/// <summary>
+	/// given ABC.23.Rxu.0_17 returns Rxu
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	public static string GetTherapyKeyCode(string label)
 	{
 		var tokens = label.Split('.');
@@ -71,6 +108,12 @@ public static class PatientLabelTools
 		throw new Exception("therapy Label not found in patient label");
 	}
 
+	/// <summary>
+	/// given ABC.23.Rxu.0_17 returns 17
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
 	public static int GetSessionNumber(string label)
 	{
 		var tokens = label.Split('.');
@@ -94,6 +137,8 @@ public static class PatientLabelTools
 	private static bool IsLetter(string str) => str.Length > 0 && char.IsLetter(str[0]);	
 	private static bool IsDigit(string str) => str.Length > 0 && char.IsDigit(str[0]);	
 
+	public static string FormLabel(string PatientLabel, string therapyKeyCode, int NumRepTherapy, int NumSession)
+		=> PatientLabel + "." + therapyKeyCode + "." + NumRepTherapy.ToString() + "_" + NumSession.ToString();
 	public static string FormLabel(Gyms gym, int patientNumber) 
 		=> gym.ToString() +"."+patientNumber.ToString();
 	public static string FormLabel(Gyms gym, int patientNumber, string therapyKeyCode) 

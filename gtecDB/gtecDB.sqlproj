@@ -75,6 +75,7 @@
     <Build Include="dbo\StoredProcedures\Patient\spPatient_Insert.sql" />
     <Build Include="dbo\StoredProcedures\Patient\spPatient_Update.sql" />
     <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_GetAllSessionhighlightsFromTherapy.sql" />
+    <Build Include="dbo\StoredProcedures\Measurement\spMeasurement_InsertOrUpdate.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="gtecDB_GTECLOCAL.publish.xml" />

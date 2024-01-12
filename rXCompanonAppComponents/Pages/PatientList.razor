@@ -23,9 +23,9 @@
 @code {
 	[Parameter] public EventCallback<Patient?> PatientSelected { get; set; }
 	[Parameter] public EventCallback AddNewPatientRequested { get; set; }
-	[Parameter]	public Patient? SelectedPatient { get; set; }
+	[Parameter]	public SelectedItems Current { get; set; }
 
-	private bool IsSelected(Patient p) => SelectedPatient == p;
+	private bool IsSelected(Patient p) => Current.SelectedPatient == p;
 
 	protected override void OnParametersSet()
 	{
@@ -41,9 +41,9 @@
 	{
 		Patient p = o as Patient;
 
-		if (SelectedPatient == p) SelectedPatient = null;
-		else SelectedPatient = p;
+		if (Current.SelectedPatient == p) Current.SelectedPatient = null;
+		else Current.SelectedPatient = p;
 
-		PatientSelected.InvokeAsync(SelectedPatient);
+		PatientSelected.InvokeAsync(Current.SelectedPatient);
 	}
 }

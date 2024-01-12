@@ -150,6 +150,8 @@
 	private List<Tuple<string, string>> GenerateDetailsSession(Session s)
 	{
 		var result = new List<Tuple<string, string>>();
+		result.Add(new Tuple<string, string>("Completeness", s.AccuracyTag));
+		result.Add(new Tuple<string, string>("Scales", s.Tag));
 		return result;
 	}
 

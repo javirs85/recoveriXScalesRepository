@@ -5,7 +5,7 @@
 <div class="d-flex gap-1 h-100">
 	<div class="d-flex flex-column DarkBackground">
 		<div class="Header rel">
-			<h1 class="mb-0">@SelectedPatient.PatientLabel</h1>
+			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
 			<h2 class="ms-0">Parkinson</h2>
 			<div class="Exit" @onclick=Exit>
 				<RXIcon IconName="RXIcon.Icons.Cancel" Color="Colors.white" IconWidth="30"/>
@@ -40,9 +40,9 @@
 	[Parameter] public EventCallback AddSessionToTherapy { get; set; }
 	[Parameter] public EventCallback EditPatientRequested { get; set; }
 	[Parameter] public EventCallback Exit { get; set; }
-	[Parameter]	public Patient SelectedPatient { get; set; }
+	[Parameter]	public SelectedItems Current { get; set; }
 
-	private bool IsSelected(Patient p) => SelectedPatient == p;
+	private bool IsSelected(Patient p) => Current.SelectedPatient == p;
 	Therapy? SelectedTherapy = null;
 
 	protected override async Task OnParametersSetAsync()
@@ -50,10 +50,10 @@
 		DB.UIUpdateRequestedFromDB -= Update;
 		DB.UIUpdateRequestedFromDB += Update;
 
-		if(!SelectedPatient.IsFullyLoadedFromDB)
-			SelectedPatient = await DB.GetPatient(SelectedPatient.Id) ?? new Patient { PatientLabel = "Not Found" };
+		if (!Current.SelectedPatient.IsFullyLoadedFromDB)
+			Current.SelectedPatient = await DB.GetPatient(Current.SelectedPatient.Id) ?? new Patient { PatientLabel = "Not Found" };
 
-		SelectedTherapy = SelectedPatient.GetParkinsonTherapy();
+		SelectedTherapy = Current.SelectedPatient.GetParkinsonTherapy();
 	}
 	private void Update(object? sender, EventArgs e)
 	{
@@ -64,15 +64,20 @@
 	{
 		get
 		{
-			if (SelectedPatient.HasTherapies)
-				return SelectedPatient.GetParkinsonTherapy().Sessions;
+			if (Current.SelectedPatient.HasTherapies)
+				return Current.SelectedPatient.GetParkinsonTherapy().Sessions;
 			else
 				return new List<Session>();
 		}
 	}
 
-	void SessionClick(object o)
+	async Task SessionClick(object o)
 	{
-		if (o is Session) SessionSelected.InvokeAsync(o as Session);
+		if (o is Session)
+		{
+			Current.SelectedSession = o as Session;
+			Current.SelectedSession = await DB.LoadAllDetailsOfSession(Current.SelectedSession);
+			await SessionSelected.InvokeAsync(o as Session);
+		}
 	}
 }

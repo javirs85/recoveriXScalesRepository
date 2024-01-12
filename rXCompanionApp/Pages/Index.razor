@@ -8,20 +8,21 @@
 @if (CurrentMode == Modes.PatientSelection)
 {
 	<PatientList 
-		SelectedPatient="SelectedPatient" 
+		Current="Current" 
 		AddNewPatientRequested="AddNewPatientRequested"
 		PatientSelected="PatientSelected" />
 }
 else if(CurrentMode == Modes.PatientEditor)
 {
-	<PatientEditor PatientToEdit="SelectedPatient"
+	<PatientEditor Current="Current"
 		PatientDeleted="PatientDeleted"
 		ChangesSaved="PatientModified"/>
 }
 else if(CurrentMode == Modes.TherapyViewer)
 {
 	<TherapyViewer
-		SelectedPatient="SelectedPatient"
+		Current="Current"
+		SessionSelected="@(()=>{CurrentMode = Modes.SessionEditor;})"
 		EditPatientRequested="@(()=>{CurrentMode = Modes.PatientEditor;})"
 		AddSessionToTherapy="@(()=>{CurrentMode = Modes.SessionEditor;})"
 		Exit="ExitRequested"/>
@@ -29,21 +30,19 @@ else if(CurrentMode == Modes.TherapyViewer)
 else if(CurrentMode == Modes.SessionEditor)
 {
 	<SessionEditor 
-		Patient="SelectedPatient" 
-		TherapyID=@SelectedTherapy.TherapyLabel
+		Current="Current"
 		OpenScaleEditor="OpenScaleEditor"
 		Exit="ExitSessionEditor"
-		Session="null"/>
+		/>
 }
 else if(CurrentMode == Modes.ScaleEditor)
 {
-	@if(SelectedScale is not null)
+	@if(Current.SelectedScale is not null)
 	{
-		@if(SelectedScale is NineHolePegTest)
+		@if (Current.SelectedScale is NineHolePegTest)
 		{
-			<AutoScaleeEditor Patient="SelectedPatient" 
-				Therapy="SelectedTherapy" 
-				Scale="SelectedScale" 
+			<AutoScaleEditor
+				Current="Current"
 				ExitAutoScale="@(()=>{CurrentMode = Modes.SessionEditor;})"/>
 		}
 		else
@@ -58,9 +57,9 @@ else if(CurrentMode == Modes.ScaleEditor)
 	enum Modes {PatientSelection, PatientEditor, TherapyViewer, SessionViewer, SessionEditor, ScaleEditor};
 	Modes CurrentMode = Modes.PatientSelection;
 
-	Patient? SelectedPatient = null;
-	Therapy? SelectedTherapy = null;
-	IScale SelectedScale;
+	SelectedItems Current = new();
+
+	
 
 	protected override void OnParametersSet()
 	{
@@ -69,7 +68,7 @@ else if(CurrentMode == Modes.ScaleEditor)
 
 	void AddNewPatientRequested()
 	{
-		SelectedPatient = null;
+		Current.SelectedPatient = null;
 		CurrentMode = Modes.PatientEditor;
 	}
 
@@ -78,14 +77,14 @@ else if(CurrentMode == Modes.ScaleEditor)
 		if(! p.IsFullyLoadedFromDB)
 			p = await DB.GetPatient(p.Id) ?? new Patient { PatientLabel = "Not Found" };
 
-		SelectedPatient = p;
-		SelectedTherapy = SelectedPatient.GetTherapy(p.TherapyLabels[0]);
+		Current.SelectedPatient = p;
+		Current.SelectedTherapy = Current.SelectedPatient.GetTherapy(p.TherapyLabels[0]);
 		CurrentMode = Modes.TherapyViewer;
 	}
 
 	async Task PatientModified(Patient p)
 	{
-		SelectedPatient = p;
+		Current.SelectedPatient = p;
 		CurrentMode = Modes.TherapyViewer;
 
 		await DB.LoadListOfPatients();
@@ -93,14 +92,14 @@ else if(CurrentMode == Modes.ScaleEditor)
 
 	async Task PatientDeleted()
 	{
-		SelectedPatient = null;
+		Current.SelectedPatient = null;
 		CurrentMode = Modes.PatientSelection;
 		await DB.LoadListOfPatients();
 	}
 
 	void ExitRequested()
 	{
-		SelectedPatient = null;
+		Current.SelectedPatient = null;
 		CurrentMode = Modes.PatientSelection;
 	}
 
@@ -111,7 +110,7 @@ else if(CurrentMode == Modes.ScaleEditor)
 
 	void OpenScaleEditor(IScale scale)
 	{
-		SelectedScale = scale;
+		Current.SelectedScale = scale;
 		CurrentMode = Modes.ScaleEditor;
 	}
 }

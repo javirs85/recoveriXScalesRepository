@@ -5,7 +5,7 @@
 <div class="d-flex gap-0 h-100 overflow-auto">
 	<div class="LeftColumMenu DarkBackground">
 		<div class="Header">
-			<h1 class="mb-0">@PatientToEdit.PatientLabel</h1>
+			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
 			<h2 class="ms-0">Parkinson</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column gap-2 justify-content-center align-items-end m-2 p-4">
@@ -189,9 +189,11 @@
 </div>
 
 @code {
-	[Parameter] public Patient PatientToEdit { get; set; } = new();
+	[Parameter] public SelectedItems Current { get; set; } = new();
 	[Parameter] public EventCallback<Patient> ChangesSaved { get; set; }
 	[Parameter] public EventCallback PatientDeleted { get; set; }
+
+	Patient PatientToEdit = new();
 
 	enum Pages {PatientInfo, ExclusionInclusion}
 	Pages CurrentPage = Pages.PatientInfo;
@@ -203,31 +205,31 @@
 
 	protected async override Task OnParametersSetAsync()
 	{
-		if(PatientToEdit is null)
+		if(Current.SelectedPatient is null)
 		{
-			PatientToEdit = new Patient();
+			Current.SelectedPatient = new Patient();
 			AreWeCreatingANewPatient = true;
 		}
-		else if(!PatientToEdit.IsFullyLoadedFromDB)
+		else if (!Current.SelectedPatient.IsFullyLoadedFromDB)
 		{
-			PatientToEdit = await DB.GetPatient(PatientToEdit.Id) ?? new Patient{ PatientLabel = "Not Found"};
+			Current.SelectedPatient = await DB.GetPatient(Current.SelectedPatient.Id) ?? new Patient { PatientLabel = "Not Found" };
 		}
-
-		Backup = PatientToEdit.Clone();
+		PatientToEdit = Current.SelectedPatient;
+		Backup = Current.SelectedPatient.Clone();
 	}
 
 	YesNo IsPatientOnTherapy
 	{
 		get
 		{
-			if (PatientToEdit.AlreadyInRehabTherapy) return YesNo.Yes;
+			if (Current.SelectedPatient.AlreadyInRehabTherapy) return YesNo.Yes;
 			else return YesNo.No;
 		}
 		set
 		{
 			var i = Thread.CurrentThread.CurrentUICulture;
-			if (value == YesNo.Yes) PatientToEdit.AlreadyInRehabTherapy = true;
-			else PatientToEdit.AlreadyInRehabTherapy = false;
+			if (value == YesNo.Yes) Current.SelectedPatient.AlreadyInRehabTherapy = true;
+			else Current.SelectedPatient.AlreadyInRehabTherapy = false;
 
 		}
 	}	

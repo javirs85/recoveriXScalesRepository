@@ -6,4 +6,4 @@ using System.Threading.Tasks;
 
 namespace rXCompanionAppComponents;
 
-public enum Colors { red, green , blue , white, black, gray}
+public enum Colors { red, green , blue , DarkBlue, DarkRed, DarkGreen, white, black, gray}
