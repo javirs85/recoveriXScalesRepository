@@ -24,15 +24,15 @@ public class ScaleItem
 
 public class IntItem : ScaleItem
 {
-    private int _value;
+    public int Value;
 
     public override string StringValue
     {
-        get { return _value.ToString(); }
+        get { return Value.ToString(); }
         set
         {
             var didWork = int.TryParse(value, out int i);
-            if (didWork) _value = i;
+            if (didWork) Value = i;
             else ReportFormatError("Please enter an integer value");
             MeasureNeedsUpdate();
 		}
@@ -40,12 +40,12 @@ public class IntItem : ScaleItem
 
 	public void Add()
 	{
-        _value ++;
+        Value ++;
 		MeasureNeedsUpdate();
 	}
 	public void Subtract()
 	{
-        _value --;
+        Value --;
 		MeasureNeedsUpdate();
 	}
 }

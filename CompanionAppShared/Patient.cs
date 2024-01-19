@@ -22,6 +22,31 @@ public class Patient
 		{
 			if (_patientLabel != value) { 
 				_patientLabel = value;
+
+				//Upadte all therapies with the new label
+				var ExistingTherapies = new List<Therapy>();
+				foreach (var t in Therapies)
+					ExistingTherapies.Add(t);
+
+				if(Therapies.Count > 0)
+				{
+					Therapies.Clear();
+					TherapyLabels.Clear();
+
+					foreach (var t in ExistingTherapies)
+						AddTherapy(t);
+
+					//Update all sessions in all therapies with new label
+
+					foreach (var t in Therapies)
+					{
+						foreach (var s in t.Sessions)
+						{
+							s.CreateSessionLabel(PatientLabel, t); ;
+						}
+					}
+				}
+				
 			}
 		}
 	} 
@@ -59,42 +84,32 @@ public class Patient
 		return t; 
 	}
 
-	public bool HasTherapies => Therapies.Count > 0;
+	public bool HasTherapies => Therapies.Count > 0 || TherapyLabels.Count > 0;
 	public Therapy GetTherapy(string therapyID) => Therapies.Find(x => x.TherapyLabel == therapyID);
 
 	[JsonIgnore]
 	public bool IsFullyLoadedFromDB { get; set; } = false;
 
+	public string NumberOfMeasurementsInLastTherapy { get; set; } = "Not yet set";
 
-
-
-
-
-	public List<Session>? Sessions { get; set; } = null;
-	private int _numberOfSessions = 0;
-	public int NumberOfSessions
+	public string NumberOfSessions
 	{
-		get 
-		{ 
-			if (Sessions is null) return _numberOfSessions;
-			else return Sessions.Count;
+		get
+		{
+			if (Therapies is null || Therapies.Count == 0 || Therapies[0].Sessions is null || Therapies[0].Sessions.Count == 0) return NumberOfMeasurementsInLastTherapy;
+			else return Therapies.OrderByDescending(t => t.Sessions.Max(s => s.MeasurementDate)).FirstOrDefault()?.Sessions.Count.ToString() ?? "0";
 		}
-		set { _numberOfSessions = value; }
 	}
+
+	public string LastMeasurementInLastTherapy { get; set; } = "Not yet set";
 
 	private DateTime? _lastSession;
 	public DateTime? LastSession
 	{
-		set { _lastSession = value; }
 		get 
 		{
-			if (Sessions is null)
-			{
-				if(_lastSession is not null) return _lastSession;
-				else return null;
-			}
-
-			return Sessions.OrderBy(x=>x.Date).First().Date; 
+			if (Therapies is null || Therapies.Count == 0 || Therapies[0].Sessions is null || Therapies[0].Sessions.Count == 0) return null;
+			else return Therapies.SelectMany(t => t.Sessions).Max(s => s.MeasurementDate);
 		}
 	}
 
@@ -108,16 +123,11 @@ public class Patient
 	{
 		var str = JsonSerializer.Serialize(this);
 		var p = JsonSerializer.Deserialize<Patient>(str);
-		for(int t = 0; t < p.Therapies.Count; ++t)
+		for(int t = 0; t < this.Therapies.Count; ++t)
 		{
-			for(int ic =0; ic < this.Therapies[t].InclusionCriteria.Count; ++ic)
-			{
-				p.Therapies[t].InclusionCriteria[ic].IsSet = this.Therapies[t].InclusionCriteria[ic].IsSet;
-			}
-			for (int ec = 0; ec < this.Therapies[t].ExclusionCriteria.Count; ++ec)
-			{
-				p.Therapies[t].ExclusionCriteria[ec].IsSet = this.Therapies[t].ExclusionCriteria[ec].IsSet;
-			}
+			Therapy newTherapy = new Therapy();
+			newTherapy.CopyDataFrom(this.Therapies[t]);
+			p.Therapies.Add(newTherapy);
 		}
 
 		return p;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DataBaseConnector;
 
@@ -59,6 +60,18 @@ public class DataBase
 		Update();
 	}
 
+	public async Task SelectPatient(SelectedItems Current)
+	{
+		if (Current.SelectedPatient is not null && !Current.SelectedPatient.IsFullyLoadedFromDB)
+		{
+			Current.SelectedPatient =
+				await GetPatient(Current.SelectedPatient.Id) ??
+				new Patient { PatientLabel = "Not Found" };
+
+			Current.SelectedTherapy = Current.SelectedPatient.GetParkinsonTherapy();
+		}
+	}
+
 	private void Update() => UIUpdateRequestedFromDB?.Invoke(this, EventArgs.Empty);
 
 	/// <summary>
@@ -81,20 +94,53 @@ public class DataBase
 		var sessions = await sGetAllMeasurementsSummariesOfTherapy(p.TherapyLabels[0]);
 		p.ReconstructTherapyWithSeasons(sessions, p.TherapyLabels[0]);
 		p.IsFullyLoadedFromDB = true;
+
+		var OldPatient = Patients.Find(x => x.Id == p.Id);
+		if (OldPatient is not null)
+		{
+			Patients.Remove(OldPatient);
+			Patients.Add(p);
+		}
+
 		return p;
+	}
+
+	public async Task DeleteSession(SelectedItems Current)
+	{
+		if (Current is not null && Current.SelectedPatient is not null && Current.SelectedTherapy is not null && Current.SelectedSession is not null)
+		{ 
+			Current.SelectedTherapy.Sessions.Remove(Current.SelectedSession);
+			await DeleteSession(Current.SelectedSession);
+			Current.SelectedSession = null;
+			Current.SelectedScale = null;
+		}
 	}
 
 	public async Task<bool> CheckIfNameIsAlreadyTaken(Patient p)
 	{
-		ErrorOccurred?.Invoke(this, new Exception("CheckIfNameIsAlreadyTaken is not yet implemented, defaulting to false"));
-		return false;
+		try
+		{
+			var query = $"SELECT COUNT(*) FROM dbo.Patient WHERE PatientLabel = '{p.PatientLabel}'";
+			int existingPatients = await db.Count(query);
+			return existingPatients > 0;
+
+		}catch(Exception e)
+		{
+			ErrorOccurred?.Invoke(this, e);
+			return true;
+		}
+
 	}
 
 	public async Task InsertPatient(Patient patient)
 	{
-		var serialized = patient.Serialize();
+		
 		try
 		{
+			//var ExistingPatient = Patients.Find(x => x.Id == patient.Id);
+
+
+			var serialized = patient.Serialize();
 			await db.SaveData("dbo.spPatient_Insert",
 			new
 			{
@@ -110,25 +156,40 @@ public class DataBase
 		}
 	}
 
-	public async Task UpdatePatient(Patient patient)
+	public async Task UpdateSelectedPatientToDB(SelectedItems current)
 	{
 		try
 		{
+			var LastMeasurementInLastTherapy = "-";
+
+			if ((DateTime?)current.SelectedPatient.LastSession is not null)
+				LastMeasurementInLastTherapy = ((DateTime)current.SelectedPatient.LastSession).ToString("dd.MM.yyyy");
+
 			await db.SaveData("dbo.spPatient_Update", new
 			{
-				Id = patient.Id,
-				Label = patient.PatientLabel,
-				NumberOfMeasurementsInLastTherapy = patient.NumberOfSessions,
-				LastMeasurementInLastTherapy = patient.LastSession,
-				SerializedData = patient.Serialize()
+				Id = current.SelectedPatient.Id,
+				Label = current.SelectedPatient.PatientLabel,
+				NumberOfMeasurementsInLastTherapy = current.SelectedPatient.NumberOfSessions,
+				LastMeasurementInLastTherapy = LastMeasurementInLastTherapy,
+				SerializedData = current.SelectedPatient.Serialize()
 			});
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			ErrorOccurred?.Invoke(this, e);	
+			ErrorOccurred?.Invoke(this, e);
 		}
 	}
-	public Task DeletePatient(Guid id) => db.SaveData("dbo.spPatient_Delete", new { Id = id });
+
+	public async Task DeletePatient(Guid id)
+	{
+		var p = Patients.Find(x => x.Id == id);
+		if(p is not null)
+		{
+			await db.SaveData("dbo.spMeasurement_DeleteAllSessionsOfPatient", new { PatientId = p.PatientLabel });
+		}
+		await db.SaveData("dbo.spPatient_Delete", new { Id = id });
+	}
+
 
 	public async Task GeneratePatientLabelForSelectedGym(Patient p)
 	{
@@ -161,26 +222,50 @@ public class DataBase
 	/// <param name="measurement"></param>
 	/// <param name="NewScale"></param>
 	/// <returns></returns>
-	public async Task InsertOrUpdateMeasurement(SelectedItems current, IScale NewScale)
+	public async Task UpdateScaleInSession(SelectedItems current, IScale NewScale)
 	{
 		current.SelectedSession.Scales.Remove(current.SelectedScale);
 		current.SelectedSession.Scales.Add(NewScale);
 		current.SelectedScale = NewScale;
 
+		await StoreSession(current);
+	}
+
+	public async Task DeleteScaleInSession(SelectedItems current)
+	{
+		if(current.SelectedScale is not null)
+		{
+			current.SelectedScale.Reset();
+
+			await StoreSession(current);
+		}
+	}
+
+	public async Task StoreSession(SelectedItems Current)
+	{
 		try
 		{
-			current.SelectedSession.Serialize();
+			Current.SelectedSession.GenerateTags();
+			var ExistingSession = Current.SelectedTherapy.Sessions.Find(x => x.Id == Current.SelectedSession.Id);
+			if (ExistingSession != null)
+				ExistingSession = Current.SelectedSession;
+			else
+				Current.SelectedTherapy.Sessions.Add(Current.SelectedSession);
+
+			Current.SelectedSession.Serialize();
 			await db.SaveData("spMeasurement_InsertOrUpdate",
 			new
 			{
-				current.SelectedSession.Id ,
-				current.SelectedSession.PatientID,
-				current.SelectedSession.Date,
-				current.SelectedSession.TherapyID,
-				current.SelectedSession.Tag,
-				current.SelectedSession.AccuracyTag,
-				current.SelectedSession.SerializedData
+				Current.SelectedSession.Id,
+				Current.SelectedSession.PatientID,
+				Current.SelectedSession.MeasurementDate,
+				Current.SelectedSession.TherapyID,
+				Current.SelectedSession.Tag,
+				Current.SelectedSession.AccuracyTag,
+				Current.SelectedSession.SerializedData
 			});
+
+			//await UpdateSelectedPatientToDB(Current);
 		}
 		catch (Exception e)
 		{
@@ -188,20 +273,19 @@ public class DataBase
 		}
 	}
 
-	public async Task<Session> LoadAllDetailsOfSession(Session session)
+	public async Task<Session> UpdateSessionInTherapyWithDetailsFromDB(Therapy SelectedTherapy, Session session)
 	{
 		try
 		{
-			var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new { 
-				Id = session.Id,
-			});
-			var r = results.FirstOrDefault();
-			var s = Session.FromJson(r.SerializedData);
-			foreach(var x in s.Scales)
+			var s = await LoadSession(session.Id);
+
+			var ExistingSession = SelectedTherapy.Sessions.Find(x=>x.Id == session.Id);
+			if(ExistingSession != null)
 			{
-				if(x != null && x.IsMeasured) 
-					x.GenerateScore(); 
+				SelectedTherapy.Sessions.Remove(ExistingSession);
+				SelectedTherapy.Sessions.Add(session);
 			}
+
 			return s;
 		}
 		catch (Exception e)
@@ -210,6 +294,85 @@ public class DataBase
 			return session;
 		}
 	}
+
+	async Task<Session> LoadSession(Guid id)
+	{
+		var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new
+		{
+			Id = id,
+		});
+		var r = results.FirstOrDefault();
+		var s = Session.FromJson(r.SerializedData);
+		foreach (var x in s.Scales)
+		{
+			if (x != null && x.IsMeasured)
+				x.GenerateScore();
+		}
+
+		s.IsFullyLoaded = true;
+
+		return s;
+	}
+
+	public async Task LoadAllSessionDetailsInTherapy(Therapy t)
+	{
+		try
+		{
+			List<Session> before = new();
+			foreach (var s in t.Sessions)
+				before.Add(s);
+
+			t.Sessions.Clear();
+
+			foreach (var s in before)
+			{
+				if (!s.IsFullyLoaded)
+					t.Sessions.Add(await LoadSession(s.Id));
+				else
+					t.Sessions.Add(s);
+			}
+		}
+		catch (Exception e)
+		{
+			ErrorOccurred?.Invoke(this, e);
+		}
+	}
+
+	public async Task DeleteSession(Session session)
+	{
+		try
+		{
+			await db.SaveData("dbo.spMeasurement_Delete", new { Id = session.Id });
+		}
+		catch (Exception e)
+		{
+			ErrorOccurred?.Invoke(this, e);
+		}
+	}
+
+	public async Task UpadePatientLabelInAllSessions(Patient p, string newPatientLabel)
+	{
+		foreach(var label in p.TherapyLabels)
+		{
+			var summaries = await sGetAllMeasurementsSummariesOfTherapy(label);
+			var newTherapy = new Therapy { KeyCode = PatientLabelTools.GetTherapyKeyCode(label)};
+
+			foreach(var summary in summaries)
+			{
+				var session = await UpdateSessionInTherapyWithDetailsFromDB(newTherapy, summary);
+				newTherapy.TherapyLabel = PatientLabelTools.GetTherapyLabel(session.SessionID);
+				session.CreateSessionLabel(newPatientLabel, newTherapy);
+				newTherapy.Sessions.Add(session);
+				session.GenerateTags();
+
+
+				await DeleteSession(session);
+				await StoreSession(new SelectedItems { SelectedPatient = p, SelectedTherapy = newTherapy, SelectedSession = session});
+			}
+
+		}
+	}
+
 	#endregion
 
 

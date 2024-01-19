@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spMeasurement_InsertOrUpdate]
 	@Id uniqueidentifier,
 	@PatientID nvarchar(50),
-	@Date DATETIME,
+	@MeasurementDate DATETIME,
 	@TherapyID nvarchar(50),
 	@SerializedData TEXT,
 	@Tag nvarchar(50),
@@ -15,7 +15,7 @@ begin
         -- Update the existing row
         update dbo.Masurement
 		set PatientID = @PatientID, 
-			MeasurementDate = @Date, 
+			MeasurementDate = @MeasurementDate, 
 			TherapyID = @TherapyID, 
 			Tag = @Tag,
 			AccuracyTag = @AccuracyTag,
@@ -26,7 +26,7 @@ begin
     BEGIN
         -- Insert a new row
         insert into dbo.Masurement (Id, PatientID, MeasurementDate, TherapyID, Tag, AccuracyTag, SerializedData)
-		values (@Id, @PatientID, @Date, @TherapyID, @Tag, @AccuracyTag, @SerializedData)
+		values (@Id, @PatientID, @MeasurementDate, @TherapyID, @Tag, @AccuracyTag, @SerializedData)
     END
 
 	

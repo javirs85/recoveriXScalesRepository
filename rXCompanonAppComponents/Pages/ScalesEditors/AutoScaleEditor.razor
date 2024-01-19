@@ -10,30 +10,32 @@
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
 			<div style="margin-bottom:50%;">
-				<LeftMenuItem Title="@($"{Current.SelectedSession.Date.ToShortDateString()} / {Current.SelectedScale.ShortName}")"
+				<LeftMenuItem Title="@($"{Current.SelectedSession.MeasurementDate.ToShortDateString()} / {Current.SelectedScale.ShortName}")"
 							  Color="LeftMenuItem.AvailableColors.green"
 							  IsSingleItem="true"
 							  IsSelected="true" />
 			</div>
 		</div>
 		<div class="Header gap-2">
-			
+			<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Revert" Clicked="ClearScale"
+						 Title="Clear data and start again" />
+
 			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
-							Icon="@(CurrentMode == Modes.NewScaleMode?RXIcon.Icons.Cancel:RXIcon.Icons.Revert)" Clicked="Cancel"
-							Title="@(CurrentMode == Modes.NewScaleMode?"Cancel and delete data":"Revert changes and exit")" />
+						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
+						 Title="@(CurrentMode == Modes.NewScaleMode?"Delete data and exit":"Revert changes and exit")" />
 			
-			
-			@if (Current.SelectedScale.IsMeasured)
+			@if (LifeCopy.IsMeasured)
 			{
 				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.solid"
 							 Icon="RXIcon.Icons.Save" Clicked="Store"
-							 Title="Store intermediate results" />
+							 Title="Store scale" />
 			}
 			else
 			{
 				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
-							 Icon="RXIcon.Icons.Tick" Clicked="Current.SelectedScale.GenerateScore"
-							 Title="Generate score" />
+							 Icon="RXIcon.Icons.Tick" Clicked="LifeCopy.GenerateScore"
+							 Title="Validate score" />
 			}
 			
 		</div>
@@ -142,7 +144,12 @@
 
 	private async Task Store()
 	{
-		await DB.InsertOrUpdateMeasurement(Current, LifeCopy);
+		await DB.UpdateScaleInSession(Current, LifeCopy);
 		await ExitAutoScale.InvokeAsync();
+	}
+
+	private void ClearScale()
+	{
+		LifeCopy.Reset();
 	}
 }

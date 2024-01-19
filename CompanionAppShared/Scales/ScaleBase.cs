@@ -60,6 +60,7 @@ public abstract class ScaleBase : IScale
     public bool IsMeasured { get; set; }= false;
     public int ReferenceScoreNormalized { get; set; } = 0;
 	public int ScoreRaw { get; set; }
+	public List<string> DetailsHeaders { get; set; } = new List<string>();
 	public List<string> Details { get; set; } = new List<string>();
 
     [JsonIgnore]
@@ -68,15 +69,20 @@ public abstract class ScaleBase : IScale
 	
 	public void GenerateScore()
 	{
-        IsMeasured = GenerateScoreInternal();
+		GenerateScoreInternal();
+		Details.Clear();
+		GenerateDetails();
+		IsMeasured = true;
 	}
-
-	protected abstract bool GenerateScoreInternal();
+	
     public void Reset()
     {
         IsMeasured = false;
         ResetInternal();
     }
+
     protected abstract void ResetInternal();
+	protected abstract void GenerateScoreInternal();
+    protected abstract void GenerateDetails();
 
 }

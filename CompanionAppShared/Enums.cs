@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace CompanionAppShared;
 
 public enum AvailbleSex { Male, Female};
-public enum ScalesIDs { NineHPT, NotSet,
+public enum ScalesIDs {
+	NotSet,
+	NineHPT, 
 	UPDRSI,
 	UPDRSII,
 	UPDRSIV,

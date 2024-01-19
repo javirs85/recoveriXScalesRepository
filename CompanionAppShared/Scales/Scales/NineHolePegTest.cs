@@ -14,6 +14,9 @@ public class NineHolePegTest : ScaleBase
 		ShortName = "9HPT";
 		AreaOfStudy = "Dexterity";
 
+		DetailsHeaders.Add("Paretic hand");
+		DetailsHeaders.Add("Healthy hand");
+
 		ScoreNormalized = 0;
 	}
 
@@ -30,7 +33,7 @@ public class NineHolePegTest : ScaleBase
 	};
 
 
-	protected override bool GenerateScoreInternal()
+	protected override void GenerateScoreInternal()
 	{
 		Details.Clear();
 		Details.Add($"Paretic hand: {TimePareticHand.StringValue}");
@@ -40,8 +43,6 @@ public class NineHolePegTest : ScaleBase
 
 		if(ScoreNormalized < 0) ScoreNormalized = 0;
 		if(ScoreNormalized > 100) ScoreNormalized = 100;	
- 
-		return true;
 	}
 
 	protected override void ResetInternal()
@@ -56,5 +57,11 @@ public class NineHolePegTest : ScaleBase
 			Options = new List<string> { "option 1", "option 2", "option 3" },
 			Label = "Select your option:"
 		};
+	}
+	protected override void GenerateDetails()
+	{
+		Details.Clear();
+		Details.Add(TimePareticHand.StringValue);
+		Details.Add(TimeHealthyHand.StringValue);
 	}
 }

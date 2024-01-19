@@ -5,7 +5,7 @@
 <div class="d-flex gap-0 h-100 overflow-auto">
 	<div class="LeftColumMenu DarkBackground">
 		<div class="Header">
-			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
+			<h1 class="mb-0">@PatientToEdit.PatientLabel</h1>
 			<h2 class="ms-0">Parkinson</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column gap-2 justify-content-center align-items-end m-2 p-4">
@@ -38,6 +38,7 @@
 				Icon=RXIcon.Icons.Revert
 				Clicked="RevertChanges"/>
 			<RoundButton Title="Delete patient" ButtonColor="Colors.red" 
+				NeedsConfirmation=true
 				ButtonStyle="RoundButton.ButtonStyles.solid" 
 				Icon=RXIcon.Icons.Bin
 				Clicked="Delete"/>
@@ -152,10 +153,11 @@
 			@if (PatientToEdit.HasTherapies)
 			{
 				<div class="d-flex flex-grow-1 overflow-auto">
-					<div class="d-flex w-50 flex-column p-5 pe-0 gap-1 h-100">
-						<h4>Exclusion criteria <small class="opacity-25 fs-5">(all must be red)</small></h4>
-						<div class="d-flex flex-column gap-1 overflow-auto">
+					<div class="d-flex w-50 flex-column p-5 pb-3 pe-0 gap-1 h-100 background-blue">
+						<h4>Exclusion criteria <small class="opacity-25 fs-5">(all must be red)</small>
 							<div class="btn btn-info" @onclick=FakeClicks>FakeClicks</div>
+							</h4>
+						<div class="d-flex flex-column gap-1 overflow-auto">
 							@foreach (var p in PatientToEdit?.GetParkinsonTherapy()?.ExclusionCriteria)
 							{
 								<InclusionExclusionCriteriaViewer Criteria="p"
@@ -174,6 +176,7 @@
 																  CriteriaType="InclusionExclusionCriteriaViewer.CriteriaTypes.Inclusion" />
 							}
 						</div>
+						<!--
 						<div class="w-100 d-flex justify-content-end p-4 pb-0 pe-0">
 							<RoundButton Title="Patient details"
 										 ButtonColor="Colors.green"
@@ -181,6 +184,7 @@
 										 ButtonStyle="RoundButton.ButtonStyles.solid"
 										 Clicked="@(()=>{CurrentPage = Pages.PatientInfo;})" />
 						</div>
+						-->
 					</div>
 				</div>
 			}
@@ -199,14 +203,13 @@
 	Pages CurrentPage = Pages.PatientInfo;
 
 	enum YesNo {Yes, No};
-	Patient Backup;
 
 	bool AreWeCreatingANewPatient = false;
 
 	protected async override Task OnParametersSetAsync()
 	{
-		if(Current.SelectedPatient is null)
-		{
+		if(Current.SelectedPatient is null || string.IsNullOrEmpty(Current.SelectedPatient.PatientLabel))
+		{  
 			Current.SelectedPatient = new Patient();
 			AreWeCreatingANewPatient = true;
 		}
@@ -214,22 +217,21 @@
 		{
 			Current.SelectedPatient = await DB.GetPatient(Current.SelectedPatient.Id) ?? new Patient { PatientLabel = "Not Found" };
 		}
-		PatientToEdit = Current.SelectedPatient;
-		Backup = Current.SelectedPatient.Clone();
+		PatientToEdit = Current.SelectedPatient.Clone();
 	}
 
 	YesNo IsPatientOnTherapy
 	{
 		get
 		{
-			if (Current.SelectedPatient.AlreadyInRehabTherapy) return YesNo.Yes;
+			if (PatientToEdit.AlreadyInRehabTherapy) return YesNo.Yes;
 			else return YesNo.No;
 		}
 		set
 		{
 			var i = Thread.CurrentThread.CurrentUICulture;
-			if (value == YesNo.Yes) Current.SelectedPatient.AlreadyInRehabTherapy = true;
-			else Current.SelectedPatient.AlreadyInRehabTherapy = false;
+			if (value == YesNo.Yes) PatientToEdit.AlreadyInRehabTherapy = true;
+			else PatientToEdit.AlreadyInRehabTherapy = false;
 
 		}
 	}	
@@ -290,12 +292,36 @@
 
 	private async Task Save()
 	{
+		if(PatientToEdit.PatientLabel != Current.SelectedPatient.PatientLabel)
+		{
+			if (await DB.CheckIfNameIsAlreadyTaken(PatientToEdit))
+			{
+				Toaster.ShowError($"The patient label {PatientToEdit.PatientLabel} already exists in the data base");
+				return;
+			}
+		}
+		
+
 		if (AreWeCreatingANewPatient)
 		{
 			await DB.InsertPatient(PatientToEdit);
 		}
 		else
-			await DB.UpdatePatient(PatientToEdit);
+		{
+			var ChangedID = PatientToEdit.PatientLabel != Current.SelectedPatient.PatientLabel;
+			if(ChangedID)
+			{
+				//therapies labels and sesionslabels has been upadted by Patient
+				//but we need to comit those changes to the BD
+				await DB.UpadePatientLabelInAllSessions(Current.SelectedPatient, PatientToEdit.PatientLabel);
+				Current.SelectedPatient.PatientLabel = PatientToEdit.PatientLabel;
+				//Current.SelectedPatient.LastSession = 
+			}
+
+			await DB.UpdateSelectedPatientToDB(Current);
+		}
+			
+
 		await ChangesSaved.InvokeAsync(PatientToEdit);
 	}
 
@@ -308,7 +334,7 @@
 
 	private void RevertChanges()
 	{
-		PatientToEdit = Backup.Clone();
+		PatientToEdit = Current.SelectedPatient.Clone();
 	}
 
 	void Update() => InvokeAsync(() => { StateHasChanged(); });

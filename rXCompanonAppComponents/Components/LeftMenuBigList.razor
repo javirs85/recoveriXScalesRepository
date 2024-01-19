@@ -59,7 +59,7 @@
 				{
 					@foreach (var s in Sessions)
 					{
-						<LeftMenuItem Title="@s.Date.ToShortDateString()"
+						<LeftMenuItem Title="@s.MeasurementDate.ToString("dd.MM.yyyy")"
 								  Color="LeftMenuItem.AvailableColors.green"
 								  SelectableItem="s"
 								  IsSelected="IsSelected(s)"
@@ -92,12 +92,13 @@
 		}
 		else if(Mode == ListingModes.Sessions)
 		{
-
+			Sessions = Sessions.OrderByDescending(x => x.MeasurementDate).ToList();
 		}
 
 		DB.UIUpdateRequestedFromDB -= Update;
-		DB.UIUpdateRequestedFromDB += Update;
+		DB.UIUpdateRequestedFromDB += Update; 
 	}
+
 	private void Update(object? sender, EventArgs e)
 	{
 		InvokeAsync(() => { StateHasChanged(); });
@@ -128,21 +129,36 @@
 	private List<Tuple<string,string>> GenerateDetailsForPatient(Patient p)
 	{
 		var result = new List<Tuple<string, string>>();
-		if (p.LastSession is not null)
+		if(p.IsFullyLoadedFromDB)
+		{
 			result.Add(new Tuple<string, string>(
-							"Last session",
-							((DateTime)p.LastSession).ToString("dd.MM.yyyy") ?? "-"
-						));
-		else
-			result.Add(new Tuple<string, string>(
-							"Last",
-							"-"
-						));
-
-		result.Add(new Tuple<string, string>(
 							"sessions",
-							p.Sessions?.Count.ToString() ?? "0"
+							p.NumberOfSessions
 						));
+			if(p.LastSession is null)
+			{
+				result.Add(new Tuple<string, string>("Last","-"));
+			}
+			else
+			{
+				result.Add(new Tuple<string, string>(
+					"Last",
+					((DateTime)p.LastSession).ToString("dd.MM.yyyy")
+				));
+			}			
+		}
+		else
+		{
+			result.Add(new Tuple<string, string>(
+							"sessions",
+							p.NumberOfMeasurementsInLastTherapy
+						));
+			result.Add(new Tuple<string, string>(
+				"Last",
+				p.LastMeasurementInLastTherapy
+			));
+		}
+
 
 		return result;
 	}
@@ -150,8 +166,8 @@
 	private List<Tuple<string, string>> GenerateDetailsSession(Session s)
 	{
 		var result = new List<Tuple<string, string>>();
-		result.Add(new Tuple<string, string>("Completeness", s.AccuracyTag));
-		result.Add(new Tuple<string, string>("Scales", s.Tag));
+		//result.Add(new Tuple<string, string>("Completeness", s.AccuracyTag));
+		result.Add(new Tuple<string, string>("", s.Tag));
 		return result;
 	}
 

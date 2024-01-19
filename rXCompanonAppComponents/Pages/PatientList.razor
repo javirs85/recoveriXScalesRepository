@@ -25,12 +25,14 @@
 	[Parameter] public EventCallback AddNewPatientRequested { get; set; }
 	[Parameter]	public SelectedItems Current { get; set; }
 
+
 	private bool IsSelected(Patient p) => Current.SelectedPatient == p;
 
 	protected override void OnParametersSet()
 	{
 		DB.UIUpdateRequestedFromDB -= Update;
 		DB.UIUpdateRequestedFromDB += Update;
+		
 		DB.Init();
 	}
 	private void Update(object? sender, EventArgs e)

@@ -25,6 +25,15 @@ public class Therapy
 
 	public List<ScalesIDs> Scales = new(); 
 	public List<Session> Sessions = new();
+
+	public void CopyDataFrom(Therapy t)
+	{
+		KeyCode = t.KeyCode;
+		TherapyLabel = t.TherapyLabel;
+		Name = t.Name;
+		foreach(var c in t.ExclusionCriteria) ExclusionCriteria.Add(c);
+		foreach(var c in t.InclusionCriteria) InclusionCriteria.Add(c);
+	}
 }
 
 public class InclusionExclusionCriteria

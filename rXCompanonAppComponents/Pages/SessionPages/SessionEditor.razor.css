@@ -36,6 +36,11 @@
     align-items: center;
     padding: 15px;
 }
+
+    .ScaleBox.Finished {
+        border-bottom: 1px solid #CFDAFA;
+    }
+
 .NotMeasured {
     background: #fbe8e840;
     border-bottom: 1px solid #e7262633;
@@ -43,6 +48,7 @@
 
 .scaleBoxButtonsContainer{
     display:flex;
+    //flex-direction:column;
     gap:10px;
 }
 

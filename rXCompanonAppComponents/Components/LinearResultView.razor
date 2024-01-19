@@ -1,0 +1,66 @@
+﻿@using static rXCompanionAppComponents.Pages.TherapyViewer;
+
+<div class="@(Values.HasNonPreValues?"":"opacity-25")" style="width: 210px; position:absolute; height:9px; ">
+	<div class="w-100 h-100 d-flex" style="border-radius:10px; overflow:hidden;">
+		<div class="flex-grow-1" style="background:#DAEAFC"></div>
+		<div class="flex-grow-1" style="background:#BCD9F9"></div>
+		<div class="flex-grow-1" style="background:#7EB9F2"></div>
+	</div>
+	@if(IsPositive)
+	{
+		<div style="position: absolute; top:-3px; left: @InitialPer; right: @FinalPer;
+					align-items: center;
+					justify-content:end;
+					padding: 3px;
+					height:14px;
+					border-radius:12px;
+					background: rgb(25,185,95);
+					background: linear-gradient(90deg, rgba(25,185,95,1) 0%, rgba(10,119,58,1) 100%);"
+			 class="d-flex align-item-center">
+			<div style="width:9px; height:9px; background: #4CEA91; border-radius:10px;"></div>
+		</div>
+	}
+	else
+	{
+		<div style="position: absolute; top:-3px; left: @InitialPer; right: @FinalPer;
+					align-items: center;
+					padding: 3px;
+					height:14px;
+					border-radius:12px;
+					background: rgb(25,185,95);
+					background: linear-gradient(90deg, rgba(125,20,20,1) 0%, rgba(166,58,58,1) 100%);"
+			 class="d-flex align-item-center">
+			<div style="width:9px; height:9px; background: #FF9D9D; border-radius:10px;"></div>
+		</div>
+	}
+
+</div>
+
+
+@code {
+	[Parameter] public EvolutionResults Values { get; set; } = new();
+
+	bool IsPositive => Values.Increase >= 0;
+
+	string InitialPer
+	{
+		get
+		{
+			if (Values.HasNonPreValues) return Values.AveragedPreValue + "%";
+			else return Values.InitialPreVale + "%";
+		}
+	}
+	string FinalPer 
+	{
+		get
+		{
+			if (Values.HasNonPreValues) return Values.FinalValue + "%";
+			else return Values.LastPreValue + "%";
+		}
+	}
+
+	protected override void OnParametersSet()
+	{
+		
+	}
+}

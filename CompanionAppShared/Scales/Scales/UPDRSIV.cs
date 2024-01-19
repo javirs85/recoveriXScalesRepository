@@ -24,10 +24,13 @@ public class UPDRSIV : ScaleBase
 		Options = new List<string> { "option 1", "option 2", "option 3" },
 		Label = "Select your option:"
 	};
-	protected override bool GenerateScoreInternal()
+	protected override void GenerateScoreInternal()
 	{
-		return true;
 	}
+	protected override void GenerateDetails()
+	{
+	}
+
 	protected override void ResetInternal()
 	{
 	}

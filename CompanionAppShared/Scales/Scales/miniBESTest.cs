@@ -24,9 +24,11 @@ public class miniBESTest : ScaleBase
 		Label = "Select your option:"
 	};
 
-	protected override bool GenerateScoreInternal()
+	protected override void GenerateScoreInternal()
 	{
-		return true;
+	}
+	protected override void GenerateDetails()
+	{
 	}
 	protected override void ResetInternal()
 	{

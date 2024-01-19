@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[spPatient_Update]
 	@Id UNIQUEIDENTIFIER,
 	@Label nvarchar(50),
-	@NumberOfMeasurementsInLastTherapy int,
-	@LastMeasurementInLastTherapy Date,
+	@NumberOfMeasurementsInLastTherapy nchar(10),
+	@LastMeasurementInLastTherapy nvarchar(50),
 	@SerializedData TEXT
 AS
 begin

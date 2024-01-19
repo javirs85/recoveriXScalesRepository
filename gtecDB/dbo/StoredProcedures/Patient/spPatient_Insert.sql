@@ -2,8 +2,8 @@
 	@Id uniqueidentifier,
 	@GymCode nvarchar(10),
 	@PatientLabel nvarchar(50),
-	@NumberOfMeasurementsInLastTherapy int,
-	@LastMeasurementInLastTherapy Date,
+	@NumberOfMeasurementsInLastTherapy nvarchar(10),
+	@LastMeasurementInLastTherapy nvarchar(50),
 	@SerializedData TEXT
 AS
 begin

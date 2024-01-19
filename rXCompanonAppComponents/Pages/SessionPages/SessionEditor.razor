@@ -5,8 +5,8 @@
 <div class="d-flex h-100">
 	<div class="DarkBackground LeftColumMenu">
 		<div class="Header">
-			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
-			<h2 class="ms-0">@Current.SelectedTherapy.Name</h2>
+			<h1 class="mb-0">@Current.SelectedTherapy.TherapyLabel</h1>
+			<h2 class="ms-0">@((Current.SelectedTherapy != null)?Current.SelectedTherapy.Name:"")</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
 			<div style="margin-bottom:50%;">
@@ -18,11 +18,11 @@
 		</div>
 		<div class ="Header gap-2">
 			<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
-						 Icon="RXIcon.Icons.Save" Clicked="Cancel"
+						 Icon="RXIcon.Icons.Save" Clicked="StoreAndFinish"
 						 Title="Store current state" />
 
 			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.solid"
-						 Icon="RXIcon.Icons.Bin" Clicked="Cancel" NeedsConfirmation=true
+						 Icon="RXIcon.Icons.Bin" Clicked="DeleteSession" NeedsConfirmation=true
 						 Title="Delete session" />			
 		</div>		
 	</div>
@@ -44,7 +44,7 @@
 					</div>
 				</div>
 				<EditForm Model="Current.SelectedSession" class="me-3">
-					<InputDate class="form-control" @bind-Value=Current.SelectedSession.Date />
+					<InputDate class="form-control" @bind-Value=Current.SelectedSession.MeasurementDate />
 				</EditForm>
 			</div>
 		</div>
@@ -85,12 +85,13 @@
 							<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined"
 										 Icon="RXIcon.Icons.Edit" Title="Edit results" Width="200" 
 										 Clicked="@(async()=>{ await EditResults(scale);})" />
-							<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined" 
+							<!--<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined" 
 									     Icon="RXIcon.Icons.Revert" Title="Repeat assessment" Width="200" NeedsConfirmation=true
 										 Clicked="@(async()=>{ await RepeatMeasurement(scale);})" />
+							-->
 							<RoundButton ButtonColor="Colors.DarkRed" ButtonStyle="RoundButton.ButtonStyles.outlined"
-										 Icon="RXIcon.Icons.Bin" Title="Delete assessment" Width="200" NeedsConfirmation=true
-										 Clicked="@(async()=>{ await DeleteMeasurement(scale);})" />
+										 Icon="RXIcon.Icons.Bin" Title="Delete scale" Width="200" NeedsConfirmation=true
+										 Clicked="@(async ()=>{await DeleteScale(scale);})" />
 						</div>
 					</div>
 				}
@@ -129,10 +130,15 @@
 		get
 		{
 			string title = "";
-			if (Current.SelectedSession.SessionKind == SessionKinds.Pre) title = "[PRE]";
-			else if (Current.SelectedSession.SessionKind == SessionKinds.Intermediate) title = "[INT]";
-			else if (Current.SelectedSession.SessionKind == SessionKinds.Post) title = "[POST]";
-			title += " " + Current.SelectedSession?.Date.ToShortDateString();
+			if (Current.SelectedSession is not null)
+			{
+				if (Current.SelectedSession.SessionKind == SessionKinds.Pre) title = "[PRE]";
+				else if (Current.SelectedSession.SessionKind == SessionKinds.Intermediate) title = "[INT]";
+				else if (Current.SelectedSession.SessionKind == SessionKinds.Post) title = "[POST]";
+				title += " " + Current.SelectedSession?.MeasurementDate.ToShortDateString();
+			}
+			else
+				title = "No session selected";
 			return title;
 		}
 	}
@@ -159,7 +165,7 @@
 
 	async Task StoreAndFinish()
 	{
-		Toaster.ShowInfo("Saving data is not yet implemented");
+		await DB.StoreSession(Current);
 		await Exit.InvokeAsync();
 	}
 
@@ -170,6 +176,7 @@
 		Current.SelectedScale = scale;
 		await EditScale(scale);
 	}
+
 	async Task RepeatMeasurement(IScale scale)
 	{
 		Current.SelectedScale = scale;
@@ -177,10 +184,17 @@
 		await EditScale(scale);
 	}
 
-	async Task DeleteMeasurement(IScale scale)
+	async Task DeleteSession()
 	{
-		Current.SelectedScale = scale;
-		Current.SelectedScale.Reset();
-		await DB.InsertOrUpdateMeasurement(Current, Current.SelectedScale);
+		if (Current.SelectedPatient is not null && Current.SelectedTherapy is not null && Current.SelectedSession is not null)
+			await DB.DeleteSession(Current);
+
+		await Exit.InvokeAsync();
+	}
+
+	async Task DeleteScale(IScale toDelete)
+	{
+		Current.SelectedScale = toDelete;
+		await DB.DeleteScaleInSession(Current);
 	}
 }

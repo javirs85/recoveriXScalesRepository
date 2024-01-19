@@ -28,6 +28,7 @@ namespace CompanionAppShared.Scales
         string ShortName { get; set; }
         int ScoreNormalized { get; }
         int ScoreRaw { get; set; }
+        List<string> DetailsHeaders { get; set; }
         List<string> Details { get; set; }
         int ScoreDelta { get; }
         bool IsMeasured { get; set; } 

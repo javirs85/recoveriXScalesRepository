@@ -134,6 +134,28 @@ public static class PatientLabelTools
 		throw new Exception("therapy Label not found in patient label");
 	}
 
+	/// <summary>
+	/// given ABC.23.RxU.0_17 returns 0
+	/// </summary>
+	/// <param name="label"></param>
+	/// <returns></returns>
+	public static int GetTherapyRepetitionNumber(string label)
+	{
+		var tokens = label.Split('.');
+		if (tokens.Length >= 4)
+		{
+			if (IsLetter(tokens[0]) &&
+				IsDigit(tokens[1]) &&
+				IsLetter(tokens[2]) &&
+				IsDigit(tokens[3]))
+			{
+				
+				return int.Parse(tokens[3]);
+			}
+		}
+		throw new Exception("therapy repetition number not found in patient label");
+	}
+
 	private static bool IsLetter(string str) => str.Length > 0 && char.IsLetter(str[0]);	
 	private static bool IsDigit(string str) => str.Length > 0 && char.IsDigit(str[0]);	
 

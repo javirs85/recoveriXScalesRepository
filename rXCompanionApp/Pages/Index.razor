@@ -39,16 +39,9 @@ else if(CurrentMode == Modes.ScaleEditor)
 {
 	@if(Current.SelectedScale is not null)
 	{
-		@if (Current.SelectedScale is NineHolePegTest)
-		{
-			<AutoScaleEditor
-				Current="Current"
-				ExitAutoScale="@(()=>{CurrentMode = Modes.SessionEditor;})"/>
-		}
-		else
-		{
-			<div>This scale is not yet supported</div>
-		}
+		<AutoScaleEditor
+			Current="Current"
+			ExitAutoScale="@(()=>{CurrentMode = Modes.SessionEditor;})"/>
 	}
 }
 
@@ -59,7 +52,7 @@ else if(CurrentMode == Modes.ScaleEditor)
 
 	SelectedItems Current = new();
 
-	
+
 
 	protected override void OnParametersSet()
 	{
@@ -85,6 +78,8 @@ else if(CurrentMode == Modes.ScaleEditor)
 	async Task PatientModified(Patient p)
 	{
 		Current.SelectedPatient = p;
+		await DB.SelectPatient(Current);
+
 		CurrentMode = Modes.TherapyViewer;
 
 		await DB.LoadListOfPatients();
@@ -100,11 +95,13 @@ else if(CurrentMode == Modes.ScaleEditor)
 	void ExitRequested()
 	{
 		Current.SelectedPatient = null;
+		Current.UpdateUI();
 		CurrentMode = Modes.PatientSelection;
 	}
 
 	void ExitSessionEditor()
 	{
+		Current.SelectedSession = null;
 		CurrentMode = Modes.TherapyViewer;
 	}
 

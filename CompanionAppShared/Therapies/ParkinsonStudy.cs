@@ -54,7 +54,8 @@ public class ParkinsonStudy : Therapy
 		//};
         Scales = new List<ScalesIDs> {
             ScalesIDs.NineHPT,
-            ScalesIDs.BnBT
+            ScalesIDs.BnBT,
+            ScalesIDs.TUG
 		};
     }
 }

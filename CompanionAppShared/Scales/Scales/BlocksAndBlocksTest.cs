@@ -8,18 +8,31 @@ public class BlocksAndBlocksTest : ScaleBase
 		Id = ScalesIDs.BnBT;
 		Name = "Blocks and box test";
 		ShortName = "BnBT";
+		DetailsHeaders.Add("Paretic hand");
+		DetailsHeaders.Add("Healthy hand");
     }
 
-    public int NumberOfBlocksPareticHand { get; set; }
-	public int NumberOfBlocksHealthyHand { get; set; }
+	public IntItem NumberOfBlocksPareticHand { get; set; } = new IntItem { Label = "Paretic hand", StringValue = "0" };
+	public IntItem NumberOfBlocksHealthyHand { get; set; } = new IntItem { Label = "Healthy hand", StringValue = "0" };
 
-	protected override bool GenerateScoreInternal()
+	protected override void GenerateScoreInternal()
 	{
-		throw new NotImplementedException();
+		ScoreRaw = NumberOfBlocksPareticHand.Value;
+		if(NumberOfBlocksHealthyHand.Value == 0)
+			ScoreNormalized = 0; 
+		else
+			ScoreNormalized = (100*NumberOfBlocksPareticHand.Value) /NumberOfBlocksHealthyHand.Value;
 	}
 
 	protected override void ResetInternal()
 	{
-		throw new NotImplementedException();
+		NumberOfBlocksPareticHand = new IntItem { Label = "Paretic hand", StringValue = "0" };
+		NumberOfBlocksHealthyHand = new IntItem { Label = "Healthy hand", StringValue = "0" };
+	}
+
+	protected override void GenerateDetails()
+	{
+		Details.Add(NumberOfBlocksPareticHand.StringValue);
+		Details.Add(NumberOfBlocksHealthyHand.StringValue);
 	}
 }
