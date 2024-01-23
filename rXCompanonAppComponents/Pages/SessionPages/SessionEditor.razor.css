@@ -1,0 +1,94 @@
+﻿.SessionHeader {
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 12px #00000040;
+    height: 63px;
+    border-bottom: 1px solid #C8DFEC;
+    display:flex;
+}
+
+.SessionModeItem {
+    width: 200px;
+    height: 50px;
+    border: 1px solid #79C7FF;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+    border-radius:10px;
+    cursor:pointer;
+}
+    .SessionModeItem.Active {
+        border-color: #265BE7;
+        background: #265BE7;
+        color:white;
+    }
+
+.MainArea {
+    display:flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: auto;
+
+}
+
+.ScaleBox {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+    .ScaleBox.Finished {
+        border-bottom: 1px solid #CFDAFA;
+    }
+
+.NotMeasured {
+    background: #fbe8e840;
+    border-bottom: 1px solid #e7262633;
+}
+
+.scaleBoxButtonsContainer{
+    display:flex;
+    //flex-direction:column;
+    gap:10px;
+}
+
+.scaleBoxTitle {
+    color: #265BE7;
+}
+
+.scaleBoxDetails {
+    font-size: 14px;
+    opacity: 0.5;
+    line-height: 25px;
+    border-left: 1px solid #CFDAFA;
+    padding-left: 8px;
+    margin: 5px 10px;
+    font-weight:100;
+}
+
+.scaleBoxScoresBox {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: center;
+    font-size: 20px;
+    color: #0D6835;
+    font-weight: 400;
+}
+
+.ScaleBoxDelta{
+    padding:10px;
+    border-radius:10px;
+}
+
+.PositiveScoreDelta {
+    font-size: 16px;
+    background: #E9F9EA;
+}
+
+.NegativeScoreDelta {
+    font-size: 16px;
+    color: #DE2424;
+    background: #F7E5EA;
+}

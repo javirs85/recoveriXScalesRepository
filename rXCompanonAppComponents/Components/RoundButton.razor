@@ -1,0 +1,105 @@
+﻿@using rXCompanionAppComponents.Components;
+
+<div class="RoundButton d-flex justify-content-center align-items-center @ButtonShapeClass"
+	 style="width: @(Width+"px");"
+	@onclick=Clicked_internal>
+	<div class="d-flex gap-2 align-items-center">
+		<div class="d-flex align-items-center">
+			@if (ShowPlusSymbol)
+			{
+				<RXIcon IconName="RXIcon.Icons.Add" Color="IconColor" IconWidth="15" />
+			}
+			@if(Icon != RXIcon.Icons.None && Icon != RXIcon.Icons.Next)
+			{
+				<RXIcon IconName="Icon" Color="IconColor" />
+			}
+		</div>
+		<div style="max-width: 164px;">@Title</div>
+		@if (Icon == RXIcon.Icons.Next)
+		{
+			<RXIcon IconName="Icon" Color="IconColor" />
+		}
+	</div>
+	<div class="ConfirmationPanel @(IsShowingConfirmation?"ShowingConfirmationPanel":"")"
+		@onclick=@(()=>{IsShowingConfirmation = false;})
+		@onclick:stopPropagation>
+		<div class="flex-grow-1">
+			Are you sure?
+		</div>
+		<div class="d-flex gap-2">
+			<div class="ConfirmItem"><RXIcon IconName="RXIcon.Icons.Cancel" /></div>
+			<div class="ConfirmItem" @onclick:stopPropagation @onclick=ConfirmClick><RXIcon IconName="RXIcon.Icons.Tick" /></div>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public ButtonStyles ButtonStyle { get; set; } = ButtonStyles.outlined;
+	[Parameter] public Colors ButtonColor { get; set; } = Colors.blue;
+	[Parameter] public RXIcon.Icons Icon { get; set; } = RXIcon.Icons.None;
+	[Parameter] public string Title { get; set; } = "Title not set";
+	[Parameter] public bool ShowPlusSymbol { get; set; } = false;
+	[Parameter] public bool IsEnabled { get; set; } = true;
+	[Parameter] public EventCallback Clicked { get; set; }
+	[Parameter] public float Width { get; set; } = 300;
+	[Parameter] public bool NeedsConfirmation { get; set; } = false;
+
+	bool IsShowingConfirmation = false;
+
+	public enum ButtonStyles {solid, outlined} 
+
+	Colors IconColor
+	{
+		get
+		{
+			if (ButtonStyle == ButtonStyles.outlined)
+				if (!IsEnabled)
+					return Colors.gray;
+				else
+					return ButtonColor;
+			else
+				return Colors.white;
+		}
+	}
+
+	string ButtonShapeClass
+	{
+		get
+		{
+			if(ButtonStyle == ButtonStyles.solid)
+			{
+				if (!IsEnabled) return "disabledSolid";
+				if (ButtonColor == Colors.green) return "GreenSolid";
+				else if (ButtonColor == Colors.blue) return "BlueSolid";
+				else return "RedSolid";
+			}
+			else
+			{
+				if (!IsEnabled) return "disabledOutline";
+				if (ButtonColor == Colors.green) return "GreenOutline";
+				else if (ButtonColor == Colors.blue) return "BlueOutline";
+				else if (ButtonColor == Colors.DarkBlue) return "DarkBlueOutline";
+				else if (ButtonColor == Colors.DarkGreen) return "DarkGreenOutline";
+				else if (ButtonColor == Colors.DarkRed) return "DarkRedOutline";
+				else return "RedSOutline";
+			}
+		}
+	}
+
+	private void ConfirmClick()
+	{
+		IsShowingConfirmation = false;
+		Clicked.InvokeAsync();
+	}
+
+	private void Clicked_internal()
+	{
+		if (IsEnabled) 
+		{
+			if (NeedsConfirmation)
+				IsShowingConfirmation = true;
+			else
+				Clicked.InvokeAsync();
+		}
+	}
+}

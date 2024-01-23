@@ -1,0 +1,28 @@
+﻿.FilterWhite {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(278deg) brightness(107%) contrast(106%);
+}
+/*filtres extracted from https://codepen.io/sosuke/pen/Pjoqqp */
+.FilterBlack{
+    filter: brightness(0) saturate(100%);
+}
+.FilterBlue {
+    filter: brightness(0) saturate(100%) invert(74%) sepia(31%) saturate(649%) hue-rotate(170deg) brightness(95%) contrast(91%);
+}
+.FilterGreen {
+    filter: brightness(0) saturate(100%) invert(93%) sepia(6%) saturate(2501%) hue-rotate(80deg) brightness(85%) contrast(83%);
+}
+.FilterRed {
+    filter: brightness(0) saturate(100%) invert(88%) sepia(69%) saturate(7177%) hue-rotate(291deg) brightness(101%) contrast(92%);
+}
+.GrayFilter {
+    filter: brightness(0) saturate(100%) invert(53%) sepia(5%) saturate(5%) hue-rotate(332deg) brightness(93%) contrast(97%);
+}
+.DarkBlueFilter {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(28%) saturate(3725%) hue-rotate(206deg) brightness(97%) contrast(95%);
+}
+.DarkRedFilter {
+    filter: brightness(0) saturate(100%) invert(22%) sepia(88%) saturate(2434%) hue-rotate(345deg) brightness(87%) contrast(100%);
+}
+.DarkGreenFilter {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(37%) saturate(3183%) hue-rotate(126deg) brightness(95%) contrast(91%);
+}

@@ -1,0 +1,80 @@
+﻿@inject ScalesService Scales
+
+<div class="d-flex h-100">
+	<div class="DarkBackground LeftColumMenu">
+		<div class="Header">
+			<h1 class="mb-0">@Patient.PatientLabel</h1>
+			<h2 class="ms-0">@Therapy.Name</h2>
+		</div>
+		<div class="flex-grow-1 d-flex flex-column justify-content-center">
+			<div style="margin-bottom:50%;">
+				<LeftMenuItem Title="@($"{Session.MeasurementDate.ToShortDateString()} / {Scale.ShortName}")"
+							  Color="LeftMenuItem.AvailableColors.green"
+							  IsSingleItem="true"
+							  IsSelected="true" />
+			</div>
+		</div>
+		<div class="Header gap-2">
+			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
+						 Title="Cancel and delete data" />
+			<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Tick" Clicked="Cancel"
+						 Title="Store intermediate results" />
+		</div>
+	</div>
+	<div class="MainContainer flex-grow-1 h-100">
+		<div class="SessionHeader">
+			<div class="SessionModeSelector d-flex justify-content-center align-items-center w-100">
+				
+			</div>
+		</div>
+		<div class="d-flex flex-column m-4">
+			@foreach (var scale in Session.Scales)
+			{
+				@if (!scale.IsMeasured)
+				{
+					<div class="ScaleBox NotMeasured">
+						<div class="flex-grow-1">
+							<div class="scaleBoxTitle">@scale.Name (@scale.ShortName)</div>
+						</div>
+						<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.solid" Icon="RXIcon.Icons.Scale" Title="Run scale" />
+					</div>
+				}
+				else
+				{
+					<div class="ScaleBox Finished">
+						<div>
+							<div class="scaleBoxTitle">@scale.Name (@scale.ShortName)</div>
+							<div class="scaleBoxDetails">
+								@foreach (var detail in scale.Details)
+								{
+									<div>@detail</div>
+								}
+							</div>
+						</div>
+						<div class="scaleBoxScoresBox">
+							<div class="ScaleBoxScore">@(scale.ScoreNormalized + "%")</div>
+							<div class="ScaleBoxDelta">@(scale.ScoreNormalized + "%")</div>
+						</div>
+						<div class="scaleBoxButtonsContainer">
+							<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Edit" Title="Edit results" />
+							<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Revert" Title="Repeat assessment" />
+							<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined" Icon="RXIcon.Icons.Bin" Title="Detelet assessment" />
+						</div>
+					</div>
+				}
+			}
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter] public Patient Patient { get; set; } = new Patient();
+	[Parameter] public Therapy Therapy { get; set; } = new ParkinsonStudy();
+	[Parameter] public Session Session { get; set; } = new Session();
+	[Parameter] public IScale Scale { get; set; }
+
+	private void Cancel() { }
+}

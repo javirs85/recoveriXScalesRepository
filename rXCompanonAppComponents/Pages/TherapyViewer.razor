@@ -1,0 +1,365 @@
+﻿@inject DataBase DB;
+
+<PageTitle>Patients list</PageTitle>
+
+<div class="d-flex gap-0 h-100">
+	<div class="LeftColumMenu d-flex flex-column DarkBackground Animable relative @(IsDarkColumnMinified?"Mini":"")">
+
+		<div class="SwitchDarkColumWidthButton DarkBackground @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
+			<i class="bi bi-chevron-compact-@(IsDarkColumnMinified?"right":"left")"></i>
+		</div>
+
+		<div class="Header rel" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+			<h1 class="mb-0">@Current.SelectedTherapy?.TherapyLabel</h1>
+			<h2 class="ms-0">@Current.SelectedTherapy?.Name</h2>
+			@if(!IsDarkColumnMinified)
+			{
+				<div class="Exit" @onclick=Exit>
+					<RXIcon IconName="RXIcon.Icons.Cancel" Color="Colors.white" IconWidth="30"/>
+				</div>
+			}			
+		</div>
+
+		<LeftMenuBigList 
+			ItemSelected="SessionClick" 
+			Mode="LeftMenuBigList.ListingModes.Sessions"
+			Sessions="SessionsOnScreen" />
+
+		<div class="ButtonsSpace d-flex flex-column gap-2" style="padding:24px;">
+			@if(CurrentView == CurrentViewOptions.table)
+			{
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Scale"
+							 Title="Add new session"
+							 ShowPlusSymbol="true"
+							 Clicked="AddSessionToTherapy" />
+
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy circles"
+							 Clicked="ShowTherapyCircles" />
+			}
+			else if(CurrentView == CurrentViewOptions.circles)
+			{
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Scale"
+							 Title="Add new session"
+							 ShowPlusSymbol="true"
+							 Clicked="AddSessionToTherapy" />
+
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy table"
+							 Clicked="ShowTherapyTable" />
+			}
+			<RoundButton ButtonColor="Colors.blue"
+						 ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Edit"
+						 Title="Edit patient"
+						 ShowPlusSymbol="false"
+						 Clicked="EditPatientRequested" />
+
+			
+		</div>
+	</div>
+	<div class="d-flex flex-column flex-grow-1 h-100">
+		@if(CurrentView == CurrentViewOptions.options)
+		{
+			<div class="d-flex flex-column h-100 justify-content-center align-items-center gap-2">
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Scale"
+							 Title="Add new session"
+							 ShowPlusSymbol="true"
+							 Clicked="AddSessionToTherapy" />
+
+				<RoundButton ButtonColor="Colors.DarkGreen"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy table"
+							 Clicked="ShowTherapyTable" />
+
+				<RoundButton ButtonColor="Colors.DarkBlue"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy circles"
+							 Clicked="ShowTherapyCircles" />
+
+			</div>
+		}
+		else if (CurrentView == CurrentViewOptions.table)
+		{
+			<div class="d-flex">
+				<div class="FirstColumn d-flex justify-content-center align-items-center">
+					<div class="TherapyHeader">
+						<div class="FirstColumn d-flex justify-content-center align-items-end pe-2">
+							<div class="form-check form-switch" @onclick=@(()=>{IsShowinDetails = !IsShowinDetails;})>
+								@if (IsShowinDetails)
+								{
+									<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+								}
+								else
+								{
+									<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+								}
+								<label class="form-check-label" for="flexSwitchCheckChecked">Details</label>
+							</div>
+						</div>
+					</div>
+					@foreach(var s in VerticalAxis)
+					{
+						<div class="TableCell RowHeader">
+							<div class="RowHeaderTitle">@s.ShortName</div>
+							<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
+								@foreach(var d in s.DetailsHeaders)
+								{
+									<div>@d</div>
+								}
+							</div>
+						</div>
+					}
+				</div>
+				<div class="MiddleSectionScrollableContent flex-grow-1">
+					@foreach (var s in HorizontalAxis)
+					{
+					
+						<div class="MiddleColumn">
+							<div class="TherapyHeader">
+								<div class="SessionHeader @(IsSessionHovered(s)?"SessionHovered":"")" @onmouseover=@(()=>{MouseOver(s);}) @onmouseleave=ResetOver @onclick=@(async ()=>{await SessionClick(s);})>
+									<h5>@s.SessionKind.ToString()</h5>
+									<div class="opacity-25" style="line-height:6px;">@s.MeasurementDate.ToString("dd.MM.yyyy")</div>
+								</div>
+							</div>
+							@foreach(var sc in VerticalAxis)
+							{
+								<div class="TableCell">
+									@if (GetScale(s.Id, sc.Id).IsMeasured)
+									{
+										<h5>@(GetScale(s.Id, sc.Id)?.ScoreNormalized + "%")</h5>
+										<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
+											@foreach (var d in GetScale(s.Id, sc.Id).Details)
+											{
+												<div>@d</div>
+											}
+										</div>
+									}
+								</div>
+							}
+						</div>
+					
+					}
+				</div>
+				<div class="FirstColumn">
+					<div class="TherapyHeader">
+						<div class="SessionHeader">
+							<h5>Result</h5>
+						</div>
+					</div>
+					@foreach (var sc in VerticalAxis)
+					{
+						<div class="TableCell">
+							<ResultLittleArea Value="@CalculateEvolutionOnScale(sc.Id)" />							
+						</div>
+					}
+				</div>
+				<div class="LastColumn">
+					<div class="TherapyHeader">
+						<div class="SessionHeader">
+							<h5>Evolution</h5>
+						</div>
+					</div>
+					@foreach (var sc in VerticalAxis)
+					{
+						<div class="TableCell">
+							<LinearResultView Values="@CalculateEvolutionOnScale(sc.Id)"/>
+						</div>
+					}
+				</div>
+			</div>
+		}
+		else if (CurrentView == CurrentViewOptions.circles)
+		{
+			<div class="d-flex flex-wrap m-4 gap-4">
+				@foreach(var sc in VerticalAxis)
+				{
+					<CircularPlot Data="CalculateEvolutionOnScale(sc.Id)" Scale="sc"/>
+				}
+			</div>
+		}
+		
+	</div>
+</div>
+
+@code {
+	[Parameter] public EventCallback<Session> SessionSelected { get; set; }
+	[Parameter] public EventCallback AddSessionToTherapy { get; set; }
+	[Parameter] public EventCallback EditPatientRequested { get; set; }
+	[Parameter] public EventCallback Exit { get; set; }
+	[Parameter]	public SelectedItems Current { get; set; }
+
+	bool IsDarkColumnMinified = false;
+	bool IsShowinDetails = false;
+	enum CurrentViewOptions {options, table, circles}
+	CurrentViewOptions CurrentView = CurrentViewOptions.options;
+
+	public class EvolutionResults
+	{
+		public int InitialPreVale = 0;
+		public int LastPreValue =0;
+		public int AveragedPreValue = 0;
+		public bool HasNonPreValues = false;
+		public int FinalValue = 0;
+		public int Increase
+		{
+			get
+			{
+				if (HasNonPreValues) return FinalValue - AveragedPreValue;
+				else return LastPreValue - InitialPreVale ;
+			}
+		}
+	}
+
+
+
+	List<IScale> VerticalAxis = new();
+	List<Session> HorizontalAxis = new();
+
+	private bool IsSelected(Patient p) => Current.SelectedPatient == p;
+	Therapy? SelectedTherapy = null;
+
+	protected override async Task OnParametersSetAsync()
+	{
+		DB.UIUpdateRequestedFromDB -= Update;
+		DB.UIUpdateRequestedFromDB += Update;
+	}
+	private void Update(object? sender, EventArgs e)
+	{
+		InvokeAsync(() => { StateHasChanged(); });
+	}
+
+	List<Session> SessionsOnScreen
+	{
+		get
+		{
+			if (Current.SelectedPatient.HasTherapies)
+				return Current.SelectedPatient.GetParkinsonTherapy().Sessions;
+			else
+				return new List<Session>();
+		}
+	}
+
+	async Task SessionClick(object o)
+	{
+		if (o is Session)
+		{
+			Current.SelectedSession = o as Session;
+			Current.SelectedTherapy.Sessions.Remove(Current.SelectedSession);
+			Current.SelectedSession = await DB.UpdateSessionInTherapyWithDetailsFromDB(Current.SelectedTherapy, Current.SelectedSession);
+			Current.SelectedTherapy.Sessions.Add(Current.SelectedSession);
+			await SessionSelected.InvokeAsync(o as Session);
+		}
+	}
+
+	Session? HoveredSession = null;
+	void MouseOver(Session s) => HoveredSession = s;
+	void ResetOver() => HoveredSession = null;
+	bool IsSessionHovered(Session s) => HoveredSession is not null && HoveredSession == s;
+
+
+	bool IsFullyLoaded = false;
+
+	async Task ShowTherapyTable()
+	{
+		await DownloadAxesFromDB();
+		CurrentView = CurrentViewOptions.table;
+	}
+
+	async Task ShowTherapyCircles()
+	{
+		await DownloadAxesFromDB();
+		CurrentView = CurrentViewOptions.circles;
+	}
+
+	async Task DownloadAxesFromDB()
+	{
+		await DB.LoadAllSessionDetailsInTherapy(Current.SelectedTherapy);
+
+		//horizontal axis
+		HorizontalAxis = Current.SelectedTherapy.Sessions.OrderBy(x => x.MeasurementDate).ToList();
+
+		//vertical axis
+		foreach (var session in HorizontalAxis)
+		{
+			foreach (var scale in session.Scales)
+			{
+				if (VerticalAxis.Find(x => x.Id == scale.Id) is null)
+				{
+					VerticalAxis.Add(scale);
+				}
+			}
+		}
+	}
+
+	IScale? GetScale(Guid SessionID, ScalesIDs id)
+	{
+		var ses = HorizontalAxis.Find(x => x.Id == SessionID);
+		if (ses is null) return null;
+
+		var sc = ses.Scales.Find(x => x.Id == id);
+		return sc;
+	}
+
+	EvolutionResults CalculateEvolutionOnScale(ScalesIDs id)
+	{
+		int amount = 0;
+		int added = 0;
+
+		var SessionsThatContainScale =  from s in HorizontalAxis
+												where s.Scales.Find(sc => sc.Id == id && sc.IsMeasured) is not null
+												select s;
+		var SessionsPRE =   from s in SessionsThatContainScale
+								where s.SessionKind == SessionKinds.Pre
+								select s;
+
+		SessionsThatContainScale = SessionsThatContainScale.OrderByDescending(x => x.MeasurementDate);
+
+		foreach (var s in SessionsPRE)
+		{
+			var sc = s.Scales.Find(x=>x.Id ==id && x.IsMeasured);
+			if(sc is not null)
+			{
+				amount ++;
+				added += sc.ScoreNormalized;
+			}
+		}
+
+		int AveragedPRE = (int)((float)added / (float)amount);
+
+		var Newest = SessionsThatContainScale.First();
+
+		if (Newest.SessionKind == SessionKinds.Pre)
+		{
+			var result = new EvolutionResults
+				{
+					InitialPreVale = SessionsPRE.First().Scales.Find(x => x.Id == id).ScoreNormalized,
+					LastPreValue = SessionsPRE.Last().Scales.Find(x => x.Id == id).ScoreNormalized,
+					HasNonPreValues = false,
+					FinalValue = AveragedPRE
+				};
+			return result;
+		}
+		else
+		{
+			var newValue = Newest.Scales.Find(x => x.Id == id).ScoreNormalized; // - AveragedPRE;
+			var result = new EvolutionResults
+				{
+					AveragedPreValue = AveragedPRE,
+					HasNonPreValues = true,
+					FinalValue = newValue
+				};
+			return result;
+		}
+
+	}
+
+}

@@ -1,0 +1,38 @@
+﻿<div class="d-flex CriteriaBox @SetBackgroundClass()">
+	<div class="flex-grow-1 pe-4">
+		@Criteria.Title
+	</div>
+	<div class="d-flex gap-1 align-items-center justify-content-center" style="height: 50px; width:104px;">
+		<div style="width:50px;" class="d-flex justify-content-end">
+			<div class="GreenTick @(Criteria.IsFalse?"GreenSmall":"GreenBig")" @onclick=SetToTrue>
+				<RXIcon IconName="RXIcon.Icons.Tick" Color="Colors.white" IconWidth="GreenIconSize"/>
+			</div>
+		</div>
+		<div style="width:50px;">
+			<div class="RedTick @(Criteria.IsTrue?"RedSmall":"RedBig")" @onclick=SetToFalse>
+				<RXIcon IconName="RXIcon.Icons.Cancel" Color="Colors.white" IconWidth="RedIconSize"/>
+			</div>
+		</div>
+	</div>
+</div>
+@code {
+	[Parameter] public InclusionExclusionCriteria Criteria { get; set; } = new();
+	[Parameter] public bool IsWrong { get; set; } = false;
+	[Parameter] public CriteriaTypes CriteriaType { get; set; } = CriteriaTypes.Exclusion;
+	[Parameter] public EventCallback UpdateRequested { get; set; }
+
+	public enum CriteriaTypes {Inclusion, Exclusion}
+
+	void SetToTrue() { Criteria.Value = true; UpdateRequested.InvokeAsync(); }
+	void SetToFalse() { Criteria.Value = false; UpdateRequested.InvokeAsync(); }
+
+	int GreenIconSize => Criteria.IsFalse ? 18 : 25;
+	int RedIconSize => Criteria.IsTrue ? 20 : 25;
+
+	string SetBackgroundClass()
+	{
+		if (CriteriaType == CriteriaTypes.Exclusion && Criteria.IsSet && Criteria.IsTrue) return "WrongCriteria";
+		else if (CriteriaType == CriteriaTypes.Inclusion && Criteria.IsSet && Criteria.IsFalse) return "WrongCriteria";
+		else return "OkCriterial";
+	}
+}

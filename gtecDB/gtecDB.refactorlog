@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="8c0b55e2-b8d1-4c2d-a541-604f96621f2f" ChangeDateTime="11/28/2023 10:13:45">
+    <Property Name="ElementName" Value="[dbo].[Masurement].[Date]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Masurement]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MeasurementDate" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="be689758-4d6d-4b2f-a4d2-259ad2a3e9fc" ChangeDateTime="11/28/2023 11:16:24">
+    <Property Name="ElementName" Value="[dbo].[Patient].[Label]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Patient]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PatientLabel" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="6e2089c7-b22a-4ab6-ba7a-e03b23756375" ChangeDateTime="12/14/2023 14:56:14">
+    <Property Name="ElementName" Value="[dbo].[Patient].[NumberOfMeasurements]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Patient]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NumberOfMeasurementsInLastTherapy" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="e378aa2b-ec33-4506-b318-558a4523bb29" ChangeDateTime="12/14/2023 14:56:16">
+    <Property Name="ElementName" Value="[dbo].[Patient].[LastMeasurement]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Patient]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LastMeasurementInLastTherapy" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="71ce8ebf-cb42-47c2-997b-75dc718b3a1c" ChangeDateTime="01/11/2024 08:52:15">
+    <Property Name="ElementName" Value="[dbo].[Masurement].[Tag]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Masurement]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Score" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9b9b63de-1f43-410c-b1d3-4c91d4e06fe4" ChangeDateTime="01/17/2024 08:20:46">
+    <Property Name="ElementName" Value="[dbo].[Masurement].[MeasurementDate]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Masurement]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Date" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2b817797-77ba-438d-9470-d3f501006050" ChangeDateTime="01/17/2024 08:21:32">
+    <Property Name="ElementName" Value="[dbo].[Masurement].[Date]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Masurement]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MeasurementDate" />
+  </Operation>
+</Operations>

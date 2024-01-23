@@ -1,0 +1,155 @@
+﻿@using System.Text.Json;
+@inject ScalesService Scales
+@inject DataBase DB
+
+<div class="d-flex h-100">
+	<div class="DarkBackground LeftColumMenu">
+		<div class="Header">
+			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
+			<h2 class="ms-0">@Current.SelectedTherapy.Name</h2>
+		</div>
+		<div class="flex-grow-1 d-flex flex-column justify-content-center">
+			<div style="margin-bottom:50%;">
+				<LeftMenuItem Title="@($"{Current.SelectedSession.MeasurementDate.ToShortDateString()} / {Current.SelectedScale.ShortName}")"
+							  Color="LeftMenuItem.AvailableColors.green"
+							  IsSingleItem="true"
+							  IsSelected="true" />
+			</div>
+		</div>
+		<div class="Header gap-2">
+			<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Revert" Clicked="ClearScale"
+						 Title="Clear data and start again" />
+
+			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
+						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
+						 Title="@(CurrentMode == Modes.NewScaleMode?"Delete data and exit":"Revert changes and exit")" />
+			
+			@if (LifeCopy.IsMeasured)
+			{
+				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Save" Clicked="Store"
+							 Title="Store scale" />
+			}
+			else
+			{
+				<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Icon="RXIcon.Icons.Tick" Clicked="LifeCopy.GenerateScore"
+							 Title="Validate score" />
+			}
+			
+		</div>
+	</div>
+	<div class="MainContainer d-flex flex-grow-1 h-100">
+		<div class="FormPanel h-100">
+			<div class="FormPanelDiv d-flex flex-column gap-3">
+				<div class=" d-flex align-items-center">
+					<div class="Score">@(LifeCopy.ScoreNormalized)%</div>
+					<div class="ScoreComment">score calculated automatically</div>
+				</div>
+				@foreach (var item in ScaleItems)
+				{
+					@if(item is StringItem)
+					{
+						<StringItemViewer Value="@(item as StringItem)"/>
+					}
+					else if(item is IntItem)
+					{
+						<IntItemViewer Value="@(item as IntItem)"/>
+					}
+					else if(item is FloatItem)
+					{
+						<FloatItemViewer Value="@(item as FloatItem)"/>
+					}
+					else if (item is OptionsItem)
+					{
+						<OptionsItemViewer Value="@(item as OptionsItem)" />
+					}
+					else if (item is TimeSpanItem)
+					{
+						<TimeSpanItemViewer Value="@(item as TimeSpanItem)" />
+					}
+					else
+					{
+						<div>@item.Label</div>
+					}				
+				}
+			</div>
+		</div>
+		<div class="FormPanel h-100">
+			
+		</div>
+		<div class="FormPanel h-100">
+			
+		</div>
+	</div>
+</div>
+
+
+@code {
+	[Parameter] public SelectedItems Current { get; set; }
+	[Parameter] public EventCallback ExitAutoScale { get; set; }
+
+	enum Modes {NewScaleMode, EditScaleMode};
+	Modes CurrentMode = Modes.NewScaleMode;
+
+	List<ScaleItem> ScaleItems = new();
+	IScale LifeCopy;
+
+	protected override void OnParametersSet()
+	{
+		var str = JsonSerializer.Serialize(Current.SelectedScale);
+		LifeCopy = JsonSerializer.Deserialize<IScale>(str);
+		LifeCopy.FixEvents();
+
+		if (Current.SelectedScale.IsMeasured) 
+		{
+			CurrentMode = Modes.EditScaleMode;
+		}
+
+		if(ScaleItems.Count == 0)
+		{
+			ScaleItems.Clear();
+			foreach (var property in LifeCopy.GetType().GetProperties())
+			{
+				if (typeof(ScaleItem).IsAssignableFrom(property.GetValue(LifeCopy).GetType()))
+				{
+					ScaleItem customItem = (ScaleItem)property.GetValue(LifeCopy);
+					if (customItem is not null){
+						ScaleItems.Add(customItem);
+					}
+				}
+			}
+		}
+
+		LifeCopy.GenerateScore();
+
+		LifeCopy.UpdateNeeded -= Update;
+		LifeCopy.UpdateNeeded += Update;
+	}
+
+	private void Update(object? sender, EventArgs e) => InvokeAsync(() => StateHasChanged());
+
+	private async Task Cancel()
+	{
+		if(CurrentMode == Modes.NewScaleMode)
+		{
+			Current.SelectedScale.Reset();
+		}
+		else
+		{
+		}
+		await ExitAutoScale.InvokeAsync();
+	}
+
+	private async Task Store()
+	{
+		await DB.UpdateScaleInSession(Current, LifeCopy);
+		await ExitAutoScale.InvokeAsync();
+	}
+
+	private void ClearScale()
+	{
+		LifeCopy.Reset();
+	}
+}

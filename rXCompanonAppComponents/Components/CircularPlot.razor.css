@@ -1,0 +1,60 @@
+﻿.PlotContainer {
+    width: 307px;
+    height: 316px;
+    background: #F4F1F1;
+    border-radius: 11px;
+    box-shadow: 0px 4px 10px #00000033;
+    position:relative;
+}
+
+.TitleBox{
+    position:absolute;
+    top:10px;
+    right:10px;
+    display:flex;
+    flex-direction:column;
+    font-size:16px;
+    width: 70%;
+}
+
+.Plot{
+    position:absolute;
+    left:50%;
+    transform: translate(-50%, 0);
+    bottom:10px;
+    width:85%;
+}
+
+.DataPanel {
+    position: absolute;
+    bottom: 30%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width:100%;
+}
+
+.CurrentPercentage{
+    font-size:48px;
+    opacity:70%;
+    font-weight:400;
+    line-height:50px;
+}
+.spacer{
+    height:1px;
+    border: solid 1px black;
+    width:55%;
+}
+
+.Old{
+    line-height: 20px;
+    opacity: 60%;
+}
+
+.ScaleIcon {
+    width: 74px;
+    margin: 11px;
+    opacity: 70%;
+}

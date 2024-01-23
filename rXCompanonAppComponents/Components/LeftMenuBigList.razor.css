@@ -1,0 +1,13 @@
+﻿
+.Option{
+    opacity: 0.2;
+    cursor: pointer;
+}
+    .Option:hover {
+        opacity: 1;
+    }
+    .Option.Selected {
+        opacity: 1;
+        color: #8f9793;
+        font-weight: 700;
+    }

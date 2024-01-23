@@ -1,0 +1,24 @@
+﻿@using static rXCompanionAppComponents.Pages.TherapyViewer;
+
+<div class="@(!Value.HasNonPreValues?"opacity-25":"")">
+	@if(Value.Increase >=0)
+	{
+		<div class="d-flex justify-content-center align-items-center" 
+			 style="background:#E2EBEB; padding:10px; border-radius:10px; height:41px;">
+			<h5 class="m-0" style="color:#0D6835;">
+				@("+"+Value.Increase + "%")
+			</h5>
+		</div>
+	}
+	else
+	{
+		<h5 style="color:#DE2424;">
+			@(Value.Increase+"%")
+		</h5>
+	}
+</div>
+
+
+@code {
+	[Parameter] public EvolutionResults Value { get; set; }
+}

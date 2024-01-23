@@ -1,17 +1,113 @@
 ﻿@page "/"
-@inject IConfiguration Config
+@using rXCompanionAppComponents.Pages.ScalesEditors
+@inject DataBase DB;
+@inject Blazored.Toast.Services.IToastService Toaster;
 
-<PageTitle>Index</PageTitle>
-<p class="h4">
-	Default connection string = @defaultConnectionString
-</p>
+<BlazoredToasts/>
+
+@if (CurrentMode == Modes.PatientSelection)
+{
+	<PatientList 
+		Current="Current" 
+		AddNewPatientRequested="AddNewPatientRequested"
+		PatientSelected="PatientSelected" />
+}
+else if(CurrentMode == Modes.PatientEditor)
+{
+	<PatientEditor Current="Current"
+		PatientDeleted="PatientDeleted"
+		ChangesSaved="PatientModified"/>
+}
+else if(CurrentMode == Modes.TherapyViewer)
+{
+	<TherapyViewer
+		Current="Current"
+		SessionSelected="@(()=>{CurrentMode = Modes.SessionEditor;})"
+		EditPatientRequested="@(()=>{CurrentMode = Modes.PatientEditor;})"
+		AddSessionToTherapy="@(()=>{CurrentMode = Modes.SessionEditor;})"
+		Exit="ExitRequested"/>
+}
+else if(CurrentMode == Modes.SessionEditor)
+{
+	<SessionEditor 
+		Current="Current"
+		OpenScaleEditor="OpenScaleEditor"
+		Exit="ExitSessionEditor"
+		/>
+}
+else if(CurrentMode == Modes.ScaleEditor)
+{
+	@if(Current.SelectedScale is not null)
+	{
+		<AutoScaleEditor
+			Current="Current"
+			ExitAutoScale="@(()=>{CurrentMode = Modes.SessionEditor;})"/>
+	}
+}
 
 
 @code{
-	private string defaultConnectionString = "";
+	enum Modes {PatientSelection, PatientEditor, TherapyViewer, SessionViewer, SessionEditor, ScaleEditor};
+	Modes CurrentMode = Modes.PatientSelection;
+
+	SelectedItems Current = new();
+
+
 
 	protected override void OnParametersSet()
 	{
-		defaultConnectionString = Config.GetConnectionString("Default") ?? "Unknown";
+		DB.ErrorOccurred += (o, e) => Toaster.ShowError(e.Message);
+	}
+
+	void AddNewPatientRequested()
+	{
+		Current.SelectedPatient = null;
+		CurrentMode = Modes.PatientEditor;
+	}
+
+	async Task PatientSelected(Patient p)
+	{		
+		if(! p.IsFullyLoadedFromDB)
+			p = await DB.GetPatient(p.Id) ?? new Patient { PatientLabel = "Not Found" };
+
+		Current.SelectedPatient = p;
+		Current.SelectedTherapy = Current.SelectedPatient.GetTherapy(p.TherapyLabels[0]);
+		CurrentMode = Modes.TherapyViewer;
+	}
+
+	async Task PatientModified(Patient p)
+	{
+		Current.SelectedPatient = p;
+		await DB.SelectPatient(Current);
+
+		CurrentMode = Modes.TherapyViewer;
+
+		await DB.LoadListOfPatients();
+	}
+
+	async Task PatientDeleted()
+	{
+		Current.SelectedPatient = null;
+		CurrentMode = Modes.PatientSelection;
+		await DB.LoadListOfPatients();
+	}
+
+	void ExitRequested()
+	{
+		Current.SelectedPatient = null;
+		Current.UpdateUI();
+		CurrentMode = Modes.PatientSelection;
+	}
+
+	void ExitSessionEditor()
+	{
+		Current.SelectedSession = null;
+		CurrentMode = Modes.TherapyViewer;
+	}
+
+	void OpenScaleEditor(IScale scale)
+	{
+		Current.SelectedScale = scale;
+		CurrentMode = Modes.ScaleEditor;
 	}
 }
