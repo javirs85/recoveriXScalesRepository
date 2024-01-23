@@ -8,7 +8,7 @@
 	</div>
 	@if(IsPositive)
 	{
-		<div style="position: absolute; top:-3px; left: @InitialPer; right: @FinalPer;
+		<div style="position: absolute; top:-3px; left: @InitialPer; right: @(100-FinalPerInt)%;
 					align-items: center;
 					justify-content:end;
 					padding: 3px;
@@ -22,7 +22,7 @@
 	}
 	else
 	{
-		<div style="position: absolute; top:-3px; left: @InitialPer; right: @FinalPer;
+		<div style="position: absolute; top:-3px; left: @FinalPer; right: @(100-InitialPerInt)%;
 					align-items: center;
 					padding: 3px;
 					height:14px;
@@ -42,22 +42,25 @@
 
 	bool IsPositive => Values.Increase >= 0;
 
-	string InitialPer
+	int InitialPerInt
 	{
 		get
 		{
-			if (Values.HasNonPreValues) return Values.AveragedPreValue + "%";
-			else return Values.InitialPreVale + "%";
+			if (Values.HasNonPreValues) return Values.AveragedPreValue;
+			else return Values.InitialPreVale;
 		}
 	}
-	string FinalPer 
-	{
-		get
+	int FinalPerInt
+	{get
 		{
-			if (Values.HasNonPreValues) return Values.FinalValue + "%";
-			else return Values.LastPreValue + "%";
+			if (Values.HasNonPreValues) return Values.FinalValue;
+			else return Values.LastPreValue;
 		}
+
 	}
+
+	string InitialPer => InitialPerInt + "%";
+	string FinalPer => FinalPerInt + "%";
 
 	protected override void OnParametersSet()
 	{
