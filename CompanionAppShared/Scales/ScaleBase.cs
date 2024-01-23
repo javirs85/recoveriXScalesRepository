@@ -50,6 +50,7 @@ public abstract class ScaleBase : IScale
     public string Name { get; set; } = string.Empty;
     public string ShortName { get; set; } = string.Empty;
     public string AreaOfStudy { get; set; } = string.Empty;
+	public ScaleIcon Icon { get; set; } = ScaleIcon.NotSet;
     public int ScoreNormalized { get; set; } = -1;
     public int ScoreDelta
     {

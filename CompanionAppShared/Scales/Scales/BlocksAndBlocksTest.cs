@@ -8,6 +8,7 @@ public class BlocksAndBlocksTest : ScaleBase
 		Id = ScalesIDs.BnBT;
 		Name = "Blocks and box test";
 		ShortName = "BnBT";
+		AreaOfStudy = "Gross motor skills";
 		DetailsHeaders.Add("Paretic hand");
 		DetailsHeaders.Add("Healthy hand");
     }

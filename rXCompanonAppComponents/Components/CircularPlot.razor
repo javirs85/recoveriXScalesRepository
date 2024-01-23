@@ -1,0 +1,187 @@
+﻿@using static rXCompanionAppComponents.Pages.TherapyViewer;
+<div class="PlotContainer">
+    <div>
+        <img class="ScaleIcon" alt="@Scale.ShortName" src="_content/rXCompanionAppComponents/Icons/ScaleIcons/@(GetIconPath(Scale.Icon))" />
+    </div>
+    <div class="TitleBox d-flex flex-column align-items-center">
+        <div style="font-weight: 600; opacity:0.75;">@Scale.Name</div>
+        <div style="opacity:0.5; line-height:10px; font-size:14px;">@("("+Scale.AreaOfStudy+")")</div>
+    </div>
+    <div class="Plot">
+        <svg style="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 @(GraphWidth) @GraphHeight">
+
+            @generatePath("#5B8FBF", 1, 99)
+            @generatePath("#89B6DF", 1, 66)
+            @generatePath("#BED6EC", 1, 33)
+
+            @generatePath(EvolutionColor, InitialPercentage, FinalPercentage, EvolutionLineThickness, true)
+            @generatePath(EvolutionCapColor, CapPosition, CapPosition, EndPointMarkerThickness, true)
+
+        </svg>
+    </div>
+    <div class="DataPanel">
+        <div class="CurrentPercentage">@(FinalPercentage + "%")</div>
+        <div class="spacer"></div>
+        <div class="Old">before:</div>
+        <div class="Old">@(InitialPercentage+"%")</div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public int InitialPercentage { get; set; }
+    [Parameter] public int FinalPercentage { get; set; }
+    [Parameter] public EvolutionResults Data { get; set; }
+    [Parameter] public IScale Scale{ get; set; }
+
+    private const float GraphHeight = 250.0f;
+    private const float GraphWidth = 250.0f;
+    private const float OuterLineThickness = 11.0f;
+    private const float EvolutionLineThickness = 20.0f;
+    private const float EndPointMarkerThickness = 16.0f;
+
+    private const string GreenColor = "#0D8642";
+    private const string GreenCapColor = "#4CEA91";
+
+    private const string RedColor = "#7D1414";
+    private const string RedCapColor = "#FF9D9D";
+
+    private string EvolutionColor = GreenColor;
+    private string EvolutionCapColor = GreenCapColor;
+
+    private int CapPosition = 0;
+
+
+    private System.Globalization.CultureInfo DotSeparatorCulture;
+
+    protected override Task OnParametersSetAsync()
+    {
+        DotSeparatorCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+        DotSeparatorCulture.NumberFormat.NumberDecimalSeparator = ".";
+
+        if(Data is not null)
+        {
+            if (Data.HasNonPreValues) 
+            {
+                InitialPercentage = Data.AveragedPreValue;
+                FinalPercentage = Data.FinalValue;
+            }
+            else
+            {
+                InitialPercentage = Data.InitialPreVale;
+                FinalPercentage = Data.LastPreValue;
+            }
+        }
+
+        if (InitialPercentage > FinalPercentage)
+        {
+            EvolutionCapColor = RedCapColor;
+            EvolutionColor = RedColor;
+            var temp = InitialPercentage;
+            InitialPercentage = FinalPercentage;
+            FinalPercentage = temp;
+            CapPosition = InitialPercentage;
+        }
+        else
+            CapPosition = FinalPercentage;
+
+        return base.OnParametersSetAsync();
+    }
+
+
+
+    private string generateBackground()
+    {
+        return string.Concat(
+            generatePath("#5B8FBF", 1, 99),
+            generatePath("#89B6DF", 1, 66),
+            generatePath("#BED6EC", 1, 33)
+            );
+    }
+
+    private MarkupString generatePath(string color, int startPoint, int endPoint, float thickness = OuterLineThickness, bool IsRounded = false)
+    {
+        float ini = (float)startPoint / 100.0f;
+        float end = (float)endPoint / 100.0f;
+        string val = $"<path id=\"OuterBlueDark\" fill=\"none\" stroke=\"{color}\" stroke-width=\"{thickness}\" d=\"{describeArc01(endPoint, startPoint, thickness)}\"";
+        if (IsRounded) val += " stroke-linecap=\"round\" ";
+        val += "/>" + Environment.NewLine;
+        return new MarkupString(val);
+    }
+
+    private string describeArc01(int endpoint, int startpoint = 0, float linewidth = OuterLineThickness)
+    {
+        float ini = (float)startpoint / 100.0f;
+        float end = (float)endpoint / 100.0f;
+        return describeArcSimple(360 * end, 360 * ini, linewidth);
+    }
+
+    private string describeArcSimple(float endAngle, float startAngle = 0, float lineWidth = OuterLineThickness) =>
+        describeArc(GraphWidth / 2, GraphWidth / 2, (GraphWidth / 2.0f) - (lineWidth / 2), startAngle, endAngle, lineWidth);
+
+
+    private Point polarToCartesian(float centerX, float centerY, float radius, float angleInDegrees)
+    {
+        var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+
+        return
+            new Point(
+                centerX + (float)(radius * Math.Cos(angleInRadians)),
+                centerY + (float)(radius * Math.Sin(angleInRadians))
+            );
+        ;
+    }
+
+    private string describeArc(float x, float y, float radius, float startAngle, float endAngle, float linewidth)
+    {
+        radius = radius - EvolutionLineThickness;
+        radius = radius + linewidth / 2;
+        var start = polarToCartesian(x, y, radius, endAngle);
+        var end = polarToCartesian(x, y, radius, startAngle);
+
+
+        var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+        string d = $"M {start.x.ToString(DotSeparatorCulture)} {start.y.ToString(DotSeparatorCulture)} A {radius.ToString(DotSeparatorCulture)} {radius.ToString(DotSeparatorCulture)} 0 {largeArcFlag.ToString(DotSeparatorCulture)} 0 {end.x.ToString(DotSeparatorCulture)} {end.y.ToString(DotSeparatorCulture)}";
+
+        return d;
+    }
+
+    protected class Point
+    {
+        public Point(float X, float Y)
+        {
+            x = X;
+            y = Y;
+        }
+        public float x { get; set; } = 0.0f;
+        public float y { get; set; } = 0.0f;
+    }
+
+    string GetIconPath(ScaleIcon icon)
+    {
+        if(icon == ScaleIcon.NotSet)
+        {
+            if (Scale.Id == ScalesIDs.TUG) icon = ScaleIcon.TUG;
+            else if (Scale.Id == ScalesIDs.BnBT) icon = ScaleIcon.bbt;
+            else if (Scale.Id == ScalesIDs.NineHPT) icon = ScaleIcon.NINEhptIcon;
+        }
+        return icon switch
+        {
+            ScaleIcon.NINEhptIcon => "9hptIcon.png",
+            ScaleIcon.bbt => "bbt.png",
+            ScaleIcon.MSIS => "MSIS.png",
+            ScaleIcon.Arm => "Arm.png",
+            ScaleIcon.TwentyFiveFootWalk => "25FootWalk.png",
+            ScaleIcon.SIXminWalk => "6minWalk.png",
+            ScaleIcon.hand => "hand.png",
+            ScaleIcon.MAS => "MAS.png",
+            ScaleIcon.MFIS => "MFIS.png",
+            ScaleIcon.pencil => "pencil.png",
+            ScaleIcon.recoveriX => "recoveriX.png",
+            ScaleIcon.sessions => "sessions.png",
+            ScaleIcon.TUG => "TUG.png",
+            _ => ""
+        };
+    }
+}

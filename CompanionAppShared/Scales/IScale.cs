@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using CompanionAppShared.Scales;
+using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace CompanionAppShared.Scales
 {
@@ -26,7 +28,9 @@ namespace CompanionAppShared.Scales
         string Name { get; set; }
         ScalesIDs Id { get; set; }
         string ShortName { get; set; }
-        int ScoreNormalized { get; }
+		string AreaOfStudy { get; set; }
+
+		int ScoreNormalized { get; }
         int ScoreRaw { get; set; }
         List<string> DetailsHeaders { get; set; }
         List<string> Details { get; set; }
@@ -38,5 +42,9 @@ namespace CompanionAppShared.Scales
         void GenerateScore();
 		void Reset();
 		void FixEvents();
+		ScaleIcon Icon { get; set; }
 	}
+
+
+    public enum ScaleIcon { NotSet, NINEhptIcon, SIXminWalk, TwentyFiveFootWalk, Arm, bbt, hand, MAS, MFIS, MSIS, pencil, recoveriX, sessions, TUG }
 }

@@ -11,13 +11,31 @@
 
 .Animable{
     transition: all linear 0.5s;
-    max-width:500px;
+    max-width:350px;
     overflow: hidden;
 }
 
-.Mini{
-    max-width: 20px;
+.relative{
+    position:relative;
 }
+
+.SwitchDarkColumWidthButton {
+    position: absolute;
+    color: white;
+    font-size: 32px;
+    top: 50%;
+    right: 0px;
+    padding: 5px 0;
+    background: #2e3539;
+}
+    .SwitchDarkColumWidthButton.GoLeft {
+        margin-right: -5px;
+    }
+
+    .Mini {
+        max-width: 20px !important;
+        min-width: 20px !important;
+    }
 
 .TherapyHeader {
     width: 100%;

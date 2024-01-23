@@ -3,8 +3,13 @@
 <PageTitle>Patients list</PageTitle>
 
 <div class="d-flex gap-0 h-100">
-	<div class="d-flex flex-column DarkBackground Animable @(IsDarkColumnMinified?"Mini":"")">
-		<div class="Header rel" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
+	<div class="LeftColumMenu d-flex flex-column DarkBackground Animable relative @(IsDarkColumnMinified?"Mini":"")">
+
+		<div class="SwitchDarkColumWidthButton DarkBackground @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
+			<i class="bi bi-chevron-compact-@(IsDarkColumnMinified?"right":"left")"></i>
+		</div>
+
+		<div class="Header rel" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
 			<h1 class="mb-0">@Current.SelectedTherapy?.TherapyLabel</h1>
 			<h2 class="ms-0">@Current.SelectedTherapy?.Name</h2>
 			@if(!IsDarkColumnMinified)
@@ -21,6 +26,34 @@
 			Sessions="SessionsOnScreen" />
 
 		<div class="ButtonsSpace d-flex flex-column gap-2" style="padding:24px;">
+			@if(CurrentView == CurrentViewOptions.table)
+			{
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Scale"
+							 Title="Add new session"
+							 ShowPlusSymbol="true"
+							 Clicked="AddSessionToTherapy" />
+
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy circles"
+							 Clicked="ShowTherapyCircles" />
+			}
+			else if(CurrentView == CurrentViewOptions.circles)
+			{
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.solid"
+							 Icon="RXIcon.Icons.Scale"
+							 Title="Add new session"
+							 ShowPlusSymbol="true"
+							 Clicked="AddSessionToTherapy" />
+
+				<RoundButton ButtonColor="Colors.blue"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy table"
+							 Clicked="ShowTherapyTable" />
+			}
 			<RoundButton ButtonColor="Colors.blue"
 						 ButtonStyle="RoundButton.ButtonStyles.outlined"
 						 Icon="RXIcon.Icons.Edit"
@@ -125,7 +158,7 @@
 					@foreach (var sc in VerticalAxis)
 					{
 						<div class="TableCell">
-							<ResultLittleDiv Value="@CalculateEvolutionOnScale(sc.Id)" />							
+							<ResultLittleArea Value="@CalculateEvolutionOnScale(sc.Id)" />							
 						</div>
 					}
 				</div>
@@ -146,7 +179,12 @@
 		}
 		else if (CurrentView == CurrentViewOptions.circles)
 		{
-			
+			<div class="d-flex flex-wrap m-4 gap-4">
+				@foreach(var sc in VerticalAxis)
+				{
+					<CircularPlot Data="CalculateEvolutionOnScale(sc.Id)" Scale="sc"/>
+				}
+			</div>
 		}
 		
 	</div>
@@ -232,6 +270,18 @@
 
 	async Task ShowTherapyTable()
 	{
+		await DownloadAxesFromDB();
+		CurrentView = CurrentViewOptions.table;
+	}
+
+	async Task ShowTherapyCircles()
+	{
+		await DownloadAxesFromDB();
+		CurrentView = CurrentViewOptions.circles;
+	}
+
+	async Task DownloadAxesFromDB()
+	{
 		await DB.LoadAllSessionDetailsInTherapy(Current.SelectedTherapy);
 
 		//horizontal axis
@@ -248,13 +298,6 @@
 				}
 			}
 		}
-
-		CurrentView = CurrentViewOptions.table;
-	}
-	async Task ShowTherapyCircles()
-	{
-		await DB.LoadAllSessionDetailsInTherapy(Current.SelectedTherapy);
-		CurrentView = CurrentViewOptions.table;
 	}
 
 	IScale? GetScale(Guid SessionID, ScalesIDs id)

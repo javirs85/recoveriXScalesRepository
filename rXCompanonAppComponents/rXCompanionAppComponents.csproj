@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Icons\" />
+    <Folder Include="wwwroot\Icons\ScaleIcons\" />
   </ItemGroup>
 
 </Project>

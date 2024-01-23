@@ -12,7 +12,7 @@ public class NineHolePegTest : ScaleBase
 		Id = ScalesIDs.NineHPT;
 		Name = "Nine hole peg test";
 		ShortName = "9HPT";
-		AreaOfStudy = "Dexterity";
+		AreaOfStudy = "Fine motor skills";
 
 		DetailsHeaders.Add("Paretic hand");
 		DetailsHeaders.Add("Healthy hand");
