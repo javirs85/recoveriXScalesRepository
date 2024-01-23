@@ -38,7 +38,11 @@
 			else if (DB.HasError)
 			{
 				<div class="ms-3 opacity-50"><small>Data Base error:</small></div>
-				<div class="ms-3 opacity-50"><small>@DB.errorMessage</small></div>
+				<div class="ms-3 opacity-50"><small>@DB.error?.Message</small></div>
+				@if(DB.error is not null && DB.error.InnerException is not null)
+				{
+					<div class="ms-3 opacity-50"><small>@DB.error.InnerException.Message</small></div>
+				}
 			}
 			else
 			{

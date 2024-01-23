@@ -22,7 +22,7 @@ public class DataBase
 	#region init
 
 	public bool HasError = false;
-	public string errorMessage = string.Empty;
+	public Exception? error = null;
 
 
 	public DataBase(ISQLDataAccess _db)
@@ -35,7 +35,7 @@ public class DataBase
 	{
 		IsLoading = false;
 		HasError = true;
-		errorMessage = e.Message;
+		error = e;
 	}
 
 	private bool AlreadyInitialized = false;
