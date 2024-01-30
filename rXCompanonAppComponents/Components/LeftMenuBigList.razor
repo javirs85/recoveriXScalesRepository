@@ -43,6 +43,7 @@
 				{
 					<div class="ms-3 opacity-50"><small>@DB.error.InnerException.Message</small></div>
 				}
+				<button class="btn btn-primary m-3" @onclick=RetryConnection>Try to connect again</button>
 			}
 			else
 			{
@@ -101,6 +102,11 @@
 
 		DB.UIUpdateRequestedFromDB -= Update;
 		DB.UIUpdateRequestedFromDB += Update; 
+	}
+
+	async Task RetryConnection()
+	{
+		await DB.LoadListOfPatients();
 	}
 
 	private void Update(object? sender, EventArgs e)
