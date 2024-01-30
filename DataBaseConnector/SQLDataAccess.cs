@@ -34,6 +34,8 @@ public class SQLDataAccess : ISQLDataAccess
 		}
 		catch(Exception ex) 
 		{
+
+
 			OnNewError?.Invoke(this, ex);
 			return Enumerable.Empty<T>();
 			throw;
