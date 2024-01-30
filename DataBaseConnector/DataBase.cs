@@ -36,6 +36,7 @@ public class DataBase
 		IsLoading = false;
 		HasError = true;
 		error = e;
+		ErrorOccurred?.Invoke(this, e);
 	}
 
 	private bool AlreadyInitialized = false;
