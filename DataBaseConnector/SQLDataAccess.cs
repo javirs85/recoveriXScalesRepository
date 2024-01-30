@@ -26,13 +26,17 @@ public class SQLDataAccess : ISQLDataAccess
 		try
 		{
 			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectionID));
-			return await connection.QueryAsync<T>(
+			var r =  await connection.QueryAsync<T>(
 				storedProcedure,
 				parameters,
 				commandType: CommandType.StoredProcedure);
-		}catch(Exception ex) {
+			return r;
+		}
+		catch(Exception ex) 
+		{
 			OnNewError?.Invoke(this, ex);
 			return Enumerable.Empty<T>();
+			throw;
 		}
 	}
 
