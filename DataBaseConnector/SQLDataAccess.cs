@@ -34,8 +34,7 @@ public class SQLDataAccess : ISQLDataAccess
 		}
 		catch(Exception ex) 
 		{
-
-
+			Exception e2 = new Exception(ex.Message + "++++++" + connectionID + "+++++" + config.GetConnectionString(connectionID));
 			OnNewError?.Invoke(this, ex);
 			return Enumerable.Empty<T>();
 			throw;
