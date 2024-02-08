@@ -7,5 +7,6 @@
 		Task<int> Count(string query, string connectionID = "Default");
 
 		event EventHandler<Exception> OnNewError;
+		event EventHandler ErrorCleared;
 	}
 }
