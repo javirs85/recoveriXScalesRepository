@@ -29,6 +29,12 @@ public class DataBase
 	{
 		db = _db;
 		db.OnNewError += HandleError;
+		db.ErrorCleared += ClearError;
+	}
+
+	private void ClearError(object? sender, EventArgs e)
+	{
+		HasError = false;
 	}
 
 	private void HandleError(object? sender, Exception e)

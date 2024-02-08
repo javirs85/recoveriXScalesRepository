@@ -11,12 +11,15 @@ public class SQLDataAccess : ISQLDataAccess
 	private readonly IConfiguration config;
 
 	public event EventHandler<Exception> OnNewError;
+	public event EventHandler ErrorCleared;
 
 
 	public SQLDataAccess(IConfiguration config)
 	{
 		this.config = config;
 	}
+
+	private void ClearError() => ErrorCleared?.Invoke(this, EventArgs.Empty);
 
 	public async Task<IEnumerable<T>> LoadData<T, U>(
 		string storedProcedure,
@@ -25,16 +28,18 @@ public class SQLDataAccess : ISQLDataAccess
 	{
 		try
 		{
-			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectionID));
+			string a = "Server=tcp:companiondbserver.database.windows.net,1433;Initial Catalog=CompanionDB;Persist Security Info=False;User ID=cdbserveradmin;Password=recoveriX!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+
+			using IDbConnection connection = new SqlConnection(a);
 			var r =  await connection.QueryAsync<T>(
 				storedProcedure,
 				parameters,
 				commandType: CommandType.StoredProcedure);
+			ClearError();
 			return r;
 		}
 		catch(Exception ex) 
 		{
-			Exception e2 = new Exception(ex.Message + "++++++" + connectionID + "+++++" + config.GetConnectionString(connectionID));
 			OnNewError?.Invoke(this, ex);
 			return Enumerable.Empty<T>();
 			throw;
@@ -54,6 +59,7 @@ public class SQLDataAccess : ISQLDataAccess
 				storedProcedure,
 				parameters,
 				commandType: CommandType.StoredProcedure);
+			ClearError();
 		}
 		catch (Exception ex)
 		{
@@ -66,6 +72,7 @@ public class SQLDataAccess : ISQLDataAccess
 	{
 		using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectionID));
 		int rowCount = await connection.ExecuteScalarAsync<int>(query);
+		ClearError();
 		return rowCount;
 	}
 }
