@@ -19,6 +19,9 @@ public class ScaleItem
         //ParentScale.IsMeasured = true;
         UpdateNeeded?.Invoke(this, new EventArgs());
     }
+    public string InstructionsForTheExaminer { get; set; } = string.Empty;
+    public string InstructionsForThePatient { get; set; } = string.Empty;
+
     protected void ReportFormatError(string error) => FormatError?.Invoke(this, error);
 }
 
@@ -49,6 +52,7 @@ public class IntItem : ScaleItem
 		MeasureNeedsUpdate();
 	}
 }
+
 
 public class FloatItem : ScaleItem
 {
@@ -189,5 +193,48 @@ public class OptionsItem : ScaleItem
         {
             return SelectedOption;
         }
+    }
+}
+
+public class InfoItem : ScaleItem
+{
+    public string Label { get; set; } = string.Empty;
+    public string Text { get; set; } = string.Empty;
+    public bool DefaultOpen { get; set; } = true;
+}
+
+
+public class ComplexOptionsItem : ScaleItem
+{
+	public int Value => SelectedOption?.Value ?? 0;
+
+    public List<Option> Options { get; set; } = new();
+
+    private Option? _selectedOption;
+
+    public Option? SelectedOption
+    {
+        get { return _selectedOption; }
+        set { _selectedOption = value;
+			MeasureNeedsUpdate();
+		}
+    }
+
+
+	public override string StringValue
+	{
+		get { return SelectedOption?.Name ?? "-"; }
+		set
+		{
+			SelectedOption = Options.Find(x=>x.Name ==  value);
+			MeasureNeedsUpdate();
+		}
+	}
+
+    public class Option
+    {
+        public int Value { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
     }
 }

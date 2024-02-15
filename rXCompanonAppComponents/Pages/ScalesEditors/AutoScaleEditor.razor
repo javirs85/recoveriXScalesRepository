@@ -63,11 +63,19 @@
 					}
 					else if (item is OptionsItem)
 					{
-						<OptionsItemViewer Value="@(item as OptionsItem)" />
+						<OptionsItemViewer Item="@(item as OptionsItem)" />
 					}
 					else if (item is TimeSpanItem)
 					{
 						<TimeSpanItemViewer Value="@(item as TimeSpanItem)" />
+					}
+					else if(item is ComplexOptionsItem)
+					{
+						<ComplexOptionsItemViewer Options="item as ComplexOptionsItem" />
+					}
+					else if (item is InfoItem)
+					{
+						<InfoItemViewer Item="item as InfoItem" />
 					}
 					else
 					{
@@ -75,12 +83,6 @@
 					}				
 				}
 			</div>
-		</div>
-		<div class="FormPanel h-100">
-			
-		</div>
-		<div class="FormPanel h-100">
-			
 		</div>
 	</div>
 </div>

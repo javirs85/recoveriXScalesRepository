@@ -27,6 +27,7 @@ public class FOGQ : ScaleBase
 
 	protected override void GenerateScoreInternal()
 	{
+		//igual que el PDQ39
 	}
 	protected override void GenerateDetails()
 	{

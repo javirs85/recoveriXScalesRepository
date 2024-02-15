@@ -19,6 +19,7 @@ namespace CompanionAppShared.Scales
 	[JsonDerivedType(typeof(UPDRSII), typeDiscriminator: "UPDRSII")]
 	[JsonDerivedType(typeof(UPDRSIII), typeDiscriminator: "UPDRSIII")]
 	[JsonDerivedType(typeof(UPDRSIV), typeDiscriminator: "UPDRSIV")]
+	[JsonDerivedType(typeof(MoCA), typeDiscriminator: "MoCA")]
 	[JsonDerivedType(typeof(BlocksAndBlocksTest), typeDiscriminator: "BnBT")]
 
 	//When adding a new scale here, don't forget to add the entry in the ScaleService

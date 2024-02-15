@@ -1,0 +1,21 @@
+﻿@if (!string.IsNullOrEmpty(Item.InstructionsForThePatient))
+{
+	<span style="opacity: 0.8;">Instructions for the patient: </span>
+	<span style="opacity: 0.5;">@Item.InstructionsForThePatient</span>
+}
+@if (!string.IsNullOrEmpty(Item.InstructionsForTheExaminer))
+{
+	<span class="mt-2" style="opacity: 0.8; cursor:pointer;"
+		@onclick=@(()=>{IsShowingExaminerDetails = !IsShowingExaminerDetails;})>
+		Instructions for the examiner: <i class="bi bi-info-circle"></i>
+	</span>
+	<span class="mb-2" style="overflow:hidden; opacity: 0.5; transition: max-height linear 0.5s; 
+			@(IsShowingExaminerDetails?"max-height: 100px;":"max-height: 0px;")">
+		@Item.InstructionsForTheExaminer
+	</span>
+}
+
+@code {
+	[Parameter] public ScaleItem Item { get; set; } = new();
+	bool IsShowingExaminerDetails = false;
+}

@@ -16,16 +16,18 @@ public class TENMWT : ScaleBase
     }
 
 
-	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
-	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
-	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };
-	public OptionsItem OptionsItem { get; set; } = new OptionsItem
-	{
-		Options = new List<string> { "option 1", "option 2", "option 3" },
-		Label = "Select your option:"
-	};
+	public TimeSpanItem MeasuredTimeExecution1 { get; set; } = new TimeSpanItem { Label = "Time for central 6 meters:" };
+	public TimeSpanItem MeasuredTimeExecution2 { get; set; } = new TimeSpanItem { Label = "Time for central 6 meters:" };
+	public TimeSpanItem MeasuredTimeExecution3 { get; set; } = new TimeSpanItem { Label = "Time for central 6 meters:" };
+
 	protected override void GenerateScoreInternal()
 	{
+		//calculate velocity
+		//ignore values when equal to zero
+		//normalizat amb valors de referencia
+		//score = mijana de valors no-zero
+
+		//TODO: Marc provide reference values
 	}
 	protected override void GenerateDetails()
 	{

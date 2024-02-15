@@ -1,8 +1,9 @@
 ﻿<EditForm Model="this">
-	<div class="d-flex flex-column gap-0">
-		<label>@Value.Label</label>
-		<InputSelect class="form-select" @bind-Value=@Value.SelectedOption>
-			@foreach (var op in Value.Options)
+	<div class="d-flex flex-column gap-0 p-2 ScaleItemBox">
+		<h4>@Item.Label</h4>
+		<InstructionsSpace Item="Item" />
+		<InputSelect class="form-select mt-4" @bind-Value=@Item.SelectedOption>
+			@foreach (var op in Item.Options)
 			{
 				<option value="@op">@op</option>
 			}
@@ -11,5 +12,5 @@
 </EditForm>
 
 @code {
-	[Parameter] public OptionsItem Value { get; set; } = new();
+	[Parameter] public OptionsItem Item { get; set; } = new();
 }

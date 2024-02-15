@@ -28,9 +28,7 @@ public class SQLDataAccess : ISQLDataAccess
 	{
 		try
 		{
-			string a = "Server=tcp:companiondbserver.database.windows.net,1433;Initial Catalog=CompanionDB;Persist Security Info=False;User ID=cdbserveradmin;Password=recoveriX!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
-			using IDbConnection connection = new SqlConnection(a);
+			using IDbConnection connection = new SqlConnection(config.GetConnectionString(connectionID));
 			var r =  await connection.QueryAsync<T>(
 				storedProcedure,
 				parameters,
