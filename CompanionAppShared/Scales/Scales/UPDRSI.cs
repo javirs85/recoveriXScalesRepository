@@ -554,21 +554,52 @@ In administering Part IA, the examiner should use the following guidelines:
 
 	protected override void GenerateScoreInternal()
 	{
-		// instructions to examiner ocultes
-		// instructions to patient sempre visibles
-		// texte de la selecció sempre visible
-		//texte de les opcions no seleccionades no visible
-		// score de la card no visible
-		// fins la 1.13
+		ScoreRaw = 0;
+		TryAdd(CognitiveImpairment);
+		TryAdd(HallucinationsAndPsychosis);
+		TryAdd(DepressedMood);
+		TryAdd(AnxiousMood);
+		TryAdd(Apathy);
+		TryAdd(DopamineDysregulationSyndrome);
+		TryAdd(SleepProblems);
+		TryAdd(DaytimeSleepiness);
+		TryAdd(PainAndOtherSensations);
+		TryAdd(UrinaryProblems);
+		TryAdd(ConstipationProblems);
+		TryAdd(LightHeadednessOnStanding);
+		TryAdd(Fatigue);
 
-		ScoreRaw = CognitiveImpairment.Value + HallucinationsAndPsychosis.Value + DepressedMood.Value +
-			AnxiousMood.Value + Apathy.Value + DopamineDysregulationSyndrome.Value +
-			SleepProblems.Value + DaytimeSleepiness.Value + PainAndOtherSensations.Value + 
-			UrinaryProblems.Value + ConstipationProblems.Value + LightHeadednessOnStanding.Value + 
-			Fatigue.Value;
-
-		ScoreNormalized = (int)LinearInterpolation(0, 52, ScoreRaw);
+		var max = FindMaxValue();
+		if (max == 0) 
+			ScoreNormalized = 0;
+		else
+			ScoreNormalized = (int)LinearInterpolation(0, max, ScoreRaw);
 	}
+
+	private void TryAdd(ComplexOptionsItem o)
+	{
+		if (o.SelectedOption is not null) ScoreRaw += o.Value;
+	}
+
+	private int FindMaxValue()
+	{
+		int v = 0;
+		if (CognitiveImpairment.SelectedOption is not null) v += 4;
+		if (HallucinationsAndPsychosis.SelectedOption is not null) v += 4;
+		if (DepressedMood.SelectedOption is not null) v += 4;
+		if (AnxiousMood.SelectedOption is not null) v += 4;
+		if (Apathy.SelectedOption is not null) v += 4;
+		if (DopamineDysregulationSyndrome.SelectedOption is not null) v += 4;
+		if (SleepProblems.SelectedOption is not null) v += 4;
+		if (DaytimeSleepiness.SelectedOption is not null) v += 4;
+		if (PainAndOtherSensations.SelectedOption is not null) v += 4;
+		if (UrinaryProblems.SelectedOption is not null) v += 4;
+		if (ConstipationProblems.SelectedOption is not null) v += 4;
+		if (LightHeadednessOnStanding.SelectedOption is not null) v += 4;
+		if (Fatigue.SelectedOption is not null) v += 4;
+		return v;
+	}
+
 	protected override void GenerateDetails()
 	{
 		Details.Clear();

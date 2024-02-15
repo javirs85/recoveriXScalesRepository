@@ -317,27 +317,40 @@
 
 		int AveragedPRE = (int)((float)added / (float)amount);
 
-		var Newest = SessionsThatContainScale.First();
-
-		if (Newest.SessionKind == SessionKinds.Pre)
+		if(SessionsThatContainScale.Count() > 0)
 		{
-			var result = new EvolutionResults
-				{
-					InitialPreVale = SessionsPRE.First().Scales.Find(x => x.Id == id).ScoreNormalized,
-					LastPreValue = SessionsPRE.Last().Scales.Find(x => x.Id == id).ScoreNormalized,
-					HasNonPreValues = false,
-					FinalValue = AveragedPRE
-				};
-			return result;
+			var Newest = SessionsThatContainScale.First();
+
+			if (Newest.SessionKind == SessionKinds.Pre)
+			{
+				var result = new EvolutionResults
+					{
+						InitialPreVale = SessionsPRE.First().Scales.Find(x => x.Id == id).ScoreNormalized,
+						LastPreValue = SessionsPRE.Last().Scales.Find(x => x.Id == id).ScoreNormalized,
+						HasNonPreValues = false,
+						FinalValue = AveragedPRE
+					};
+				return result;
+			}
+			else
+			{
+				var newValue = Newest.Scales.Find(x => x.Id == id).ScoreNormalized; // - AveragedPRE;
+				var result = new EvolutionResults
+					{
+						AveragedPreValue = AveragedPRE,
+						HasNonPreValues = true,
+						FinalValue = newValue
+					};
+				return result;
+			}
 		}
 		else
 		{
-			var newValue = Newest.Scales.Find(x => x.Id == id).ScoreNormalized; // - AveragedPRE;
 			var result = new EvolutionResults
 				{
-					AveragedPreValue = AveragedPRE,
+					AveragedPreValue = 0,
 					HasNonPreValues = true,
-					FinalValue = newValue
+					FinalValue = 0
 				};
 			return result;
 		}

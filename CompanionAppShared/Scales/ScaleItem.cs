@@ -206,7 +206,7 @@ public class InfoItem : ScaleItem
 
 public class ComplexOptionsItem : ScaleItem
 {
-	public int Value => SelectedOption?.Value ?? 0;
+	public int Value => SelectedOption?.Value ?? -1;
 
     public List<Option> Options { get; set; } = new();
 
