@@ -1,0 +1,48 @@
+﻿<div class="d-flex flex-column gap-0 p-2 ScaleItemBox">
+	<h4>@Options.Label</h4>
+	<InstructionsSpace Item="Options"/>
+	@if(Options.SelectedOption is not null)
+	{
+		<div class="d-flex justify-content-center mt-2 mb-4">
+			<div class="ActionsPanel LightBlueBorder" style="width:80%; border-radius:0.5em; overflow:hidden;">
+				<div class="OptionsContainerSelected">
+					@foreach (var o in Options.Options)
+					{
+						<div class="Option PaleBlueBackground Selectable LightBlueBorder BorderJustDown
+							@(Options.SelectedOption is not null && Options.SelectedOption == o?"Selected":"")"
+							 @onclick=@(()=>{Options.SelectedOption = o;})>
+							<div>@o.Name</div>
+						</div>
+					}
+				</div>
+				@if (Options.SelectedOption is not null)
+				{
+					<div class="SelectedOptionDetails p-2">
+						@Options.SelectedOption.Description
+					</div>
+				}
+			</div>
+		</div>
+	}
+	else
+	{
+		<div class="d-flex justify-content-center mt-2 mb-4">
+			<div class="ActionsPanel" style="width:80%">
+				<div class="OptionsContainer LightBlueBorder">
+					@foreach (var o in Options.Options)
+					{
+						<div class="Option PaleBlueBackground Selectable LightBlueBorder
+				@(Options.SelectedOption is not null && Options.SelectedOption == o?"Selected":"")"
+							 @onclick=@(()=>{Options.SelectedOption = o;})>
+							<div>@o.Name</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+@code {
+	[Parameter] public ComplexOptionsItem Options { get; set; } = new();
+}

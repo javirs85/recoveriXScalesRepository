@@ -14,6 +14,7 @@
     flex: 1;
     padding: 20px;
     padding-right: 0;
+    overflow:auto;
 }
 
 .FormPanelDiv {

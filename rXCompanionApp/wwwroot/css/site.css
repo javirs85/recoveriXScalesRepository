@@ -11,6 +11,42 @@ html, body {
     color:black;
 }
 
+.ScaleItemBox {
+    border: 1px solid #79c7ff;
+    border-radius: 5px;
+}
+.ScaleItemHeader {
+    background: #c9e8ff;
+    cursor: pointer;
+}
+
+.PaleBlueBackground {
+    background: #c9e8ff;
+}
+    .PaleBlueBackground.Selectable:hover {
+        background: #9ed6ff;
+    }
+    .PaleBlueBackground.Selected {
+        background: #0a4a79;
+        color: white;
+    }
+        .PaleBlueBackground.Selected:hover {
+            background: #0a4a79;
+            color: white;
+        }
+
+.LightBlueBorder {
+    border: 1px solid #79c7ff;
+}
+
+.ScaleItemBody {
+    transition: max-height linear 0.5s;
+    overflow: hidden;
+}
+.ScaleItemBodyInner {
+    border-top: 1px solid #79c7ff;
+}
+
 .DarkBackground {
     background: #242A2D;
 }

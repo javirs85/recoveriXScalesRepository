@@ -1,5 +1,6 @@
 ﻿
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace CompanionAppShared.Scales;
@@ -16,9 +17,10 @@ public class PDQ39 : ScaleBase
     }
 
 
-	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
-	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
-	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };
+	public IntItem q1 { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
+	public IntItem q2 { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
+	public IntItem q3 { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
+
 	public OptionsItem OptionsItem { get; set; } = new OptionsItem
 	{
 		Options = new List<string> { "option 1", "option 2", "option 3" },
@@ -26,9 +28,12 @@ public class PDQ39 : ScaleBase
 	};
 	protected override void GenerateScoreInternal()
 	{
+		//suma de cada pregunta, amb valors 0..4 per cada pregunta
+		//score normalitzat = mitja
 	}
 	protected override void GenerateDetails()
 	{
+		//suma sense normalitzar
 	}
 	protected override void ResetInternal()
 	{

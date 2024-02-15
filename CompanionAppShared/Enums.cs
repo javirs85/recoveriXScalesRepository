@@ -24,7 +24,8 @@ public enum ScalesIDs {
 	ERP,
 	ATA,
 	SEADL,
-	BnBT
+	BnBT,
+	MoCA
 }
 
 public enum  Gyms { SCH, BCN }

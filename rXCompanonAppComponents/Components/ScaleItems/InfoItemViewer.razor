@@ -1,0 +1,40 @@
+﻿@using Markdig
+
+<div class="d-flex flex-column ScaleItemBox">
+    <div class="p-2 d-flex justify-content-between ScaleItemHeader"
+        @onclick=@(()=>{IsExpanded = !IsExpanded;})>
+
+        <span>@Item.Label</span>
+        <span><i class="bi bi-info-circle"></i></span>
+    </div>
+    <div class="d-flex flex-column ScaleItemBody"
+         style=" @(IsExpanded?"max-height:1100px;":"max-height:0;")">
+        <div class="p-2 ScaleItemBodyInner">
+            @HtmlContent
+            </div>
+        
+    </div>
+</div>
+
+@code {
+    [Parameter] public InfoItem Item { get; set; } = new();
+    bool IsExpanded = false;
+
+    private RenderFragment HtmlContent;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // Assuming you have the Markdig NuGet package installed
+        var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+        var markedDownHtml = Markdig.Markdown.ToHtml(Item.Text, pipeline);
+
+        HtmlContent = builder =>
+        {
+            builder.AddMarkupContent(0, markedDownHtml);
+        };
+
+        IsExpanded = Item.DefaultOpen;
+    }
+}

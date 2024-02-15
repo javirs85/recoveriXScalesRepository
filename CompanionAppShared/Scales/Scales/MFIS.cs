@@ -25,6 +25,7 @@ public class MFIS : ScaleBase
 	};
 	protected override void GenerateScoreInternal()
 	{
+		//tot igual que el PDQ39
 	}
 	protected override void GenerateDetails()
 	{

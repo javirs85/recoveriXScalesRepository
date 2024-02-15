@@ -14,6 +14,23 @@ public abstract class ScaleBase : IScale
 		FixEvents();
 	}
 
+	/// <summary>
+	/// Finds the linear interpolation of a rect that croses (x,y0) and (100, y100) then evaluates this line for xToInvestigate. Results are caped at 0..100
+	/// </summary>
+	/// <param name="X0">the value you mus enter to get a zero</param>
+	/// <param name="X100">the value you must enter t o get a 100</param>
+	/// <param name="xToInvestigate">the value you want to investigate</param>
+	/// <returns></returns>
+	public static double LinearInterpolation(double x100, double x0, double xToInvestigate)
+	{
+		// Perform linear interpolation
+		double slope = 100 / (x100 - x0);
+		double result = 100 - slope * (x100 - xToInvestigate);
+
+		// Ensure the result is within the 0-100 range
+		return Math.Max(0, Math.Min(100, result));
+	}
+
 	public void FixEvents()
 	{
 		Items.Clear();

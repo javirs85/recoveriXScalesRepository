@@ -1,0 +1,41 @@
+﻿.ActionsPanel {
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
+}
+
+.OptionsContainerSelected {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.OptionsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.OptionsContainer > .Option:last-child{
+    border:none!important;
+}
+.Option{
+    display:flex;
+    flex:1;
+    justify-content:center;
+    padding:10px;
+    border-width:0 1px 0 0;
+    cursor:pointer;
+}
+
+.BorderJustDown{
+    border:none!important;
+    border-radius:0!important;
+}
+
+.SelectedOptionDetails {
+    background: #0a4a79;
+    color: #c9e8ff;
+}

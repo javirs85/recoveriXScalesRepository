@@ -14,31 +14,28 @@ public class NineHolePegTest : ScaleBase
 		ShortName = "9HPT";
 		AreaOfStudy = "Fine motor skills";
 
-		DetailsHeaders.Add("Paretic hand");
-		DetailsHeaders.Add("Healthy hand");
+		DetailsHeaders.Add("Right hand");
+		DetailsHeaders.Add("Left hand");
 
 		ScoreNormalized = 0;
 	}
 
-	public TimeSpanItem TimePareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:"};
-	public TimeSpanItem TimeHealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:"};
+	public TimeSpanItem TimeRightHand { get; set; } = new TimeSpanItem { Label = "Right hand:" };
+	public TimeSpanItem TimeLeftHand { get; set; } = new TimeSpanItem { Label = "Left hand:" };
 
-	public StringItem StringItem { get; set; } = new StringItem { Label="Test string", StringValue = "Default value" };
-	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
-	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };
-	public OptionsItem OptionsItem { get; set; } = new OptionsItem
-	{
-		Options = new List<string> { "option 1", "option 2", "option 3" },
-		Label = "Select your option:"
-	};
 
 
 	protected override void GenerateScoreInternal()
 	{
 		Details.Clear();
-		Details.Add($"Paretic hand: {TimePareticHand.StringValue}");
-		Details.Add($"healthy hand: {TimeHealthyHand.StringValue}");
-		var floatscore = (TimeHealthyHand.Value.TotalSeconds / TimePareticHand.Value.TotalSeconds) * 100;
+		Details.Add($"Paretic hand: {TimeRightHand.StringValue}");
+		Details.Add($"healthy hand: {TimeLeftHand.StringValue}");
+		var floatscore = 0.0;
+		if( TimeLeftHand.Value.TotalSeconds > TimeRightHand.Value.TotalSeconds)
+			floatscore = (TimeLeftHand.Value.TotalSeconds / TimeRightHand.Value.TotalSeconds) * 100;
+		else
+			floatscore = (TimeRightHand.Value.TotalSeconds / TimeLeftHand.Value.TotalSeconds) * 100;
+
 		ScoreNormalized = (int)Math.Round(floatscore);
 
 		if(ScoreNormalized < 0) ScoreNormalized = 0;
@@ -47,21 +44,13 @@ public class NineHolePegTest : ScaleBase
 
 	protected override void ResetInternal()
 	{
-		TimePareticHand = new TimeSpanItem { Label = "Paretic hand:" };
-		TimeHealthyHand = new TimeSpanItem { Label = "Healthy hand:" };
-		StringItem = new StringItem { Label = "Test string", StringValue = "Default value" };
-		IntItem = new IntItem { Label = "Test int", StringValue = "12" };
-		FloatItem = new FloatItem { Label = "Test float", StringValue = "3,14" };
-		OptionsItem = new OptionsItem
-		{
-			Options = new List<string> { "option 1", "option 2", "option 3" },
-			Label = "Select your option:"
-		};
+		TimeRightHand = new TimeSpanItem { Label = "Paretic hand:" };
+		TimeLeftHand = new TimeSpanItem { Label = "Healthy hand:" };
 	}
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
-		Details.Add(TimePareticHand.StringValue);
-		Details.Add(TimeHealthyHand.StringValue);
+		Details.Add(TimeRightHand.StringValue);
+		Details.Add(TimeLeftHand.StringValue);
 	}
 }
