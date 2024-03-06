@@ -2,10 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CompanionAppShared.Scales;
+
+
+[JsonDerivedType(typeof(IntItem), typeDiscriminator: "IntItem")]
+[JsonDerivedType(typeof(FloatItem), typeDiscriminator: "FloatItem")]
+[JsonDerivedType(typeof(StringItem), typeDiscriminator: "StringItem")]
+[JsonDerivedType(typeof(TimeSpanItem), typeDiscriminator: "TimeSpanItem")]
+[JsonDerivedType(typeof(OptionsItem), typeDiscriminator: "OptionsItem")]
+[JsonDerivedType(typeof(InfoItem), typeDiscriminator: "InfoItem")]
+[JsonDerivedType(typeof(ConditionalSection), typeDiscriminator: "ConditionalSection")]
+[JsonDerivedType(typeof(ConditionalSectionsPack), typeDiscriminator: "ConditionalSectionsPack")]
+[JsonDerivedType(typeof(ComplexOptionsItem), typeDiscriminator: "ComplexOptionsItem")]
 
 public class ScaleItem
 {
@@ -203,10 +215,43 @@ public class InfoItem : ScaleItem
     public bool DefaultOpen { get; set; } = true;
 }
 
+public class ConditionalSectionsPack : ScaleItem
+{
+    public List<ConditionalSection> ConditionalSections { get; set; } = new();
+}
+
+public class ConditionalSection : ScaleItem
+{
+
+	public event EventHandler ToggledVisibility;
+	private bool _isVisible;
+
+	public bool IsVisible
+	{
+		get { return _isVisible; }
+		set
+		{
+			if (_isVisible != value)
+			{
+				_isVisible = value;
+				ToggledVisibility?.Invoke(this, EventArgs.Empty);
+			};
+		}
+	}
+
+    public void Toggle() => IsVisible = !IsVisible;
+
+
+	public string Label { get; set; } = string.Empty;
+    public string InstructionsForTheExaminer { get; set; } = string.Empty;
+    public List<ScaleItem> Items { get; set; } = new();
+}
+
 
 public class ComplexOptionsItem : ScaleItem
 {
-	public int Value => SelectedOption?.Value ?? 0;
+
+    public int Value => SelectedOption?.Value ?? -1;
 
     public List<Option> Options { get; set; } = new();
 
@@ -231,7 +276,7 @@ public class ComplexOptionsItem : ScaleItem
 		}
 	}
 
-    public class Option
+	public class Option
     {
         public int Value { get; set; }
         public string Name { get; set; } = string.Empty;

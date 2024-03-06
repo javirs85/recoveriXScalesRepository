@@ -33,22 +33,13 @@ public abstract class ScaleBase : IScale
 
 	public void FixEvents()
 	{
-		Items.Clear();
-		foreach (var property in this.GetType().GetProperties())
+		foreach(var customItem in Items)
 		{
-			if (typeof(ScaleItem).IsAssignableFrom(property.GetValue(this).GetType()))
-			{
-				ScaleItem customItem = (ScaleItem)property.GetValue(this);
-				if (customItem is not null)
-				{
-					Items.Add(customItem);
-					customItem.ParentScale = this;
-					customItem.UpdateNeeded -= Update;
-					customItem.UpdateNeeded += Update;
-					customItem.FormatError -= Invalidate;
-					customItem.FormatError += Invalidate;
-				}
-			}
+			customItem.ParentScale = this;
+			customItem.UpdateNeeded -= Update;
+			customItem.UpdateNeeded += Update;
+			customItem.FormatError -= Invalidate;
+			customItem.FormatError += Invalidate;
 		}
 	}
 
@@ -80,8 +71,6 @@ public abstract class ScaleBase : IScale
 	public int ScoreRaw { get; set; }
 	public List<string> DetailsHeaders { get; set; } = new List<string>();
 	public List<string> Details { get; set; } = new List<string>();
-
-    [JsonIgnore]
     public List<ScaleItem> Items { get; set; } = new();
 
 	

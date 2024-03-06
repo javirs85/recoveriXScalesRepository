@@ -3,7 +3,7 @@
         <img class="ScaleIcon" alt="@Scale.ShortName" src="_content/rXCompanionAppComponents/Icons/ScaleIcons/@(GetIconPath(Scale.Icon))" style="@(Data.HasNonPreValues?"":"opacity: 0.3;")" />
     </div>
     <div class="TitleBox d-flex flex-column align-items-center" style="@(Data.HasNonPreValues?"":"opacity: 0.3;")">
-        <div style="font-weight: 600; opacity:0.75;">@Scale.Name</div>
+        <div style="font-weight: 600; opacity:0.75;">@Scale.ShortName</div>
         <div style="opacity:0.5; line-height:10px; font-size:14px;">@("("+Scale.AreaOfStudy+")")</div>
     </div>
     <div class="Plot" style="@(Data.HasNonPreValues?"":"opacity: 0.2;")">
@@ -201,7 +201,7 @@
             ScaleIcon.recoveriX => "recoveriX.png",
             ScaleIcon.sessions => "sessions.png",
             ScaleIcon.TUG => "TUG.png",
-            _ => ""
+            _ => "Default.png"
         };
     }
 }

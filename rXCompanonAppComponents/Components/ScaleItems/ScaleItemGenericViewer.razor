@@ -1,0 +1,40 @@
+﻿@if (Item is StringItem)
+{
+	<StringItemViewer Value="@(Item as StringItem)" />
+}
+else if (Item is IntItem)
+{
+	<IntItemViewer Value="@(Item as IntItem)" />
+}
+else if (Item is FloatItem)
+{
+	<FloatItemViewer Value="@(Item as FloatItem)" />
+}
+else if (Item is OptionsItem)
+{
+	<OptionsItemViewer Item="@(Item as OptionsItem)" />
+}
+else if (Item is TimeSpanItem)
+{
+	<TimeSpanItemViewer Value="@(Item as TimeSpanItem)" />
+}
+else if (Item is ComplexOptionsItem)
+{
+	<ComplexOptionsItemViewer Options="Item as ComplexOptionsItem" />
+}
+else if (Item is InfoItem)
+{
+	<InfoItemViewer Item="Item as InfoItem" />
+}
+else if (Item is ConditionalSectionsPack)
+{
+	<ConditionalSectionViewer Sections="(Item as ConditionalSectionsPack).ConditionalSections" />
+}
+else
+{
+	<div>@Item.Label</div>
+}
+
+@code {
+	[Parameter] public ScaleItem Item { get; set; } = new();
+}

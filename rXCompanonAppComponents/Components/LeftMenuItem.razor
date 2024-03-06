@@ -9,12 +9,26 @@
 			<div class="flex-grow-1">
 				@Title
 			</div>
-			<div class="Details d-flex gap-2">
+			<div class="Details d-flex gap-4 justify-content-end me-3">
 				@foreach(var info in Details)
 				{
-					<div class="Detail me-4">
-						<div>@info.Item1</div>
-						<div>@info.Item2</div>
+					<div class="Detail">
+						@if (!string.IsNullOrEmpty(info.Item1) && !string.IsNullOrEmpty(info.Item2))
+						{
+							<div style="white-space: nowrap; overflow:hidden; width:70px; text-align:right;">@info.Item1</div>
+							<div style="white-space: nowrap; overflow:hidden; width:70px; text-align:right;">@info.Item2</div>
+						}
+						else 
+						{
+								if (!string.IsNullOrEmpty(info.Item1))
+							{
+								<div style="white-space: nowrap; overflow:hidden;">@info.Item1</div>
+							}
+							@if (!string.IsNullOrEmpty(info.Item2))
+							{
+								<div style="white-space: nowrap; overflow:hidden; max-width:150px;">@info.Item2</div>
+							}		
+						}
 					</div>
 				}
 			</div>
@@ -24,7 +38,7 @@
 	{
 		<div class="d-flex flex-column gap-0 UltraLightBackground">
 			<div class="SelectedUpperDecoration DarkBackground"></div>
-			<div class="SelectedCenter" style="@(IsSingleItem?"height:70px!important":"")">
+			<div class="SelectedCenter text-nowrap" style="@(IsSingleItem?"height:70px!important":"")">
 				@if(!IsSingleItem)
 				{
 					<i class="bi bi-x-lg ms-3" @onclick=Exit @onclick:stopPropagation></i>

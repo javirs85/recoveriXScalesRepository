@@ -90,7 +90,7 @@ public class Patient
 	[JsonIgnore]
 	public bool IsFullyLoadedFromDB { get; set; } = false;
 
-	public string NumberOfMeasurementsInLastTherapy { get; set; } = "Not yet set";
+	public string NumberOfMeasurementsInLastTherapy { get; set; } = "-";
 
 	public string NumberOfSessions
 	{
@@ -101,7 +101,7 @@ public class Patient
 		}
 	}
 
-	public string LastMeasurementInLastTherapy { get; set; } = "Not yet set";
+	public string LastMeasurementInLastTherapy { get; set; } = "-";
 
 	private DateTime? _lastSession;
 	public DateTime? LastSession

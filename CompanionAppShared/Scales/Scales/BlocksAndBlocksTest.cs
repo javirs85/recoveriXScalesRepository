@@ -11,6 +11,12 @@ public class BlocksAndBlocksTest : ScaleBase
 		AreaOfStudy = "Gross motor skills";
 		DetailsHeaders.Add("Paretic hand");
 		DetailsHeaders.Add("Healthy hand");
+
+		Items = new List<ScaleItem>
+		{
+			NumberOfBlocksHealthyHand, 
+			NumberOfBlocksHealthyHand
+		};
     }
 
 	public IntItem NumberOfBlocksPareticHand { get; set; } = new IntItem { Label = "Paretic hand", StringValue = "0" };

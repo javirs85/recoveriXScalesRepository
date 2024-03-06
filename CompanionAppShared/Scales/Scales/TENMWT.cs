@@ -13,6 +13,13 @@ public class TENMWT : ScaleBase
 		Name = "10 Meter Walk Test";
 		ShortName = "10MWT";
 		AreaOfStudy = "Gait";
+
+		Items = new List<ScaleItem>
+		{
+			MeasuredTimeExecution1,
+			MeasuredTimeExecution2, 
+			MeasuredTimeExecution3
+		};
     }
 
 

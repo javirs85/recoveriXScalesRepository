@@ -41,14 +41,12 @@ public class ParkinsonStudy : Therapy
             ScalesIDs.UPDRSIII,
             ScalesIDs.UPDRSIV,
             ScalesIDs.HYClass,
-            ScalesIDs.SEADL,
             ScalesIDs.PDQ39,
             ScalesIDs.MFIS,
             ScalesIDs.NineHPT,
             ScalesIDs.TUG,
             ScalesIDs.TENMWT,
             ScalesIDs.FOGQ,
-            ScalesIDs.ERP,
             ScalesIDs.ATA,
             ScalesIDs.MoCA
         };

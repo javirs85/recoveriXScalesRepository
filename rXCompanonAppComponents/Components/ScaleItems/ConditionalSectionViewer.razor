@@ -1,0 +1,54 @@
+﻿@using System.Text.Json
+
+<div class="accordion" id="Accordion">
+    @foreach(var Section in MySections)
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="@DivInner">
+                <button class="accordion-button" type="button" 
+                        data-bs-toggle="collapse" data-bs-target="#ID_@Section.ID" 
+                        aria-expanded="true" aria-controls="@CollapseID" 
+                        style="box-shadow: none;">
+                    @Section.Section.Label
+                </button>
+            </h2>
+            <div id="ID_@Section.ID" class="accordion-collapse collapse @(Section.Section.IsVisible?"show":"")" aria-labelledby="@DivInner" data-bs-parent="#Accordion">
+                <div class="accordion-body" style="background: #e7f1ff;">
+                    <div class="bt-4 pb-5" >
+                        @foreach (var i in Section.Section.Items)
+                        {
+                            <ScaleItemGenericViewer Item="i" />
+                        }
+					</div>
+				</div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<ConditionalSection> Sections { get; set; } = new();
+    private Guid guid = new Guid();
+
+    private string DivID => $"id_{guid}";
+    private string DivInner => $"id_inner_{guid}";
+    private string CollapseID => $"id_collapse_{guid}";
+    private string StartVisisble = "";
+
+    private List<SectionWithId> MySections = new();
+
+    private class SectionWithId
+    {
+        public ConditionalSection Section {get;set;} = new();
+        public Guid ID {get;set;}= Guid.NewGuid();
+    }
+
+    protected override void OnParametersSet()
+    {
+        MySections.Clear();
+        foreach(var s in Sections)
+        {
+            MySections.Add(new SectionWithId { Section = s });
+        }
+    }
+}
