@@ -3,9 +3,9 @@
 @inject IToastService Toaster
 
 <div class="d-flex h-100">
-	<div class="DarkBackground LeftColumMenu">
+	<div class="DarkBackground LeftColumMenu  Animable relative @(IsDarkColumnMinified?"Mini":"")">
 
-		<div class="SwitchDarkColumWidthButton DarkBackground @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
+		<div class="SwitchDarkColumWidthButton @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
 			<i class="bi bi-chevron-compact-@(IsDarkColumnMinified?"right":"left")"></i>
 		</div>
 
@@ -14,12 +14,14 @@
 			<h2 class="ms-0">@((Current.SelectedTherapy != null)?Current.SelectedTherapy.Name:"")</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
-			<div style="margin-bottom:50%;">
+			
+			<div style="position:absolute; left:0; top: 250px; width:350px; transition:all 0.5s linear; @(IsDarkColumnMinified?"opacity:0;":"")">
 				<LeftMenuItem Title="@ColumnTittle"
-						  Color="LeftMenuItem.AvailableColors.green"
-						  IsSingleItem="true"
-						  IsSelected="true"/>
+				Color="LeftMenuItem.AvailableColors.green"
+				IsSingleItem="true"
+				IsSelected="true"/>
 			</div>
+			
 		</div>
 		<div class ="Header gap-2">
 			<RoundButton ButtonColor="Colors.green" ButtonStyle="RoundButton.ButtonStyles.outlined"
