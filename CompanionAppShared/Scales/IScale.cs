@@ -44,6 +44,7 @@ namespace CompanionAppShared.Scales
 		void Reset();
 		void FixEvents();
 		ScaleIcon Icon { get; set; }
+		List<ScaleItem> Items { get; set; }
 	}
 
 

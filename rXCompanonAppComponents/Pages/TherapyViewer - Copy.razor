@@ -26,19 +26,7 @@
 			Sessions="SessionsOnScreen" />
 
 		<div class="ButtonsSpace d-flex flex-column gap-2" style="padding:24px;">
-			@if(CurrentView == CurrentViewOptions.options)
-			{
-				<RoundButton ButtonColor="Colors.green"
-							 ButtonStyle="RoundButton.ButtonStyles.outlined"
-							 Title="Show therapy table"
-							 Clicked="ShowTherapyTable" />
-
-				<RoundButton ButtonColor="Colors.green"
-							 ButtonStyle="RoundButton.ButtonStyles.outlined"
-							 Title="Show therapy circles"
-							 Clicked="ShowTherapyCircles" />
-			}
-			else if(CurrentView == CurrentViewOptions.table)
+			@if(CurrentView == CurrentViewOptions.table)
 			{
 				<RoundButton ButtonColor="Colors.blue"
 							 ButtonStyle="RoundButton.ButtonStyles.solid"
@@ -76,7 +64,7 @@
 			
 		</div>
 	</div>
-	<div class="d-flex flex-column flex-grow-1 h-100" style="flex:1; overflow:auto;">
+	<div class="d-flex flex-column flex-grow-1 h-100">
 		@if(CurrentView == CurrentViewOptions.options)
 		{
 			<div class="d-flex flex-column h-100 justify-content-center align-items-center gap-2">
@@ -87,101 +75,112 @@
 							 ShowPlusSymbol="true"
 							 Clicked="AddSessionToTherapy" />
 
+				<RoundButton ButtonColor="Colors.DarkGreen"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy table"
+							 Clicked="ShowTherapyTable" />
+
+				<RoundButton ButtonColor="Colors.DarkBlue"
+							 ButtonStyle="RoundButton.ButtonStyles.outlined"
+							 Title="Show therapy circles"
+							 Clicked="ShowTherapyCircles" />
+
 			</div>
 		}
 		else if (CurrentView == CurrentViewOptions.table)
 		{
-			<table style ="font-family:Roboto; font-size:18px; font-weight:400;">
-				<thead class=" HeaderContainer" style="position:sticky; top:0; z-index:4; box-shadow: 0 0 9px #00000075;">
-					<tr>
-						<th>
-							<div class="tableCellContainer darkened">
-								<div class="form-check form-switch" @onclick=@(()=>{IsShowinDetails = !IsShowinDetails;})>
-									@if (IsShowinDetails)
-									{
-										<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-									}
-									else
-									{
-										<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
-									}
-									<label class="form-check-label" for="flexSwitchCheckChecked">Details</label>
-								</div>
+			<div class="d-flex">
+				<div class="FirstColumn d-flex justify-content-center align-items-center">
+					<div class="TherapyHeader">
+						<div class="FirstColumn d-flex justify-content-center align-items-end pe-2">
+							<div class="form-check form-switch" @onclick=@(()=>{IsShowinDetails = !IsShowinDetails;})>
+								@if (IsShowinDetails)
+								{
+									<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+								}
+								else
+								{
+									<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+								}
+								<label class="form-check-label" for="flexSwitchCheckChecked">Details</label>
 							</div>
-						</th>
-						@foreach(var session in HorizontalAxis)
-						{
-							<th class="">
-								<div class="tableCellContainer" >
-									<div>@session.SessionKind.ToString()</div>
-									<div class="opacity-25">@session.MeasurementDate.ToShortDateString()</div>
-								</div>
-								
-							</th>
-						}
-						<th class="ResultMini">
-							<div class="tableCellContainer darkenedBeforeLast">
-								Result
-							</div>
-						</th>
-						<th class="last">
-							<div class="tableCellContainer darkenedLast">
-								Evolution
-							</div>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach(var scale in VerticalAxis.OrderByDescending(x=>CalculateEvolutionOnScale(x.Id).HasNonPreValues))
+						</div>
+					</div>
+					@foreach(var s in VerticalAxis)
 					{
-						<tr>
-							<td style="padding:0;">
-								<div class="tableCellContainer darkened py-2">
-									<div class="RowHeaderTitle">@scale.ShortName</div>
-									<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
-										@foreach (var d in scale.DetailsHeaders)
-										{
-											<div>@d</div>
-										}
-									</div>
-								</div>
-							</td>
-							@foreach (var session in HorizontalAxis)
-							{
-								<td>
-									<div class="tableCellContainer">
-										@if (GetScale(session.Id, scale.Id).IsMeasured)
-										{
-											<h5>@(GetScale(session.Id, scale.Id)?.ScoreNormalized + "%")</h5>
-											<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
-												@foreach (var d in GetScale(session.Id, scale.Id).Details)
-												{
-													<div>@d</div>
-												}
-											</div>
-										}
-									</div>
-								</td>
-							}
-							<td class="ResultMini">
-								<div class="tableCellContainer darkenedBeforeLast">
-									<ResultLittleArea Value="@CalculateEvolutionOnScale(scale.Id)" />
-								</div>
-							</td>
-							<td class="last">
-								<div class="tableCellContainer darkenedLast">
-									<LinearResultView Values="@CalculateEvolutionOnScale(scale.Id)" />
-								</div>
-							</td>
-						</tr>
+						<div class="TableCell RowHeader">
+							<div class="RowHeaderTitle">@s.ShortName</div>
+							<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
+								@foreach(var d in s.DetailsHeaders)
+								{
+									<div>@d</div>
+								}
+							</div>
+						</div>
 					}
-				</tbody>
-			</table>
+				</div>
+				<div class="MiddleSectionScrollableContent flex-grow-1">
+					@foreach (var s in HorizontalAxis)
+					{
+					
+						<div class="MiddleColumn">
+							<div class="TherapyHeader">
+								<div class="SessionHeader @(IsSessionHovered(s)?"SessionHovered":"")" @onmouseover=@(()=>{MouseOver(s);}) @onmouseleave=ResetOver @onclick=@(async ()=>{await SessionClick(s);})>
+									<h5>@s.SessionKind.ToString()</h5>
+									<div class="opacity-25" style="line-height:6px;">@s.MeasurementDate.ToString("dd.MM.yyyy")</div>
+								</div>
+							</div>
+							@foreach(var sc in VerticalAxis)
+							{
+								<div class="TableCell">
+									@if (GetScale(s.Id, sc.Id).IsMeasured)
+									{
+										<h5>@(GetScale(s.Id, sc.Id)?.ScoreNormalized + "%")</h5>
+										<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
+											@foreach (var d in GetScale(s.Id, sc.Id).Details)
+											{
+												<div>@d</div>
+											}
+										</div>
+									}
+								</div>
+							}
+						</div>
+					
+					}
+				</div>
+				<div class="FirstColumn">
+					<div class="TherapyHeader">
+						<div class="SessionHeader">
+							<h5>Result</h5>
+						</div>
+					</div>
+					@foreach (var sc in VerticalAxis)
+					{
+						<div class="TableCell">
+							<ResultLittleArea Value="@CalculateEvolutionOnScale(sc.Id)" />							
+						</div>
+					}
+				</div>
+				<div class="LastColumn">
+					<div class="TherapyHeader">
+						<div class="SessionHeader">
+							<h5>Evolution</h5>
+						</div>
+					</div>
+					@foreach (var sc in VerticalAxis)
+					{
+						<div class="TableCell">
+							<LinearResultView Values="@CalculateEvolutionOnScale(sc.Id)"/>
+						</div>
+					}
+				</div>
+			</div>
 		}
 		else if (CurrentView == CurrentViewOptions.circles)
 		{
-			<div class="d-flex flex-wrap p-4 gap-4 h-100 overflow-auto">
-				@foreach (var sc in VerticalAxis.OrderByDescending(x => CalculateEvolutionOnScale(x.Id).HasNonPreValues))
+			<div class="d-flex flex-wrap m-4 gap-4">
+				@foreach(var sc in VerticalAxis)
 				{
 					<CircularPlot Data="CalculateEvolutionOnScale(sc.Id)" Scale="sc"/>
 				}
@@ -350,7 +349,7 @@
 			var result = new EvolutionResults
 				{
 					AveragedPreValue = 0,
-					HasNonPreValues = false,
+					HasNonPreValues = true,
 					FinalValue = 0
 				};
 			return result;

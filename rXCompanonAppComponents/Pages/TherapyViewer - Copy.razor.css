@@ -1,0 +1,116 @@
+﻿.rel{
+    position: relative;
+}
+
+.Exit{
+    position: absolute;
+    top:20px;
+    right:20px;
+    cursor:pointer;
+}
+
+.Animable{
+    transition: all linear 0.5s;
+    max-width:350px;
+    overflow: hidden;
+}
+
+.relative{
+    position:relative;
+}
+
+.SwitchDarkColumWidthButton {
+    position: absolute;
+    color: white;
+    font-size: 32px;
+    top: 50%;
+    right: 0px;
+    padding: 5px 0;
+    background: #2e3539;
+}
+    .SwitchDarkColumWidthButton.GoLeft {
+        margin-right: -5px;
+    }
+
+    .Mini {
+        max-width: 20px !important;
+        min-width: 20px !important;
+    }
+
+.TherapyHeader {
+    width: 100%;
+    background: white;
+    //box-shadow: 0 4px 12px #00000040;
+    height: 63px;
+    border-bottom: 1px solid #C8DFEC;
+    display: flex;
+}
+.FirstColumn {
+    width: 130px;
+    display: flex;
+    flex-direction: column;
+}
+.MiddleColumn {
+    flex: 1 1 0px;
+    display: flex;
+    flex-direction:column;
+}
+.LastColumn {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.SessionHeader {
+    flex: 1 1 0px;
+    display: flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    background: transparent;
+}
+.SessionHovered {
+    background: #EEF9FF;
+}
+
+.TableCell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items:center;
+    height: 85px;
+    border-bottom: 1px solid #DAE1EE;
+}
+
+.RowHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: end;
+    align-items: flex-end;
+    width: 100%;
+    padding-right: 10px;
+}
+.RowHeaderTitle{
+    font-size: 18px;
+    
+}
+.TableCellDetails {
+    font-size: 14px;
+    opacity: 0.25;
+    line-height: 20px;
+    overflow: hidden;
+    max-height: 200px;
+    transition: max-height 0.3s linear;
+}
+
+    .TableCellDetails.Hide {
+        max-height: 0;
+    }
+
+.MiddleSectionScrollableContent{
+    display:flex;
+    flex-grow: 1;
+    overflow:auto;
+}

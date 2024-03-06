@@ -4,6 +4,11 @@
 
 <div class="d-flex h-100">
 	<div class="DarkBackground LeftColumMenu">
+
+		<div class="SwitchDarkColumWidthButton DarkBackground @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
+			<i class="bi bi-chevron-compact-@(IsDarkColumnMinified?"right":"left")"></i>
+		</div>
+
 		<div class="Header">
 			<h1 class="mb-0">@Current.SelectedTherapy.TherapyLabel</h1>
 			<h2 class="ms-0">@((Current.SelectedTherapy != null)?Current.SelectedTherapy.Name:"")</h2>
@@ -76,7 +81,7 @@
 									}
 								</div>
 							</div>
-							<div class="scaleBoxScoresBox">
+							<div class="scaleBoxScoresBox d-flex justify-content-end me-5">
 								<div class="ScaleBoxScore">@GetScore(scale)</div>
 								<div class="ScaleBoxDelta @IsPositive(scale.ScoreDelta)">@ToNice(scale.ScoreDelta)</div>
 							</div>
@@ -85,10 +90,7 @@
 							<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined"
 										 Icon="RXIcon.Icons.Edit" Title="Edit results" Width="200" 
 										 Clicked="@(async()=>{ await EditResults(scale);})" />
-							<!--<RoundButton ButtonColor="Colors.DarkBlue" ButtonStyle="RoundButton.ButtonStyles.outlined" 
-									     Icon="RXIcon.Icons.Revert" Title="Repeat assessment" Width="200" NeedsConfirmation=true
-										 Clicked="@(async()=>{ await RepeatMeasurement(scale);})" />
-							-->
+							
 							<RoundButton ButtonColor="Colors.DarkRed" ButtonStyle="RoundButton.ButtonStyles.outlined"
 										 Icon="RXIcon.Icons.Bin" Title="Delete scale" Width="200" NeedsConfirmation=true
 										 Clicked="@(async ()=>{await DeleteScale(scale);})" />
@@ -106,6 +108,8 @@
 	[Parameter] public EventCallback<IScale> OpenScaleEditor { get; set; }
 
 	Session Backup;
+
+	bool IsDarkColumnMinified;
 
 	bool AreWeCreatingANewSession = false;
 

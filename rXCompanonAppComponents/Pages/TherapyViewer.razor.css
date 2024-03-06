@@ -9,39 +9,13 @@
     cursor:pointer;
 }
 
-.Animable{
-    transition: all linear 0.5s;
-    max-width:350px;
-    overflow: hidden;
-}
-
-.relative{
-    position:relative;
-}
-
-.SwitchDarkColumWidthButton {
-    position: absolute;
-    color: white;
-    font-size: 32px;
-    top: 50%;
-    right: 0px;
-    padding: 5px 0;
-    background: #2e3539;
-}
-    .SwitchDarkColumWidthButton.GoLeft {
-        margin-right: -5px;
-    }
-
-    .Mini {
-        max-width: 20px !important;
-        min-width: 20px !important;
-    }
 
 .TherapyHeader {
     width: 100%;
     background: white;
     //box-shadow: 0 4px 12px #00000040;
     height: 63px;
+    min-height: 63px;
     border-bottom: 1px solid #C8DFEC;
     display: flex;
 }
@@ -78,8 +52,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items:center;
-    height: 85px;
+    align-items: center;
+    height: 58px;
+    min-height: 58px;
     border-bottom: 1px solid #DAE1EE;
 }
 
@@ -112,5 +87,130 @@
 .MiddleSectionScrollableContent{
     display:flex;
     flex-grow: 1;
+    overflow-x:auto;
+    overflow-y:initial;
+}
+
+.TableScroller{
+    height:100%;
+    width:100%;
+    background:olive;
     overflow:auto;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: #F9FAFF;
+    width: 100%;
+    overflow: auto;
+}
+th {
+    height: 63px;
+    background: white;
+    z-index: 5;
+    min-width: 150px;
+    width: 150px;
+    font-weight:400;
+    box-shadow: 0 4px 2px -2px gray;
+    padding:0;
+}
+    th:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 6;
+        box-shadow: 0px 0px 3px black;
+        width: 200px;
+        min-width: 200px;
+    }
+    th:last-child {
+        position: sticky;
+        right: 0;
+        z-index: 6;
+        width: 230px;
+        min-width: 230px;
+        max-width: 230px;
+        box-shadow: 0px 0px 3px black;
+    }
+    th:nth-last-child(2) {
+        position: sticky;
+        right: 230px;
+        z-index: 6;
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+td {
+    min-width: 150px;
+    width: 150px;
+    z-index: 1;
+    /*border-bottom: 1px solid #DAE1EE;*/
+    height: 63px;
+    padding:0;
+}
+
+    td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: #F9FAFF;
+        width: 200px;
+        min-width: 200px;
+        z-index: 2;
+    }
+    td:last-child {
+        position: sticky;
+        right: 0;
+        background-color: #F9FAFF;
+        width: 230px;
+        min-width: 230px;
+        max-width: 230px;
+        z-index: 2;
+    }
+    td:nth-last-child(2) {
+        position: sticky;
+        right: 230px;
+        z-index: 2;
+        background-color: #F9FAFF;
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
+    }
+
+.tableCellContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #daeafc;
+}
+
+.tableCellContainer h5{
+    margin:0;
+}
+
+.darkened {
+    height: 100%;
+    background: #f6f7fb;
+    border-right: 1px solid #e1e6f7
+}
+.darkenedBeforeLast {
+    height: 100%;
+    background: #f6f7fb;
+    border-left: 1px solid #e1e6f7
+}
+.darkenedLast {
+    height: 100%;
+    background: #f6f7fb;
+    border: none;
+    padding: 10px;
+    /*  #e1e6f7  */
+}
+
+.HeaderContainer
+{
+    
+    
 }

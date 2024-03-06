@@ -17,6 +17,11 @@ public class TUG : ScaleBase
 		AreaOfStudy = "Balance and gait";
 
 		DetailsHeaders.Add("Time (m)");
+
+		Items = new List<ScaleItem>
+		{
+			TimedExecution
+		};
     }
 
 	public TimeSpanItem TimedExecution { get; set; } = new TimeSpanItem { Label = "Time to stand up and go" };

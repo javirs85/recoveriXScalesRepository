@@ -3,13 +3,18 @@
 @inject DataBase DB
 
 <div class="d-flex h-100">
-	<div class="DarkBackground LeftColumMenu">
+	<div class="DarkBackground LeftColumMenu Animable relative @(IsDarkColumnMinified?"Mini":"")">
+
+		<div class="SwitchDarkColumWidthButton DarkBackground @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
+			<i class="bi bi-chevron-compact-@(IsDarkColumnMinified?"right":"left")"></i>
+		</div>
+
 		<div class="Header">
 			<h1 class="mb-0">@Current.SelectedPatient.PatientLabel</h1>
-			<h2 class="ms-0">@Current.SelectedTherapy.Name</h2>
+			<h2 class="ms-0 text-nowrap">@Current.SelectedTherapy.Name</h2>
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
-			<div style="margin-bottom:50%;">
+			<div style="margin-bottom:50%; overflow:hidden; transition:margin-left linear 0.5s; @(IsDarkColumnMinified?"margin-left:20px;":"")">
 				<LeftMenuItem Title="@($"{Current.SelectedSession.MeasurementDate.ToShortDateString()} / {Current.SelectedScale.ShortName}")"
 							  Color="LeftMenuItem.AvailableColors.green"
 							  IsSingleItem="true"
@@ -49,38 +54,7 @@
 				</div>
 				@foreach (var item in ScaleItems)
 				{
-					@if(item is StringItem)
-					{
-						<StringItemViewer Value="@(item as StringItem)"/>
-					}
-					else if(item is IntItem)
-					{
-						<IntItemViewer Value="@(item as IntItem)"/>
-					}
-					else if(item is FloatItem)
-					{
-						<FloatItemViewer Value="@(item as FloatItem)"/>
-					}
-					else if (item is OptionsItem)
-					{
-						<OptionsItemViewer Item="@(item as OptionsItem)" />
-					}
-					else if (item is TimeSpanItem)
-					{
-						<TimeSpanItemViewer Value="@(item as TimeSpanItem)" />
-					}
-					else if(item is ComplexOptionsItem)
-					{
-						<ComplexOptionsItemViewer Options="item as ComplexOptionsItem" />
-					}
-					else if (item is InfoItem)
-					{
-						<InfoItemViewer Item="item as InfoItem" />
-					}
-					else
-					{
-						<div>@item.Label</div>
-					}				
+					<ScaleItemGenericViewer Item="item" />
 				}
 			</div>
 		</div>
@@ -91,6 +65,8 @@
 @code {
 	[Parameter] public SelectedItems Current { get; set; }
 	[Parameter] public EventCallback ExitAutoScale { get; set; }
+
+	bool IsDarkColumnMinified;
 
 	enum Modes {NewScaleMode, EditScaleMode};
 	Modes CurrentMode = Modes.NewScaleMode;
@@ -112,15 +88,9 @@
 		if(ScaleItems.Count == 0)
 		{
 			ScaleItems.Clear();
-			foreach (var property in LifeCopy.GetType().GetProperties())
+			foreach(var i in LifeCopy.Items)
 			{
-				if (typeof(ScaleItem).IsAssignableFrom(property.GetValue(LifeCopy).GetType()))
-				{
-					ScaleItem customItem = (ScaleItem)property.GetValue(LifeCopy);
-					if (customItem is not null){
-						ScaleItems.Add(customItem);
-					}
-				}
+				ScaleItems.Add(i);
 			}
 		}
 

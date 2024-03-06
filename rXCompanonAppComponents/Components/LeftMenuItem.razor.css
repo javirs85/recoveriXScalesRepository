@@ -12,6 +12,7 @@
 .Decoration {
     height: 100%;
     width: 35px;
+    min-width: 35px;
     position: relative;
 }
 .DottedLine {
@@ -58,6 +59,11 @@
     border-radius: 0 10px 0 0;
 }
 
+.Details{
+    display:flex;
+    gap:10px;
+}
+
 .Detail {
     display: flex;
     flex-direction: column;
@@ -66,3 +72,9 @@
     font-size: 14px;
     font-weight: 200;
 }
+    .Detail div {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+

@@ -11,6 +11,24 @@ html, body {
     color:black;
 }
 
+
+.Animable {
+    transition: all linear 0.5s;
+    max-width: 350px;
+    overflow: hidden;
+}
+
+.relative {
+    position: relative;
+}
+
+
+
+.Mini {
+    max-width: 20px !important;
+    min-width: 20px !important;
+}
+
 .ScaleItemBox {
     border: 1px solid #79c7ff;
     border-radius: 5px;
@@ -19,6 +37,20 @@ html, body {
     background: #c9e8ff;
     cursor: pointer;
 }
+
+.SwitchDarkColumWidthButton {
+    position: absolute;
+    color: white;
+    font-size: 32px;
+    top: 50%;
+    right: 0px;
+    padding: 5px 0;
+    background: #2e3539;
+}
+
+    .SwitchDarkColumWidthButton.GoLeft {
+        margin-right: -5px;
+    }
 
 .PaleBlueBackground {
     background: #c9e8ff;
@@ -70,6 +102,7 @@ html, body {
     gap: 0px;
     padding: 24px;
     color: white;
+    white-space:nowrap;
 }
 
     .Header h1 {
