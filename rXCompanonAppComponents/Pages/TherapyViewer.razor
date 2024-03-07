@@ -6,7 +6,7 @@
 	<div class="LeftColumMenu d-flex flex-column DarkBackground Animable relative @(IsDarkColumnMinified?"Mini":"")">
 
 		<div class="SwitchDarkColumWidthButton @(IsDarkColumnMinified?"GoLeft":"")" @onclick=@(()=>{IsDarkColumnMinified = !IsDarkColumnMinified;})>
-			<i class="bi bi-chevron-compact-@(IsDarkColumnMinified?"right":"left")"></i>
+			<i class="bi bi-chevron-@(IsDarkColumnMinified?"right":"left")"></i>
 		</div>
 
 		<div class="Header rel" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -19,12 +19,13 @@
 				</div>
 			}			
 		</div>
+
 		<LeftMenuBigList 
 			ItemSelected="SessionClick" 
 			Mode="LeftMenuBigList.ListingModes.Sessions"
 			Sessions="SessionsOnScreen" />
 
-		<div class="ButtonsSpace d-flex flex-column gap-2" style="padding:24px;">
+		<div class="ButtonsSpace">
 			@if(CurrentView == CurrentViewOptions.options)
 			{
 				<RoundButton ButtonColor="Colors.green"
