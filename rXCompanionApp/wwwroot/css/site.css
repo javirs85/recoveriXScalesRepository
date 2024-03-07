@@ -40,17 +40,33 @@ html, body {
 
 .SwitchDarkColumWidthButton {
     position: absolute;
-    color: white;
-    font-size: 32px;
+    color: black;
+    font-size: 22px;
     top: 50%;
-    right: 0px;
-    padding: 5px 0;
-    background: #2e3539;
+    right: -16px;
+    width: 46px;
+    height: 40px;
+    background: #373f43;
+    border-radius: 50%;
+    box-shadow: 0 0 5px black;
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+    cursor: pointer;
+    z-index: 22;
+    transition:margin, border-radius 1s linear;
 }
-
+    .SwitchDarkColumWidthButton:hover{
+        background:#4a5359;
+    }
     .SwitchDarkColumWidthButton.GoLeft {
         margin-right: -5px;
+        border-radius: 0;
+        background: #4a5359;
     }
+        .SwitchDarkColumWidthButton.GoLeft:hover {
+            background: rgb(103 116 124);
+        }
 
 .PaleBlueBackground {
     background: #c9e8ff;
@@ -95,7 +111,8 @@ html, body {
     flex: 1;
     font-family: Roboto;
     gap: 0;
-    overflow:auto;
+    overflow-y:auto;
+    overflow-x:hidden;
 }
     .LeftColumMenu::-webkit-scrollbar-track {
         background-color:transparent;
@@ -192,3 +209,10 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.ButtonsSpace{
+    display:flex;
+    flex-direction:column;
+    gap: .5rem;
+    padding: 24px;
+}
