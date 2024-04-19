@@ -20,9 +20,10 @@ public class NineHolePegTest : ScaleBase
 
 		ScoreNormalized = 0;
 
+		/*
 		Items = new List<ScaleItem>
 		{
-			/*new InfoItem
+			new InfoItem
 			{
 				Label = "General information",
 				Text = @"
@@ -76,51 +77,25 @@ If it is not possible to perform the test with the paretic hand, please use the 
 The goal of m9HPT is to detect any motor improvement using this test. Please
 describe his/her performance in Note (e.g. with assistance of unaffected hand).
 "
-			},*/
-
-			new ConditionalSectionsPack
-			{
-				ConditionalSections = new List<ConditionalSection>
-				{
-					new ConditionalSection
-					{
-						Label = "9HPT",
-						IsVisible = true,
-						Items = new List<ScaleItem>
-						{
-							HealthyHand,
-							PareticHand
-						}
-					},
-					new ConditionalSection
-					{
-						Label = "m9HPT - Sitting",
-						InstructionsForTheExaminer = "Let this area untouched if the ran test was not modified 9HPT in sitting position",
-						Items = new List<ScaleItem>
-						{
-							SittingOptions,
-							PareticHand,
-							PareticItems
-						}
-					},
-					new ConditionalSection
-					{
-						Label = "m9HPT - Standing",
-						InstructionsForTheExaminer = "Let this area untouched if the ran test was not modified 9HPT in standing position",
-						Items = new List<ScaleItem>
-						{
-							StandingOptions,
-							PareticHand,
-							PareticItems
-						}
-					}
-				}
-			}
+			},
 		};
+
+		*/
+
+
+		FixItemsInternal();
 	}
 
-	TimeSpanItem HealthyHand = new TimeSpanItem { Label = "Healthy hand:" };
-	TimeSpanItem PareticHand = new TimeSpanItem { Label = "Paretic hand:" };
+	public override void FixItemsInternal()
+	{
+		Items.Clear();
+		Items.Add(HealthyHand);
+		Items.Add(PareticHand);
+	}
+
+	public TimeSpanItem HealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:" };
+	public TimeSpanItem PareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:" };
+
 	ComplexOptionsItem SittingOptions = new ComplexOptionsItem
 	{
 		Label = "Points",
@@ -159,7 +134,7 @@ describe his/her performance in Note (e.g. with assistance of unaffected hand).
 		Details.Add($"Paretic hand: {HealthyHand.StringValue}");
 		Details.Add($"healthy hand: {PareticHand.StringValue}");
 		var floatscore = 0.0;
-		if( PareticHand.Value.TotalSeconds > HealthyHand.Value.TotalSeconds)
+		if( PareticHand.Value.TotalSeconds < HealthyHand.Value.TotalSeconds)
 			floatscore = (PareticHand.Value.TotalSeconds / HealthyHand.Value.TotalSeconds) * 100;
 		else
 			floatscore = (HealthyHand.Value.TotalSeconds / PareticHand.Value.TotalSeconds) * 100;

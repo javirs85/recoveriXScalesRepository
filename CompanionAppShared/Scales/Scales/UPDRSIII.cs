@@ -368,9 +368,12 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 			}
 		};
 	}
-	
-	
 
+
+	public override void FixItemsInternal()
+	{
+
+	}
 
 	protected override void GenerateScoreInternal()
 	{

@@ -12,7 +12,11 @@ public class FOGQ : ScaleBase
 		Name = "Freezing Of Gait Questionnaire";
 		ShortName = "FOGQ";
 		AreaOfStudy = "Freezing of gait";
-    }
+	}
+	public override void FixItemsInternal()
+	{
+		Items.Clear();
+	}
 
 	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
 	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };

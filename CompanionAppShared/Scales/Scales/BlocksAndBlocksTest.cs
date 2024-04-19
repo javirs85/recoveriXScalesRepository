@@ -12,12 +12,17 @@ public class BlocksAndBlocksTest : ScaleBase
 		DetailsHeaders.Add("Paretic hand");
 		DetailsHeaders.Add("Healthy hand");
 
-		Items = new List<ScaleItem>
-		{
-			NumberOfBlocksHealthyHand, 
-			NumberOfBlocksHealthyHand
-		};
+		Items = new List<ScaleItem>();
+		FixItemsInternal();
     }
+
+
+	public override void FixItemsInternal()
+	{
+		Items.Clear();
+		Items.Add(NumberOfBlocksPareticHand);
+		Items.Add(NumberOfBlocksHealthyHand);
+	}
 
 	public IntItem NumberOfBlocksPareticHand { get; set; } = new IntItem { Label = "Paretic hand", StringValue = "0" };
 	public IntItem NumberOfBlocksHealthyHand { get; set; } = new IntItem { Label = "Healthy hand", StringValue = "0" };

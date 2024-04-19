@@ -11,6 +11,7 @@ public abstract class ScaleBase : IScale
 {
     public ScaleBase() 
     {
+		FixItemsInternal();
 		FixEvents();
 	}
 
@@ -31,6 +32,14 @@ public abstract class ScaleBase : IScale
 		return Math.Max(0, Math.Min(100, result));
 	}
 
+	public void FixItems(Patient? patient = null)
+	{
+		Patient = patient;
+		FixItemsInternal();
+	}
+
+	public abstract void FixItemsInternal();
+
 	public void FixEvents()
 	{
 		foreach(var customItem in Items)
@@ -40,6 +49,23 @@ public abstract class ScaleBase : IScale
 			customItem.UpdateNeeded += Update;
 			customItem.FormatError -= Invalidate;
 			customItem.FormatError += Invalidate;
+
+			if(customItem is ConditionalSectionsPack)
+			{
+				var pack = (ConditionalSectionsPack)customItem;
+				foreach(var section in pack.ConditionalSections)
+				{
+					foreach(var item in section.Items)
+					{
+						item.ParentScale = this;
+						item.UpdateNeeded -= Update;
+						item.UpdateNeeded += Update;
+						item.FormatError -= Invalidate;
+						item.FormatError += Invalidate;
+					}
+					
+				}
+			}
 		}
 	}
 
@@ -72,6 +98,8 @@ public abstract class ScaleBase : IScale
 	public List<string> DetailsHeaders { get; set; } = new List<string>();
 	public List<string> Details { get; set; } = new List<string>();
     public List<ScaleItem> Items { get; set; } = new();
+
+	protected Patient? Patient;
 
 	
 	public void GenerateScore()

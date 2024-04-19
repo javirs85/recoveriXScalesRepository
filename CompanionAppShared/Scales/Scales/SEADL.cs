@@ -14,7 +14,10 @@ public class SEADL : ScaleBase
 		ShortName = "SEADL";
 		AreaOfStudy = "Activities in Daily Living";
     }
+	public override void FixItemsInternal()
+	{
 
+	}
 	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
 	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
 	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };

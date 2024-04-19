@@ -490,7 +490,12 @@ public class PDQ39 : ScaleBase
 		};
     }
 
-	
+	public override void FixItemsInternal()
+	{
+		
+	}
+
+
 	protected override void GenerateScoreInternal()
 	{
 		ScoreRaw = 0;

@@ -26,6 +26,7 @@ public class ScaleItem
     public event EventHandler<string> FormatError;
     public virtual string StringValue { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
+
     protected void MeasureNeedsUpdate()
     {
         //ParentScale.IsMeasured = true;
@@ -35,11 +36,14 @@ public class ScaleItem
     public string InstructionsForThePatient { get; set; } = string.Empty;
 
     protected void ReportFormatError(string error) => FormatError?.Invoke(this, error);
+
+	public int MaxValue { get; set; } = 1000;
+	public int MinValue { get; set; } = -1000;
 }
 
 public class IntItem : ScaleItem
 {
-    public int Value;
+    public int Value { get; set; }
 
     public override string StringValue
     {
@@ -55,12 +59,14 @@ public class IntItem : ScaleItem
 
 	public void Add()
 	{
-        Value ++;
+        if(Value+1 <= MaxValue)
+            Value ++;
 		MeasureNeedsUpdate();
 	}
 	public void Subtract()
 	{
-        Value --;
+        if(Value-1 >= MinValue)
+            Value --;
 		MeasureNeedsUpdate();
 	}
 }

@@ -14,24 +14,27 @@ public class HYClass : ScaleBase
 		Name = "UPDRS - V (Hoehn and Yahr Scale)";
 		ShortName = "HYClass";
 		AreaOfStudy = "PD disease classification";
-
-		Items = new List<ScaleItem>
-		{
-			new ComplexOptionsItem
-			{
-				Label = "Hoehn and Yahr Stage",
-				Options = new List<Option>
-				{
-					new Option { Value = 0, Name = "Asymptomatic", Description = string.Empty },
-					new Option { Value = 1, Name = "Unilateral involvement only", Description = string.Empty },
-					new Option { Value = 2, Name = "Bilateral involvement without impairment of balance", Description = string.Empty },
-					new Option { Value = 3, Name = "Mild to moderate involvement; some postural instability but physically independent; needs assistance to recover from pull test", Description = string.Empty },
-					new Option { Value = 4, Name = "Severe disability; still able to walk or stand unassisted", Description = string.Empty },
-					new Option { Value = 5, Name = "Wheelchair bound or bedridden unless aided", Description = string.Empty }
-				}
-			}
-		};
     }
+
+	public ComplexOptionsItem HoenYahr = new ComplexOptionsItem
+	{
+		Label = "Hoehn and Yahr Stage",
+		Options = new List<Option>
+		{
+			new Option { Value = 0, Name = "Asymptomatic", Description = string.Empty },
+			new Option { Value = 1, Name = "Unilateral involvement only", Description = string.Empty },
+			new Option { Value = 2, Name = "Bilateral involvement without impairment of balance", Description = string.Empty },
+			new Option { Value = 3, Name = "Mild to moderate involvement; some postural instability but physically independent; needs assistance to recover from pull test", Description = string.Empty },
+			new Option { Value = 4, Name = "Severe disability; still able to walk or stand unassisted", Description = string.Empty },
+			new Option { Value = 5, Name = "Wheelchair bound or bedridden unless aided", Description = string.Empty }
+		}
+	};
+
+	public override void FixItemsInternal()
+	{
+		Items.Clear();
+		Items.Add(HoenYahr);
+	}
 
 	protected override void GenerateScoreInternal()
 	{

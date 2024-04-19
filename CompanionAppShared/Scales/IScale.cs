@@ -43,6 +43,7 @@ namespace CompanionAppShared.Scales
         void GenerateScore();
 		void Reset();
 		void FixEvents();
+		void FixItems(Patient? patient = null);
 		ScaleIcon Icon { get; set; }
 		List<ScaleItem> Items { get; set; }
 	}

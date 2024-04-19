@@ -556,9 +556,12 @@ In administering Part IA, the examiner should use the following guidelines:
 		};
 		
 	}
-    
 
-	
+	public override void FixItemsInternal()
+	{
+		
+	}
+
 
 	protected override void GenerateScoreInternal()
 	{

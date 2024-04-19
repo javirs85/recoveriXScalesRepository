@@ -14,6 +14,9 @@ public class ATA : ScaleBase
 		ShortName = "ATA";
 		AreaOfStudy = "Brain responses";
     }
+	public override void FixItemsInternal()
+	{
+	}
 
 	protected override void GenerateScoreInternal()
 	{

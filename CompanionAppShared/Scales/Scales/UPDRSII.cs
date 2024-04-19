@@ -204,7 +204,10 @@ public class UPDRSII : ScaleBase
 	}
 
 
-	
+	public override void FixItemsInternal()
+	{
+
+	}
 
 
 	protected override void GenerateScoreInternal()
