@@ -2,6 +2,8 @@
 (
 	[Id] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY, 
     [PatientID] NVARCHAR(50) NOT NULL, 
+    [SessionID] NVARCHAR(50) NOT NULL, 
+    [SessionKind] INT NOT NULL, 
     [MeasurementDate] DATETIME NOT NULL, 
     [TherapyID] NVARCHAR(50) NOT NULL, 
     [Tag] NVARCHAR(50) NOT NULL, 

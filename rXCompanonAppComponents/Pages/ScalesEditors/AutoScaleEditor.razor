@@ -22,10 +22,6 @@
 			</div>
 		</div>
 		<div class="ButtonsSpace">
-			<RoundButton ButtonColor="Colors.blue" ButtonStyle="RoundButton.ButtonStyles.outlined"
-						 Icon="RXIcon.Icons.Revert" Clicked="ClearScale"
-						 Title="Clear data and start again" />
-
 			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
 						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
 						 Title="@(CurrentMode == Modes.NewScaleMode?"Delete data and exit":"Revert changes and exit")" />
@@ -52,7 +48,7 @@
 					<div class="Score">@(LifeCopy.ScoreNormalized)%</div>
 					<div class="ScoreComment">score calculated automatically</div>
 				</div>
-				@foreach (var item in ScaleItems)
+				@foreach (var item in LifeCopy.Items)
 				{
 					<ScaleItemGenericViewer Item="item" />
 				}
@@ -71,27 +67,18 @@
 	enum Modes {NewScaleMode, EditScaleMode};
 	Modes CurrentMode = Modes.NewScaleMode;
 
-	List<ScaleItem> ScaleItems = new();
 	IScale LifeCopy;
 
 	protected override void OnParametersSet()
 	{
 		var str = JsonSerializer.Serialize(Current.SelectedScale);
 		LifeCopy = JsonSerializer.Deserialize<IScale>(str);
+		LifeCopy.FixItems(Current.SelectedPatient);
 		LifeCopy.FixEvents();
 
 		if (Current.SelectedScale.IsMeasured) 
 		{
 			CurrentMode = Modes.EditScaleMode;
-		}
-
-		if(ScaleItems.Count == 0)
-		{
-			ScaleItems.Clear();
-			foreach(var i in LifeCopy.Items)
-			{
-				ScaleItems.Add(i);
-			}
 		}
 
 		LifeCopy.GenerateScore();

@@ -47,9 +47,9 @@ public class ParkinsonStudy : Therapy
             ScalesIDs.TUG,
             ScalesIDs.TENMWT,
             ScalesIDs.FOGQ,
-            ScalesIDs.ATA,
             ScalesIDs.MoCA
         };
+
 
     }
 }

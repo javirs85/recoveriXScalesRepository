@@ -46,7 +46,6 @@ public class Session
 			);
 	}
 
-	public void Serialize() => SerializedData = JsonSerializer.Serialize(this);
 
 	public static Session FromJson(string json)
 	{

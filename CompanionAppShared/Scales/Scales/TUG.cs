@@ -11,6 +11,11 @@ public class TUG : ScaleBase
 
     public TUG()
     {
+		
+    }
+
+	public override void Init()
+	{
 		Id = ScalesIDs.TUG;
 		Name = "Timed Up & Go";
 		ShortName = "TUG";
@@ -22,7 +27,23 @@ public class TUG : ScaleBase
 		{
 			TimedExecution
 		};
-    }
+	}
+
+	public override void FixItemsInternal()
+	{
+		Items.Clear();
+		Items.Add(TimedExecution);
+	}
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+		var dbItems = ParseDbString(valuesInDb, Items.Count);
+		int i = 0;
+		foreach (var dbItem in dbItems)
+		{
+			Items[i].StringValue = dbItem;
+			i++;
+		}
+	}
 
 	public TimeSpanItem TimedExecution { get; set; } = new TimeSpanItem { Label = "Time to stand up and go" };
 
@@ -31,7 +52,12 @@ public class TUG : ScaleBase
 		//This score assumes Average time up 45. Mas Time up 135s
 		//To change those values please update the ScoreNormalized function.
 
+
+
 		ScoreRaw = (int)Math.Ceiling(TimedExecution.Value.TotalSeconds);
+
+		var externalized = ScaleBase.LinearInterpolation(135, 45, ScoreRaw);
+
 		if (ScoreRaw < 35) ScoreNormalized = 0;
 		else if (ScoreRaw > 135) ScoreNormalized = 100;
 		else
@@ -53,5 +79,32 @@ public class TUG : ScaleBase
 	{
 		Details.Clear();
 		Details.Add(TimedExecution.StringValue);
+	}
+
+	public override string ToDBString()
+	{
+		List<string> labels = new List<string>();
+		List<string> values = new List<string>();
+
+		int i = 0;
+		foreach (var item in Items)
+		{
+			labels.Add(i.ToString());
+			i = i + 1;
+			values.Add(item.StringValue);
+		}
+
+		return CreateDBItem(labels, values);
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, Items.Count);
+		int i = 0;
+		foreach (var dbItem in dbItems)
+		{
+			Items[i].StringValue = dbItem;
+			i++;
+		}
 	}
 }

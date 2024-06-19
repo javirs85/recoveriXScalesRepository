@@ -150,7 +150,7 @@
 							{
 								<td>
 									<div class="tableCellContainer">
-										@if (GetScale(session.Id, scale.Id).IsMeasured)
+										@if (GetScale(session.Id, scale.Id) is not null && GetScale(session.Id, scale.Id).IsMeasured)
 										{
 											<h5>@(GetScale(session.Id, scale.Id)?.ScoreNormalized + "%")</h5>
 											<div class="TableCellDetails @(IsShowinDetails?"":"Hide")">
@@ -237,7 +237,7 @@
 		{
 			Current.SelectedSession = o as Session;
 			Current.SelectedTherapy.Sessions.Remove(Current.SelectedSession);
-			Current.SelectedSession = await DB.UpdateSessionInTherapyWithDetailsFromDB(Current.SelectedTherapy, Current.SelectedSession);
+			Current.SelectedSession = await DB.UpdateSessionInTherapyWithDetailsFromDB(Current);
 			Current.SelectedTherapy.Sessions.Add(Current.SelectedSession);
 			await SessionSelected.InvokeAsync(o as Session);
 		}
@@ -265,7 +265,7 @@
 
 	async Task DownloadAxesFromDB()
 	{
-		await DB.LoadAllSessionDetailsInTherapy(Current.SelectedTherapy);
+		await DB.LoadAllSessionDetailsInTherapy(Current);
 
 		//horizontal axis
 		HorizontalAxis = Current.SelectedTherapy.Sessions.OrderBy(x => x.MeasurementDate).ToList();
@@ -317,6 +317,8 @@
 		}
 
 		int AveragedPRE = (int)((float)added / (float)amount);
+		if (amount == 0)
+			AveragedPRE = -1;
 
 		if(SessionsThatContainScale.Count() > 0)
 		{
@@ -336,6 +338,9 @@
 			else
 			{
 				var newValue = Newest.Scales.Find(x => x.Id == id).ScoreNormalized; // - AveragedPRE;
+				if (AveragedPRE == -1)
+					AveragedPRE = newValue;
+
 				var result = new EvolutionResults
 					{
 						AveragedPreValue = AveragedPRE,
