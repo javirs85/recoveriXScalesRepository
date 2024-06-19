@@ -10,15 +10,7 @@ public class NineHolePegTest : ScaleBase
 {
     public NineHolePegTest()
     {
-		Id = ScalesIDs.NineHPT;
-		Name = "Nine hole peg test";
-		ShortName = "9HPT";
-		AreaOfStudy = "Fine motor skills";
-
-		DetailsHeaders.Add("Healthy hand");
-		DetailsHeaders.Add("Paretic hand");
-
-		ScoreNormalized = 0;
+		
 
 		/*
 		Items = new List<ScaleItem>
@@ -81,20 +73,38 @@ describe his/her performance in Note (e.g. with assistance of unaffected hand).
 		};
 
 		*/
+	}
 
+	public override void Init()
+	{
+		Id = ScalesIDs.NineHPT;
+		Name = "Nine hole peg test";
+		ShortName = "9HPT";
+		AreaOfStudy = "Fine motor skills";
 
-		FixItemsInternal();
+		DetailsHeaders.Add("Healthy hand");
+		DetailsHeaders.Add("Paretic hand");
+
+		ScoreNormalized = 0;
 	}
 
 	public override void FixItemsInternal()
 	{
 		Items.Clear();
-		Items.Add(HealthyHand);
-		Items.Add(PareticHand);
+		Items.Add(RightHand);
+		Items.Add(LeftHand);
 	}
 
-	public TimeSpanItem HealthyHand { get; set; } = new TimeSpanItem { Label = "Healthy hand:" };
-	public TimeSpanItem PareticHand { get; set; } = new TimeSpanItem { Label = "Paretic hand:" };
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+		var dbItems = ParseDbString(valuesInDb, 2);
+
+		RightHand.StringValue = dbItems[0];
+		LeftHand.StringValue = dbItems[1];
+	}
+
+	public TimeSpanItem RightHand { get; set; } = new TimeSpanItem { Label = "Right hand:" };
+	public TimeSpanItem LeftHand { get; set; } = new TimeSpanItem { Label = "Left hand:" };
 
 	ComplexOptionsItem SittingOptions = new ComplexOptionsItem
 	{
@@ -131,13 +141,13 @@ describe his/her performance in Note (e.g. with assistance of unaffected hand).
 	protected override void GenerateScoreInternal()
 	{
 		Details.Clear();
-		Details.Add($"Paretic hand: {HealthyHand.StringValue}");
-		Details.Add($"healthy hand: {PareticHand.StringValue}");
+		Details.Add($"Right hand: {RightHand.StringValue}");
+		Details.Add($"Left hand: {LeftHand.StringValue}");
 		var floatscore = 0.0;
-		if( PareticHand.Value.TotalSeconds < HealthyHand.Value.TotalSeconds)
-			floatscore = (PareticHand.Value.TotalSeconds / HealthyHand.Value.TotalSeconds) * 100;
+		if( LeftHand.Value.TotalSeconds < RightHand.Value.TotalSeconds)
+			floatscore = (LeftHand.Value.TotalSeconds / RightHand.Value.TotalSeconds) * 100;
 		else
-			floatscore = (HealthyHand.Value.TotalSeconds / PareticHand.Value.TotalSeconds) * 100;
+			floatscore = (RightHand.Value.TotalSeconds / LeftHand.Value.TotalSeconds) * 100;
 
 		ScoreNormalized = (int)Math.Round(floatscore);
 
@@ -147,13 +157,36 @@ describe his/her performance in Note (e.g. with assistance of unaffected hand).
 
 	protected override void ResetInternal()
 	{
- 		HealthyHand = new TimeSpanItem { Label = "Healthy hand:" };
-		PareticHand = new TimeSpanItem { Label = "Paretic hand:" };
+ 		RightHand = new TimeSpanItem { Label = "Right hand:" };
+		LeftHand = new TimeSpanItem { Label = "Left hand:" };
 	}
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
-		Details.Add(HealthyHand.StringValue);
-		Details.Add(PareticHand.StringValue);
+		Details.Add(RightHand.StringValue);
+		Details.Add(LeftHand.StringValue);
+	}
+
+	public override string ToDBString()
+	{
+		return CreateDBItem(
+			new List<string>
+			{
+				"RightHand",
+				"LeftHand"
+			},
+			new List<string>
+			{
+				RightHand.StringValue,
+				LeftHand.StringValue
+			});
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, 2);
+
+		RightHand.StringValue = dbItems[0];
+		LeftHand.StringValue = dbItems[1];
 	}
 }

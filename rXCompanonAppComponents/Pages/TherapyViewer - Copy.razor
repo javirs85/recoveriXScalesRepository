@@ -236,7 +236,7 @@
 		{
 			Current.SelectedSession = o as Session;
 			Current.SelectedTherapy.Sessions.Remove(Current.SelectedSession);
-			Current.SelectedSession = await DB.UpdateSessionInTherapyWithDetailsFromDB(Current.SelectedTherapy, Current.SelectedSession);
+			Current.SelectedSession = await DB.UpdateSessionInTherapyWithDetailsFromDB(Current);
 			Current.SelectedTherapy.Sessions.Add(Current.SelectedSession);
 			await SessionSelected.InvokeAsync(o as Session);
 		}
@@ -264,7 +264,7 @@
 
 	async Task DownloadAxesFromDB()
 	{
-		await DB.LoadAllSessionDetailsInTherapy(Current.SelectedTherapy);
+		await DB.LoadAllSessionDetailsInTherapy(Current);
 
 		//horizontal axis
 		HorizontalAxis = Current.SelectedTherapy.Sessions.OrderBy(x => x.MeasurementDate).ToList();

@@ -24,16 +24,21 @@
 .Option {
     display: flex;
     flex: 1;
-    justify-content: center;
-    padding: 10px;
+    justify-content: left;
     border-width: 0 1px 0 0;
     cursor: pointer;
     user-select: none;
 }
 
-.BorderJustDown{
-    border:none!important;
-    border-radius:0!important;
+.OptionValueBox {
+    width:40px;
+    border-right: 1px solid #79c7ff;
+    opacity:0.5;
+}
+
+.BorderJustDown {
+    border: none !important;
+    border-radius: 0 !important;
 }
 
 .SelectedOptionDetails {

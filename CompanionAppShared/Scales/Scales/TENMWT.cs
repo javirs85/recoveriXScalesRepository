@@ -9,13 +9,19 @@ public class TENMWT : ScaleBase
 {
     public TENMWT()
     {
+		
+	}
+
+	public override void Init()
+	{
 		Id = ScalesIDs.TENMWT;
 		Name = "10 Meter Walk Test";
 		ShortName = "10MWT";
 		AreaOfStudy = "Gait";
-    }
+		DetailsHeaders.Add("Attempts");
+	}
 
-	
+
 
 	public override void FixItemsInternal()
 	{
@@ -37,13 +43,51 @@ public class TENMWT : ScaleBase
 		//score = mijana de valors no-zero
 
 		//TODO: Marc provide reference values
+		ScoreNormalized = 50;
 	}
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
-		Details.Add
+		Details.Add(MeasuredTimeExecution1.StringValue);
+		Details.Add(MeasuredTimeExecution2.StringValue);
+		Details.Add(MeasuredTimeExecution3.StringValue);
 	}
 	protected override void ResetInternal()
 	{
+	}
+
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+		var dbItems = ParseDbString(valuesInDb, 3);
+
+		MeasuredTimeExecution1.StringValue = dbItems[0];
+		MeasuredTimeExecution2.StringValue = dbItems[1];
+		MeasuredTimeExecution3.StringValue = dbItems[2];
+	}
+
+	public override string ToDBString()
+	{
+		return CreateDBItem(
+			new List<string>
+			{
+				"first run",
+				"second run",
+				"third run"
+			},
+			new List<string>
+			{
+				MeasuredTimeExecution1.StringValue,
+				MeasuredTimeExecution2.StringValue,
+				MeasuredTimeExecution3.StringValue
+			});
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, 2);
+
+		MeasuredTimeExecution1.StringValue = dbItems[0];
+		MeasuredTimeExecution2.StringValue = dbItems[1];
+		MeasuredTimeExecution3.StringValue = dbItems[2];
 	}
 }

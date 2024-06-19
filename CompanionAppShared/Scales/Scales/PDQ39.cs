@@ -12,10 +12,17 @@ public class PDQ39 : ScaleBase
 {
     public PDQ39()
     {
+		
+    }
+
+	public override void Init()
+	{
 		Id = ScalesIDs.PDQ39;
 		Name = "Parkinson's Disease Questionnaire";
 		ShortName = "PDQ39";
 		AreaOfStudy = "Impact of the disease";
+
+		DetailsHeaders = new List<string> { "Points" };
 
 		Items = new List<ScaleItem>
 		{
@@ -488,12 +495,14 @@ public class PDQ39 : ScaleBase
 				}
 			}
 		};
-    }
+	}
 
 	public override void FixItemsInternal()
 	{
 		
 	}
+
+	public override void LoadValuesFromDB(string valuesInDb) => FromDBStrinngToListOfComplexOptions(valuesInDb);
 
 
 	protected override void GenerateScoreInternal()
@@ -505,7 +514,7 @@ public class PDQ39 : ScaleBase
 							 where i is ComplexOptionsItem
 							 select i as ComplexOptionsItem)
 		{
-			if (item.SelectedOption is not null)
+			if (item.SelectedOption is not null && item.SelectedOption.Value != -1)
 			{
 				ScoreRaw += item.Value;
 				maxValue += item.Options.Count - 1;
@@ -520,9 +529,40 @@ public class PDQ39 : ScaleBase
 
 	protected override void GenerateDetails()
 	{
-		//suma sense normalitzar
+		Details.Clear();
+		Details.Add(ScoreRaw.ToString());
 	}
 	protected override void ResetInternal()
 	{
+	}
+
+	public override string ToDBString()
+	{
+		List<string> labels = new List<string>();
+		List<string> values = new List<string>();
+
+		int i = 0;
+		foreach (var item in Items)
+		{
+			if (item is ComplexOptionsItem)
+			{
+				labels.Add(i.ToString());
+				i = i + 1;
+				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "-1");
+			}
+		}
+
+		return CreateDBItem(labels, values);
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, Items.Count);
+		int i = 0;
+		foreach (var dbItem in dbItems)
+		{
+			Items[i].StringValue = dbItem;
+			i++;
+		}
 	}
 }

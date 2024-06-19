@@ -1,10 +1,17 @@
-﻿namespace CompanionAppShared.Scales;
+﻿using System.Text.Json;
+
+namespace CompanionAppShared.Scales;
 
 
 public class BlocksAndBlocksTest : ScaleBase
 {
     public BlocksAndBlocksTest()
     {
+		
+    }
+
+	public override void Init()
+	{
 		Id = ScalesIDs.BnBT;
 		Name = "Blocks and box test";
 		ShortName = "BnBT";
@@ -13,8 +20,7 @@ public class BlocksAndBlocksTest : ScaleBase
 		DetailsHeaders.Add("Healthy hand");
 
 		Items = new List<ScaleItem>();
-		FixItemsInternal();
-    }
+	}
 
 
 	public override void FixItemsInternal()
@@ -35,6 +41,10 @@ public class BlocksAndBlocksTest : ScaleBase
 		else
 			ScoreNormalized = (100*NumberOfBlocksPareticHand.Value) /NumberOfBlocksHealthyHand.Value;
 	}
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+		throw new NotImplementedException();
+	}
 
 	protected override void ResetInternal()
 	{
@@ -46,5 +56,28 @@ public class BlocksAndBlocksTest : ScaleBase
 	{
 		Details.Add(NumberOfBlocksPareticHand.StringValue);
 		Details.Add(NumberOfBlocksHealthyHand.StringValue);
+	}
+
+	public override string ToDBString()
+	{		
+		return CreateDBItem(
+			new List<string>
+			{
+				"HealthyHand",
+				"PareticHand"
+			}, 
+			new List<string>
+			{
+				NumberOfBlocksHealthyHand.StringValue,
+				NumberOfBlocksPareticHand.StringValue
+			});
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, 2);
+
+		NumberOfBlocksHealthyHand.StringValue = dbItems[0];
+		NumberOfBlocksPareticHand.StringValue = dbItems[1];
 	}
 }

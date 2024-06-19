@@ -50,8 +50,11 @@
 						Post
 					</div>
 				</div>
+				@* <EditForm Model="Current.SelectedSession" class="me-3">
+					<input type="date" class="form-control" @bind="Current.SelectedSession.MeasurementDate"	 @bind:format="yyyy-MM-dd" />
+				</EditForm> *@
 				<EditForm Model="Current.SelectedSession" class="me-3">
-					<InputDate class="form-control" @bind-Value=Current.SelectedSession.MeasurementDate />
+					<InputText class="form-control" @bind-Value=DateInString/>
 				</EditForm>
 			</div>
 		</div>
@@ -111,8 +114,22 @@
 
 	Session Backup;
 
-	bool IsDarkColumnMinified;
+	private string DateInString
+	{
+		get { return Current.SelectedSession.MeasurementDate.ToString("dd.MM.yyyy"); }
+		set
+		{
+			DateTime d = DateTime.Now;
+			var Ok = DateTime.TryParse(value, out d);
+			if (Ok)
+				Current.SelectedSession.MeasurementDate = d;
+			else
+				Toaster.ShowError("Wrong date format");
+		}
+	}
 
+	bool IsDarkColumnMinified;
+	
 	bool AreWeCreatingANewSession = false;
 
 	protected override void OnParametersSet()

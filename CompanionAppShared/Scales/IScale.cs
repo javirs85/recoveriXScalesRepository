@@ -46,8 +46,13 @@ namespace CompanionAppShared.Scales
 		void FixItems(Patient? patient = null);
 		ScaleIcon Icon { get; set; }
 		List<ScaleItem> Items { get; set; }
+
+		string ToDBString();
+		void FromDBString(string dbString);
+		void LoadValuesFromDB(string valuesInDb);
+
 	}
 
 
-    public enum ScaleIcon { NotSet, NINEhptIcon, SIXminWalk, TwentyFiveFootWalk, Arm, bbt, hand, MAS, MFIS, MSIS, pencil, recoveriX, sessions, TUG }
+	public enum ScaleIcon { NotSet, NINEhptIcon, SIXminWalk, TwentyFiveFootWalk, Arm, bbt, hand, MAS, MFIS, MSIS, pencil, recoveriX, sessions, TUG }
 }

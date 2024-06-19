@@ -10,11 +10,18 @@ public class UPDRSIV : ScaleBase
 {
     public UPDRSIV()
     {
+		
+	}
+
+	public override void Init()
+	{
 		Id = ScalesIDs.UPDRSIV;
 		Name = "Unified Parkinson's Disease Rating Scale - Section IV";
 		ShortName = "UPDRS-IV";
 		AreaOfStudy = "Complications therapy";
-    }
+
+		DetailsHeaders = new List<string> { "Points" };
+	}
 	public override void FixItemsInternal()
 	{
 		Items.Clear();
@@ -183,7 +190,7 @@ This completes my rating of your Parkinson’s disease. I know the questions and
 							 where i is ComplexOptionsItem
 							 select i as ComplexOptionsItem)
 		{
-			if (item.SelectedOption is not null)
+			if (item.SelectedOption is not null && item.SelectedOption.Value != -1)
 			{
 				ScoreRaw += item.Value;
 				maxValue += item.Options.Count - 1;
@@ -204,9 +211,74 @@ This completes my rating of your Parkinson’s disease. I know the questions and
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
+		Details.Add(ScoreRaw.ToString());
+	}
+
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+		var dbItems = ParseDbString(valuesInDb, 10);
+
+		TimeWithDysk.ForceOption(int.Parse(dbItems[0]));
+		TotalHoursAwake.StringValue = dbItems[1];
+		TotaHoursWithDisk.StringValue = dbItems[2];
+
+		FunctionalImpact.ForceOption(int.Parse(dbItems[3]));
+
+		TimeSpentOff.ForceOption(int.Parse(dbItems[4]));
+		TotalHoursAwake_off.StringValue = dbItems[5];
+		TotalHoursOff.StringValue = dbItems[6];
+
+		ImpactOfFluctuations.ForceOption(int.Parse(dbItems[7]));
+		ComplexityOfMotorFluctuations.ForceOption(int.Parse(dbItems[8]));
+		PainfulOffState.ForceOption(int.Parse(dbItems[9]));
+
+		FixItemsInternal();
 	}
 
 	protected override void ResetInternal()
 	{
+	}
+
+	public override string ToDBString()
+	{
+		List<string> labels = new List<string>();
+		List<string> values = new List<string>();
+
+		labels.Add("TimeWithDyskOption");
+		values.Add(TimeWithDysk.SelectedOption?.Value.ToString() ?? "-1");
+		labels.Add("TotalHoursAwake");
+		values.Add(TotalHoursAwake.StringValue);
+		labels.Add("TotaHoursWithDisk");
+		values.Add(TotaHoursWithDisk.StringValue);
+
+		labels.Add("FunctionalImpactOption");
+		values.Add(FunctionalImpact.SelectedOption?.Value.ToString() ?? "-1");
+
+		labels.Add("TimeSpentOffOption");
+		values.Add(TimeSpentOff.SelectedOption?.Value.ToString() ?? "-1");
+		labels.Add("TotalHoursAwake_off");
+		values.Add(TotalHoursAwake_off.StringValue);
+		labels.Add("TotalHoursOff");
+		values.Add(TotalHoursOff.StringValue);
+
+		labels.Add("ImpactOfFluctuations");
+		values.Add(ImpactOfFluctuations.SelectedOption?.Value.ToString() ?? "-1");
+		labels.Add("ComplexityOfMotorFluctuations");
+		values.Add(ComplexityOfMotorFluctuations.SelectedOption?.Value.ToString() ?? "-1");
+		labels.Add("PainfulOffState");
+		values.Add(PainfulOffState.SelectedOption?.Value.ToString() ?? "-1");
+
+		return CreateDBItem(labels, values);
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, Items.Count);
+		int i = 0;
+		foreach (var dbItem in dbItems)
+		{
+			Items[i].StringValue = dbItem;
+			i++;
+		}
 	}
 }

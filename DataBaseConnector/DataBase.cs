@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
 
@@ -259,17 +261,20 @@ public class DataBase
 			else
 				Current.SelectedTherapy.Sessions.Add(Current.SelectedSession);
 
-			Current.SelectedSession.Serialize();
+			var SerializedData = CreateStorableVersionOftheSession(Current.SelectedSession);
+
 			await db.SaveData("spMeasurement_InsertOrUpdate",
 			new
 			{
 				Current.SelectedSession.Id,
 				Current.SelectedSession.PatientID,
+				Current.SelectedSession.SessionID,
+				Current.SelectedSession.SessionKind,
 				Current.SelectedSession.MeasurementDate,
 				Current.SelectedSession.TherapyID,
 				Current.SelectedSession.Tag,
 				Current.SelectedSession.AccuracyTag,
-				Current.SelectedSession.SerializedData
+				SerializedData
 			});
 
 			//await UpdateSelectedPatientToDB(Current);
@@ -280,17 +285,39 @@ public class DataBase
 		}
 	}
 
-	public async Task<Session> UpdateSessionInTherapyWithDetailsFromDB(Therapy SelectedTherapy, Session session)
+	private string CreateStorableVersionOftheSession(Session session)
+	{
+		List<StorableScale> StorableScales = new();
+		foreach (var sc in session.Scales)
+		{
+			StorableScales.Add(new StorableScale
+			{
+				ScaleID = sc.Id,
+				IsMeasured = sc.IsMeasured,
+				SerializedMeasurements = sc.ToDBString()
+			});
+		}
+		return JsonSerializer.Serialize(StorableScales);
+	}
+
+	private class StorableScale
+	{
+		public ScalesIDs ScaleID { get; set; } = ScalesIDs.NotSet;
+		public bool IsMeasured { get; set; }
+		public string SerializedMeasurements { get; set; } = string.Empty;
+	}
+
+	public async Task<Session> UpdateSessionInTherapyWithDetailsFromDB(SelectedItems Current)
 	{
 		try
 		{
-			var s = await LoadSession(session.Id);
+			var s = await LoadSession(Current);
 
-			var ExistingSession = SelectedTherapy.Sessions.Find(x=>x.Id == session.Id);
+			var ExistingSession = Current.SelectedTherapy.Sessions.Find(x=>x.Id == Current.SelectedSession.Id);
 			if(ExistingSession != null)
 			{
-				SelectedTherapy.Sessions.Remove(ExistingSession);
-				SelectedTherapy.Sessions.Add(session);
+				Current.SelectedTherapy.Sessions.Remove(ExistingSession);
+				Current.SelectedTherapy.Sessions.Add(Current.SelectedSession);
 			}
 
 			return s;
@@ -298,17 +325,43 @@ public class DataBase
 		catch (Exception e)
 		{
 			ErrorOccurred?.Invoke(this, e);
-			return session;
+			return Current.SelectedSession;
 		}
 	}
 
-	async Task<Session> LoadSession(Guid id)
+	async Task<Session> LoadSession(SelectedItems Current)
 	{
+		Guid id = Current.SelectedSession.Id;
 		var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new
 		{
 			Id = id,
 		});
 		var r = results.FirstOrDefault();
+		
+		var scalesInDB = System.Text.Json.JsonSerializer.Deserialize<List<StorableScale>>(r.SerializedData);
+		Current.SelectedSession.Scales.Clear();
+
+		foreach(var sca in scalesInDB??new List<StorableScale>())
+		{
+			var GeneratedScale = ScalesService.GenerateNewScale(sca.ScaleID);
+			if(GeneratedScale is not null)
+			{
+				if (sca.IsMeasured)
+				{
+					GeneratedScale.LoadValuesFromDB(sca.SerializedMeasurements);
+					GeneratedScale.GenerateScore();
+				}
+				else
+				{
+					GeneratedScale.IsMeasured = false;
+				}
+
+				Current.SelectedSession.Scales.Add(GeneratedScale);
+			}
+		}
+
+		Current.SelectedSession.IsFullyLoaded = true;
+		/*
 		var s = Session.FromJson(r.SerializedData);
 		foreach (var x in s.Scales)
 		{
@@ -317,15 +370,19 @@ public class DataBase
 		}
 
 		s.IsFullyLoaded = true;
+		*/
 
-		return s;
+		return Current.SelectedSession;
 	}
 
-	public async Task LoadAllSessionDetailsInTherapy(Therapy t)
+	public async Task LoadAllSessionDetailsInTherapy(SelectedItems current)
 	{
 		try
 		{
+			var t = current.SelectedTherapy ?? new Therapy();
+
 			List<Session> before = new();
+
 			foreach (var s in t.Sessions)
 				before.Add(s);
 
@@ -334,7 +391,13 @@ public class DataBase
 			foreach (var s in before)
 			{
 				if (!s.IsFullyLoaded)
-					t.Sessions.Add(await LoadSession(s.Id));
+				{
+					SelectedItems temp = new SelectedItems();
+					temp.SelectedTherapy = current.SelectedTherapy;
+					temp.SelectedPatient = current.SelectedPatient;
+					temp.SelectedSession = s;
+					t.Sessions.Add(await LoadSession(temp));
+				}
 				else
 					t.Sessions.Add(s);
 			}
@@ -366,7 +429,12 @@ public class DataBase
 
 			foreach(var summary in summaries)
 			{
-				var session = await UpdateSessionInTherapyWithDetailsFromDB(newTherapy, summary);
+				SelectedItems temp = new();
+				temp.SelectedPatient = p;
+				temp.SelectedTherapy = newTherapy;
+				temp.SelectedSession = summary;
+
+				var session = await UpdateSessionInTherapyWithDetailsFromDB(temp);
 				newTherapy.TherapyLabel = PatientLabelTools.GetTherapyLabel(session.SessionID);
 				session.CreateSessionLabel(newPatientLabel, newTherapy);
 				newTherapy.Sessions.Add(session);

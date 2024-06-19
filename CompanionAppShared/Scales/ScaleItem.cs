@@ -271,6 +271,13 @@ public class ComplexOptionsItem : ScaleItem
 		}
     }
 
+    public void ForceOption(int i)
+    {
+        if (i == -1) SelectedOption = null;
+        else
+            SelectedOption = Options[i];
+    }
+
 
 	public override string StringValue
 	{

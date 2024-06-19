@@ -20,6 +20,10 @@ public class ERP : ScaleBase
 	{
 		Items.Clear();
 	}
+	public override void Init()
+	{
+	}
+
 
 	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
 	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
@@ -30,6 +34,9 @@ public class ERP : ScaleBase
 		Label = "Select your option:"
 	};
 
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+	}
 
 
 	protected override void GenerateScoreInternal()
@@ -40,5 +47,29 @@ public class ERP : ScaleBase
 	}
 	protected override void ResetInternal()
 	{
+	}
+
+
+	public override string ToDBString()
+	{
+		return CreateDBItem(
+			new List<string>
+			{
+				"not done",
+			},
+			new List<string>
+			{
+				"not done",
+			});
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, 2);
+
+		/*
+		NumberOfBlocksHealthyHand.StringValue = dbItems[0];
+		NumberOfBlocksPareticHand.StringValue = dbItems[1];
+		*/
 	}
 }

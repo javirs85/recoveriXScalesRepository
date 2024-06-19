@@ -9,23 +9,30 @@ public class MoCA : ScaleBase
 {
     public MoCA()
     {
+		
+    }
+
+	public override void Init()
+	{
 		Id = ScalesIDs.MoCA;
 		Name = "Montreal cognitive assessment";
 		ShortName = "MoCA";
 		AreaOfStudy = "Cognitive status";
-
-    }
+	}
 
 	public override void FixItemsInternal()
 	{
-		Items.Clear();
-		Items.Add(visual);
-		Items.Add(Naming);
-		Items.Add(Attention);
-		Items.Add(Language);
-		Items.Add(Abstraction);
-		Items.Add(Memory);
-		Items.Add(Orientation);
+		if (Items.Count == 0)
+		{
+			Items.Clear();
+			Items.Add(visual);
+			Items.Add(Naming);
+			Items.Add(Attention);
+			Items.Add(Language);
+			Items.Add(Abstraction);
+			Items.Add(Memory);
+			Items.Add(Orientation);
+		}
 	}
 
 
@@ -43,6 +50,21 @@ public class MoCA : ScaleBase
 		ScoreRaw = visual.Value + Naming.Value + Attention.Value + Language.Value + Abstraction.Value + Memory.Value+ Orientation.Value;
 		ScoreNormalized = (int)((float)ScoreRaw / 30.0f * 100);
 	}
+
+	public override void LoadValuesFromDB(string valuesInDb)
+	{
+		var dbItems = ParseDbString(valuesInDb, 7);
+
+		visual.StringValue = dbItems[0];
+		Naming.StringValue = dbItems[1];
+		Attention.StringValue = dbItems[2];
+		Language.StringValue = dbItems[3];
+		Abstraction.StringValue = dbItems[4];
+		Memory.StringValue = dbItems[5];
+		Orientation.StringValue = dbItems[6];
+
+		FixItemsInternal();
+	}
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
@@ -51,5 +73,40 @@ public class MoCA : ScaleBase
 
 	protected override void ResetInternal()
 	{
+	}
+
+	public override string ToDBString()
+	{
+
+		List<string> labels = new List<string>();
+		List<string> values = new List<string>();
+
+		labels.Add("visual");
+		values.Add(visual.StringValue);
+		labels.Add("Naming");
+		values.Add(Naming.StringValue);
+		labels.Add("Attention");
+		values.Add(Attention.StringValue);
+		labels.Add("Language");
+		values.Add(Language.StringValue);
+		labels.Add("Abstraction");
+		values.Add(Abstraction.StringValue);
+		labels.Add("Memory");
+		values.Add(Memory.StringValue);
+		labels.Add("Orientation");
+		values.Add(Orientation.StringValue);
+
+		return CreateDBItem(labels, values);
+	}
+
+	public override void FromDBString(string dbString)
+	{
+		var dbItems = ParseDbString(dbString, Items.Count);
+		int i = 0;
+		foreach (var dbItem in dbItems)
+		{
+			Items[i].StringValue = dbItem;
+			i++;
+		}
 	}
 }
