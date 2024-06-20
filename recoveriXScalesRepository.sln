@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompanionAppShared", "Compa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "rXCompanionAppComponents", "rXCompanonAppComponents\rXCompanionAppComponents.csproj", "{D8E5D2D7-0BE2-417D-A199-77CD82546CEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GtecDBMatblaConnector", "GtecDBMatblaConnector\GtecDBMatblaConnector.csproj", "{544E94AF-3E64-41E9-B53C-F27F67E1583A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GtecDBMatblaConnector", "GtecDBMatblaConnector\GtecDBMatblaConnector.csproj", "{544E94AF-3E64-41E9-B53C-F27F67E1583A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

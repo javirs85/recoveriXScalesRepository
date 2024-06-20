@@ -78,6 +78,10 @@ public class DataBase
 				new Patient { PatientLabel = "Not Found" };
 
 			Current.SelectedTherapy = Current.SelectedPatient.GetParkinsonTherapy();
+
+			var oldP = Patients.Find(x=>x.PatientLabel == Current.SelectedPatient.PatientLabel);
+			Patients.Remove(oldP);
+			Patients.Add(Current.SelectedPatient);
 		}
 	}
 
