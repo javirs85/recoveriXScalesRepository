@@ -34,18 +34,9 @@ public class TUG : ScaleBase
 		Items.Clear();
 		Items.Add(TimedExecution);
 	}
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-		var dbItems = ParseDbString(valuesInDb, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
-	}
 
-	public TimeSpanItem TimedExecution { get; set; } = new TimeSpanItem { Label = "Time to stand up and go" };
+
+	public TimeSpanItem TimedExecution { get; set; } = new TimeSpanItem { JsonCode = "R1", Label = "Time to stand up and go" };
 
 	protected override void GenerateScoreInternal()
 	{
@@ -79,32 +70,5 @@ public class TUG : ScaleBase
 	{
 		Details.Clear();
 		Details.Add(TimedExecution.StringValue);
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			labels.Add(i.ToString());
-			i = i + 1;
-			values.Add(item.StringValue);
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }

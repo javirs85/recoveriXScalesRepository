@@ -1,0 +1,196 @@
+﻿@inject DataBase DB;
+@inject IToastService Toaster;
+
+<div class="fs-4">@Status</div>
+
+<div class="d-flex flex-column gap-1">
+    <div class="TableRow d-flex align-items-center gap-1">
+        <div style="width: 60px;">
+            Patient
+        </div>
+        <div style="width: 83px;">
+            <button class="btn btn-primary" @onclick=@(async ()=>{ await LoadAllPatients();})>Load all</button>
+        </div>
+    </div>
+    @foreach(var p in DB.Patients.OrderBy(x=>x.PatientLabel))
+    {
+        <div class="TableRow d-flex gap-1 align-items-center gap-1">
+            <div style="width: 60px;">
+                @p.PatientLabel
+            </div>
+            <div style="width: 100px;">
+                <button class="btn btn-primary" style="width: 83px;" @onclick=@(async ()=>{ await LoadPatient(p);})>Load</button>
+            </div>
+        </div>
+    }
+
+    <div class="TableRow d-flex align-items-center gap-1 mt-4">
+        <div style="width: 60px;">
+            Patient
+        </div>
+        <div style="width: 60px;">
+            Loaded?
+        </div>
+        <div style="width: 60px;">
+            PS?
+        </div>
+        <div style="width: 162px;">
+            <button class="btn btn-primary" @onclick=@(async ()=>{ await GenerateJsonAll();})>Download selected</button>
+        </div>
+    </div>
+    @foreach (var p in MyPatients.OrderBy(x => x.PatientLabel))
+    {
+        <div class="TableRow d-flex gap-1 align-items-center gap-1">
+            <div style="width: 60px;">
+                @p.PatientLabel
+            </div>
+            <div style="width: 60px;">
+                @if (@p.IsFullyLoadedFromDB)
+                {
+                    <i class="bi bi-check-square"></i>
+                }
+                else
+                {
+                    <i class="bi bi-x"></i>
+                }
+            </div>
+            <div style="width: 60px;">
+                @if (p.GetParkinsonTherapy() != null)
+                {
+                    <i class="bi bi-check-square"></i>
+                }
+                else
+                {
+                    <i class="bi bi-x"></i>
+                }
+            </div>
+        </div>
+        
+        @foreach(var s in p.GetParkinsonTherapy().Sessions)
+        {
+            <div class="TableRow d-flex gap-1 align-items-center gap-1">
+                <div class="ms-2">@s.MeasurementDate</div>
+                <div>
+                    @if (s.IsFullyLoaded)
+                    {
+                        <i class="bi bi-check-square"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-x"></i>
+                    }
+                </div>
+                <div>@s.SerializedData</div>
+            </div>
+        }
+       
+    }
+    
+    <div>
+        @json
+    </div>
+</div>
+
+
+@code {
+    private string Status ="Initialized";
+    private string json = "";
+    private List<Patient> MyPatients = new();
+
+    private async Task LoadPatient(Patient p)
+    {
+        Status = "Loading";
+        SelectedItems temp = new SelectedItems();
+        temp.SelectedPatient = p;
+        await DB.SelectPatient(temp);
+        p = temp.SelectedPatient;
+        MyPatients.Add(p);
+        Status = "Ready";
+    }
+
+    private async Task LoadAllPatients()
+    {
+        Status = "Loading";
+        for (int i = 0; i < DB.Patients.Count; ++i)
+        {
+            if (!DB.Patients[i].IsFullyLoadedFromDB)
+            {
+                await LoadPatient(DB.Patients[i]);
+            }
+        }
+        Status = "Ready";
+        StateHasChanged();
+    }
+
+    private async Task GenerateJsonAll()
+    {
+        List<PatientInJson> LoadedPatietns = new();
+        foreach(var p in MyPatients)
+        {
+            if (p.IsFullyLoadedFromDB)
+            {
+                PatientInJson np = new PatientInJson();
+                np.ID = p.PatientLabel;
+
+                var therapy = p.GetParkinsonTherapy();
+                var nt = new TherapyInJson { ID = therapy.TherapyLabel };
+                foreach(var s in therapy.Sessions)
+                {
+                    if(!s.IsFullyLoaded)
+                    {
+                        var Current = new SelectedItems();
+                        Current.SelectedSession = s;
+                        Current.SelectedPatient = p;
+                        Current.SelectedTherapy = therapy;
+
+                        var loadedSession = await DB.GetSessionFromDB(s.Id);
+                        nt.Sessions.Add(new SessionInJson
+                            {
+                                Date = loadedSession.MeasurementDate,
+                                Kind = loadedSession.SessionKind.ToString(),
+                                Data = loadedSession.SerializedData
+                            });
+                    }
+                    else
+                    {
+                        nt.Sessions.Add(new SessionInJson
+                            {
+                                Date = s.MeasurementDate,
+                                Kind = s.SessionKind.ToString(),
+                                Data = s.SerializedData
+                            });
+                    }                    
+                }
+                np.Therapies.Add(nt);
+                LoadedPatietns.Add(np);
+            }
+        }
+
+        json = System.Text.Json.JsonSerializer.Serialize(LoadedPatietns);
+        json = json.Replace("\\u0022", "\"");
+        json = json.Replace("\\", "");
+        json = json.Replace("\"Data\":\"[", "\"Data\":[");
+        json = json.Replace("\"]]\"},{", "\"]]},{");
+        json = json.Replace("]]\"}]\"},{", "]]}]\"},{");
+        json = json.Replace("]]}]\"},{\"Date\"", "]]}]},{\"Date\"");
+        json = json.Replace("SerializedMeasurements\":\"[", "SerializedMeasurements\":[");
+        json = json.Replace("]]\"}]\"}]}]}]", "]]}]}]}]}]");
+    }
+
+    private class PatientInJson
+    {
+        public string ID { get; set; } = "";
+        public List<TherapyInJson> Therapies { get; set; } = new();
+    }
+    private class TherapyInJson
+    {
+        public string ID { get; set; } = "";
+        public List<SessionInJson> Sessions { get; set; } = new();
+    }
+    private class SessionInJson
+    {
+        public DateTime Date { get; set; }
+        public string Kind { get; set; } = "";
+        public string Data { get; set; } = "";
+    }
+}

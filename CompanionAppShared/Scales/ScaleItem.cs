@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace CompanionAppShared.Scales;
 
 
+public enum ScaleItemType { NotSet, IntItem, FloatItem, StringItem, TimeSpanItem, OptionsItem , InfoItem , ConditionalSection , ConditionalSectionsPack , ComplexOptionsItem };
+
 [JsonDerivedType(typeof(IntItem), typeDiscriminator: "IntItem")]
 [JsonDerivedType(typeof(FloatItem), typeDiscriminator: "FloatItem")]
 [JsonDerivedType(typeof(StringItem), typeDiscriminator: "StringItem")]
@@ -19,6 +21,7 @@ namespace CompanionAppShared.Scales;
 [JsonDerivedType(typeof(ConditionalSectionsPack), typeDiscriminator: "ConditionalSectionsPack")]
 [JsonDerivedType(typeof(ComplexOptionsItem), typeDiscriminator: "ComplexOptionsItem")]
 
+
 public class ScaleItem
 {
     public ScaleBase ParentScale;
@@ -26,7 +29,8 @@ public class ScaleItem
     public event EventHandler<string> FormatError;
     public virtual string StringValue { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
-
+    public string JsonCode { get; set; } = string.Empty;
+    public ScaleItemType ItemType { get; set; } = ScaleItemType.NotSet;
     protected void MeasureNeedsUpdate()
     {
         //ParentScale.IsMeasured = true;
@@ -43,6 +47,7 @@ public class ScaleItem
 
 public class IntItem : ScaleItem
 {
+    public IntItem() { ItemType = ScaleItemType.IntItem; }
     public int Value { get; set; }
 
     public override string StringValue
@@ -51,7 +56,12 @@ public class IntItem : ScaleItem
         set
         {
             var didWork = int.TryParse(value, out int i);
-            if (didWork) Value = i;
+            if (didWork)
+            {
+                Value = i;
+                if (Value > MaxValue) Value = MaxValue;
+                if (Value < MinValue) Value = MinValue;
+            }
             else ReportFormatError("Please enter an integer value");
             MeasureNeedsUpdate();
 		}
@@ -74,6 +84,10 @@ public class IntItem : ScaleItem
 
 public class FloatItem : ScaleItem
 {
+    public FloatItem()
+    {
+        ItemType = ScaleItemType.FloatItem;
+    }
     private decimal _value;
 
     public decimal Value
@@ -102,6 +116,11 @@ public class FloatItem : ScaleItem
 
 public class StringItem : ScaleItem
 {
+    public StringItem()
+    {
+        ItemType = ScaleItemType.StringItem;
+    }
+
     private string _value = string.Empty;
 
     public string Value
@@ -128,7 +147,7 @@ public class TimeSpanItem : ScaleItem
 {
     public TimeSpanItem()
     {
-        
+        ItemType = ScaleItemType.TimeSpanItem;
     }
     private TimeSpan _value;
 
@@ -167,6 +186,11 @@ public class TimeSpanItem : ScaleItem
 
     private TimeSpan? ParseTimeString(string timeString)
     {
+        int RawNumber = 0;
+        bool isRawNumber = int.TryParse(timeString, out RawNumber);
+        if(isRawNumber)
+            return TimeSpan.FromSeconds(RawNumber);
+
 		Regex regex = new Regex(@"\s*(?:(\d+)h\s*)?(?:(\d+)m\s*)?(?:(\d+)s)?");
 		Match match = regex.Match(timeString);
 
@@ -187,6 +211,11 @@ public class TimeSpanItem : ScaleItem
 
 public class OptionsItem : ScaleItem
 {
+    public OptionsItem()
+    {
+        ItemType = ScaleItemType.OptionsItem;
+    }
+
     public List<string> Options { get; set; } = new List<string>();
     private string _selectedOption = string.Empty;
     public string SelectedOption
@@ -205,17 +234,25 @@ public class OptionsItem : ScaleItem
         }
     }
 
-	public override string StringValue 
+	public override string StringValue
     {
         get
         {
             return SelectedOption;
+        }
+        set
+        {
+            SelectedOption = value;
         }
     }
 }
 
 public class InfoItem : ScaleItem
 {
+    public InfoItem()
+    {
+        ItemType = ScaleItemType.InfoItem;
+    }
     public string Label { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
     public bool DefaultOpen { get; set; } = true;
@@ -223,13 +260,21 @@ public class InfoItem : ScaleItem
 
 public class ConditionalSectionsPack : ScaleItem
 {
+    public ConditionalSectionsPack()
+    {
+            ItemType = ScaleItemType.ConditionalSection;
+    }
     public List<ConditionalSection> ConditionalSections { get; set; } = new();
 }
 
 public class ConditionalSection : ScaleItem
 {
+    public ConditionalSection()
+    {
+        ItemType = ScaleItemType.ConditionalSection;
+    }
 
-	public event EventHandler ToggledVisibility;
+    public event EventHandler ToggledVisibility;
 	private bool _isVisible;
 
 	public bool IsVisible
@@ -256,6 +301,10 @@ public class ConditionalSection : ScaleItem
 
 public class ComplexOptionsItem : ScaleItem
 {
+    public ComplexOptionsItem()
+    {
+        ItemType = ScaleItemType.ComplexOptionsItem;
+    }
 
     public int Value => SelectedOption?.Value ?? -1;
 
@@ -281,10 +330,20 @@ public class ComplexOptionsItem : ScaleItem
 
 	public override string StringValue
 	{
-		get { return SelectedOption?.Name ?? "-"; }
+		get { return Value.ToString(); }
 		set
 		{
-			SelectedOption = Options.Find(x=>x.Name ==  value);
+            int v = 0;
+            var canParse = int.TryParse(value, out v);
+            if(canParse)
+                ForceOption(v);
+            else
+            {
+                var o = Options.Find(x => x.Name == value);
+                if (o is not null)
+                    SelectedOption = o;
+            }
+
 			MeasureNeedsUpdate();
 		}
 	}

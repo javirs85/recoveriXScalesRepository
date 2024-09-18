@@ -29,34 +29,6 @@ public class ATA : ScaleBase
 	}
 
 	protected override void ResetInternal()
-	{
-	}
+	{ }
 
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-
-	}
-
-	public override string ToDBString()
-	{
-		return CreateDBItem(
-			new List<string>
-			{
-				"not done",
-			},
-			new List<string>
-			{
-				"not done",
-			});
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, 2);
-
-		/*
-		NumberOfBlocksHealthyHand.StringValue = dbItems[0];
-		NumberOfBlocksPareticHand.StringValue = dbItems[1];
-		*/
-	}
 }

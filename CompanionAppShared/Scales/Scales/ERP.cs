@@ -25,19 +25,24 @@ public class ERP : ScaleBase
 	}
 
 
-	public StringItem StringItem { get; set; } = new StringItem { Label = "Test string", StringValue = "Default value" };
-	public IntItem IntItem { get; set; } = new IntItem { Label = "Test int", StringValue = "12" };
-	public FloatItem FloatItem { get; set; } = new FloatItem { Label = "Test float", StringValue = "3,14" };
+	public StringItem StringItem { get; set; } = new StringItem
+    {
+        JsonCode = "TestString",
+        Label = "Test string", StringValue = "Default value" };
+	public IntItem IntItem { get; set; } = new IntItem
+    {
+        JsonCode = "TestInt",
+        Label = "Test int", StringValue = "12" };
+	public FloatItem FloatItem { get; set; } = new FloatItem
+    {
+        JsonCode = "TestFloat",
+        Label = "Test float", StringValue = "3,14" };
 	public OptionsItem OptionsItem { get; set; } = new OptionsItem
-	{
-		Options = new List<string> { "option 1", "option 2", "option 3" },
+    {
+        JsonCode = "TestOptions",
+        Options = new List<string> { "option 1", "option 2", "option 3" },
 		Label = "Select your option:"
 	};
-
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-	}
-
 
 	protected override void GenerateScoreInternal()
 	{
@@ -50,26 +55,11 @@ public class ERP : ScaleBase
 	}
 
 
-	public override string ToDBString()
+	public override Dictionary<string, string> ToDBDictionary()
 	{
-		return CreateDBItem(
-			new List<string>
-			{
-				"not done",
-			},
-			new List<string>
-			{
-				"not done",
-			});
-	}
+        var dic = new Dictionary<string, string>();
+        dic.Add("NotDone", "Not coded yet");
+        return dic;
+    }
 
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, 2);
-
-		/*
-		NumberOfBlocksHealthyHand.StringValue = dbItems[0];
-		NumberOfBlocksPareticHand.StringValue = dbItems[1];
-		*/
-	}
 }

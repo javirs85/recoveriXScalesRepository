@@ -64,6 +64,8 @@
     padding-left: 8px;
     margin: 5px 10px;
     font-weight:100;
+    display: flex;
+    gap:0.5em;
 }
 
 .scaleBoxScoresBox {

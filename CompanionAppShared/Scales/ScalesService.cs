@@ -34,7 +34,6 @@ public class ScalesService
 			_ => throw new Exception($"The scale '{scalesIDs}' has not been registered at the ScalesService, don't forget to add the JsonDerived at ScaleBase")
 		} ;
 	}
-
 	public static IScale GenerateNewScale(ScalesIDs scalesIDs)
 	{
 		return scalesIDs switch

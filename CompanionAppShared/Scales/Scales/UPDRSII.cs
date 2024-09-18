@@ -26,8 +26,9 @@ public class UPDRSII : ScaleBase
 		Items = new List<ScaleItem>
 		{
 			new ComplexOptionsItem
-			{
-				Label = "2.1 SPEECH",
+			{	
+				JsonCode = "2.1",
+                Label = "2.1 SPEECH",
 				InstructionsForThePatient = "Over the past week, have you had problems with your speech?",
 				Options = new List<Option>
 				{
@@ -39,21 +40,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.1 SPEECH",
-				InstructionsForThePatient = "Over the past week, have you had problems with your speech?",
-				Options = new List<Option>
-				{
-					new Option { Value = 0, Name = "Normal", Description = "Not at all (no problems)." },
-					new Option { Value = 1, Name = "Slight", Description = "My speech is soft, slurred or uneven, but it does not cause others to ask me to repeat myself." },
-					new Option { Value = 2, Name = "Mild", Description = "My speech causes people to ask me to occasionally repeat myself, but not every day." },
-					new Option { Value = 3, Name = "Moderate", Description = "My speech is unclear enough that others ask me to repeat myself every day even though most of my speech is understood." },
-					new Option { Value = 4, Name = "Severe", Description = "Most or all of my speech cannot be understood." }
-				}
-			},
-			new ComplexOptionsItem
-			{
-				Label = "2.2 SALIVA AND DROOLING",
+            {
+                JsonCode = "2.2",
+                Label = "2.2 SALIVA AND DROOLING",
 				InstructionsForThePatient = "Over the past week, have you usually had too much saliva during when you are awake or when you sleep?",
 				Options = new List<Option>
 				{
@@ -65,8 +54,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.3 CHEWING AND SWALLOWING",
+            {
+                JsonCode = "2.3",
+                Label = "2.3 CHEWING AND SWALLOWING",
 				InstructionsForThePatient = "Over the past week, have you usually had problems swallowing pills or eating meals? Do you need your pills cut or crushed or your meals to be made soft, chopped, or blended to avoid choking?",
 				Options = new List<Option>
 				{
@@ -78,8 +68,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.4 EATING TASKS",
+            {
+                JsonCode = "2.4",
+                Label = "2.4 EATING TASKS",
 				InstructionsForThePatient = "Over the past week, have you usually had troubles handling your food and using eating utensils? For example, do you have trouble handling finger foods or using forks, knives, spoons, chopsticks?",
 				Options = new List<Option>
 				{
@@ -91,8 +82,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.5 DRESSING",
+            {
+                JsonCode = "2.5",
+                Label = "2.5 DRESSING",
 				InstructionsForThePatient = "Over the past week, have you usually had problems dressing? For example, are you slow or do you need help with buttoning, using zippers, putting on or taking off your clothes or jewelry?",
 				Options = new List<Option>
 				{
@@ -104,8 +96,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.6 HYGIENE",
+            {
+                JsonCode = "2.6",
+                Label = "2.6 HYGIENE",
 				InstructionsForThePatient = "Over the past week, have you usually been slow or do you need help with washing, bathing, shaving, brushing teeth, combing your hair, or with other personal hygiene?",
 				Options = new List<Option>
 				{
@@ -117,8 +110,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.7 HANDWRITING",
+            {
+                JsonCode = "2.7",
+                Label = "2.7 HANDWRITING",
 				InstructionsForThePatient = "Over the past week, have people usually had trouble reading your handwriting?",
 				Options = new List<Option>
 				{
@@ -130,8 +124,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.8 DOING HOBBIES AND OTHER ACTIVITIES",
+            {
+                JsonCode = "2.8",
+                Label = "2.8 DOING HOBBIES AND OTHER ACTIVITIES",
 				InstructionsForThePatient = "Over the past week, have you usually had trouble doing your hobbies or other things that you like to do?",
 				Options = new List<Option>
 				{
@@ -143,8 +138,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.9 TURNING IN BED",
+            {
+                JsonCode = "2.9",
+                Label = "2.9 TURNING IN BED",
 				InstructionsForThePatient = "Over the past week, do you usually have trouble turning over in bed?",
 				Options = new List<Option>
 				{
@@ -156,8 +152,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.10 TREMOR",
+            {
+                JsonCode = "2.10",
+                Label = "2.10 TREMOR",
 				InstructionsForThePatient = "Over the past week, have you usually had shaking or tremor?",
 				Options = new List<Option>
 				{
@@ -169,8 +166,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.11 GETTING OUT OF BED, A CAR, OR A DEEP CHAIR",
+            {
+                JsonCode = "2.11",
+                Label = "2.11 GETTING OUT OF BED, A CAR, OR A DEEP CHAIR",
 				InstructionsForThePatient = "Over the past week, have you usually had trouble getting out of bed, a car seat, or a deep chair?",
 				Options = new List<Option>
 				{
@@ -182,8 +180,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.12 WALKING AND BALANCE",
+            {
+                JsonCode = "2.12",
+                Label = "2.12 WALKING AND BALANCE",
 				InstructionsForThePatient = "Over the past week, have you usually had problems with balance and walking?",
 				Options = new List<Option>
 				{
@@ -195,8 +194,9 @@ public class UPDRSII : ScaleBase
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2.13 FREEZING",
+            {
+                JsonCode = "2.13",
+                Label = "2.13 FREEZING",
 				InstructionsForThePatient = "Over the past week, on your usual day when walking, do you suddenly stop or freeze as if your feet are stuck to the floor?",
 				Options = new List<Option>
 				{
@@ -214,7 +214,6 @@ public class UPDRSII : ScaleBase
 	{
 
 	}
-	public override void LoadValuesFromDB(string valuesInDb) => FromDBStrinngToListOfComplexOptions(valuesInDb);
 
 	protected override void GenerateScoreInternal()
 	{
@@ -235,7 +234,7 @@ public class UPDRSII : ScaleBase
 		if (maxValue == 0)
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue,0 , ScoreRaw);
 	}
 	protected override void GenerateDetails()
 	{
@@ -246,33 +245,4 @@ public class UPDRSII : ScaleBase
 	{
 	}
 
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			if (item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "-1");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
-	}
 }

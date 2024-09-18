@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
@@ -24,6 +23,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Icons\ScaleIcons\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\DBManagement.razor" />
   </ItemGroup>
 
 </Project>

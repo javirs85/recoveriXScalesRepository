@@ -65,8 +65,9 @@ Words that patients often recognize include “good time”, “walking time”,
 		DefaultOpen = false
 	};
 	ComplexOptionsItem TimeWithDysk { get; set; } = new ComplexOptionsItem
-	{
-		Label = "Time Spent with Dyskinesias",
+    {
+        JsonCode = "TimeDisk",
+        Label = "Time Spent with Dyskinesias",
 		InstructionsForTheExaminer = "Determine the hours in the usual waking day and then the hours of dyskinesias. Calculate the percentage. If the patient has dyskinesias in the office, you can point them out as a reference to ensure that patients and caregivers understand what they are rating. You may also use your own acting skills to enact the dyskinetic movements you have seen in the patient before or show them dyskinetic movements typical of other patients. Exclude from this question early morning and nighttime painful dystonia.",
 		InstructionsForThePatient = "Over the past week, how many hours do you usually sleep on a daily basis, including nighttime sleep and daytime napping? Alright, if you sleep ___ hrs, you are awake ____ hrs. Out of those awake hours, how many hours in total do you have wiggling, twitching, or jerking movements? Do not count the times when you have tremor, which is a regular back and forth shaking or times when you have painful foot cramps or spasms in the early morning or at nighttime. I will ask about those later. Concentrate only on these types of wiggling, jerking, and irregular movements. Add up all the time during the waking day when these usually occur. How many hours ____ (use this number for your calculations).",
 		Options = new List<Option>
@@ -79,20 +80,24 @@ Words that patients often recognize include “good time”, “walking time”,
 				}
 	};
 	IntItem TotalHoursAwake { get; set; } = new IntItem
-	{
-		Label = "Total Hours Awake:"
+    {
+        JsonCode = "AwakeH",
+        Label = "Total Hours Awake:"
 	};
 	IntItem TotaHoursWithDisk { get; set; } = new IntItem
-	{
-		Label = "Total Hours with Dyskinesia:"
+    {
+        JsonCode = "DiskH",
+        Label = "Total Hours with Dyskinesia:"
 	};
 	IntItem DiskAutoUpdate { get; set; } = new IntItem
 	{
+		JsonCode = "AutoDisk",
 		Label = "AUTOUPDATE [Not required]: % Dyskinesia = ((Total Hours with Dyskinesia/Total Hours Awake)*100):",
 	};
 	ComplexOptionsItem FunctionalImpact { get; set; } = new ComplexOptionsItem
-	{
-		Label = "Functional Impact of Dyskinesias",
+    {
+        JsonCode = "Impact",
+        Label = "Functional Impact of Dyskinesias",
 		InstructionsForTheExaminer = "Determine the degree to which dyskinesias impact on the patient’s daily function in terms of activities and social interactions. Use the patient’s and caregiver’s response to your question and your own observations during the office visit to arrive at the best answer.",
 		InstructionsForThePatient = "Over the past week, did you usually have trouble doing things or being with people when these jerking movements occurred? Did they stop you from doing things or from being with people?",
 		Options = new List<Option>
@@ -105,8 +110,9 @@ Words that patients often recognize include “good time”, “walking time”,
 				}
 	};
 	ComplexOptionsItem TimeSpentOff { get; set; } = new ComplexOptionsItem
-	{
-		Label = "Time Spent in the OFF State",
+    {
+        JsonCode = "TimeOff",
+        Label = "Time Spent in the OFF State",
 		InstructionsForTheExaminer = "Use the number of waking hours derived from 4.1 and determine the hours spent in the “OFF” state. Calculate the percentage.",
 		InstructionsForThePatient = "Some patients with Parkinson’s disease have a good effect from their medications throughout their awake hours and we call that “ON” time. Other patients take their medications but still have some hours of low time, bad time, slow time, or shaking time. Doctors call these low periods “OFF” time. Over the past week, you told me before that you are generally awake ____ hrs each day. Out of these awake hours, how many hours in total do you usually have this type of low level or OFF function? ____ (use this number for your calculations).",
 		Options = new List<Option>
@@ -119,20 +125,24 @@ Words that patients often recognize include “good time”, “walking time”,
 				}
 	};
 	IntItem TotalHoursAwake_off { get; set; } = new IntItem
-	{
-		Label = "Total Hours Awake:"
+    {
+        JsonCode = "AwakeHOff",
+        Label = "Total Hours Awake:"
 	};
 	IntItem TotalHoursOff { get; set; } = new IntItem
-	{
-		Label = "Total Hours OFF:"
+    {
+        JsonCode = "HoursOff",
+        Label = "Total Hours OFF:"
 	};
 	IntItem AutoOffTime { get; set; } = new IntItem
 	{
+		JsonCode = "AutoOff",
 		Label = "AUTOUPDATE [Not required]: % Dyskinesia = ((Total Hours OFF/Total Hours Awake)*100):",
 	};
 	ComplexOptionsItem ImpactOfFluctuations { get; set; } = new ComplexOptionsItem
-	{
-		Label = "Functional Impact of Fluctuations",
+    {
+        JsonCode = "FluctImpact",
+        Label = "Functional Impact of Fluctuations",
 		InstructionsForTheExaminer = "Determine the degree to which motor fluctuations impact on the patient’s daily function in terms of activities and social interactions. This question concentrates on the difference between the ON state and the OFF state.",
 		InstructionsForThePatient = "Think about when those low or “OFF” periods have occurred over the past week. Do you usually have more problems doing things or being with people than compared to the rest of the day when you feel your medications working? Are there some things you usually do during a good period that you have trouble with or stop doing during a low period?",
 		Options = new List<Option>
@@ -145,8 +155,9 @@ Words that patients often recognize include “good time”, “walking time”,
 				}
 	};
 	ComplexOptionsItem ComplexityOfMotorFluctuations { get; set; } = new ComplexOptionsItem
-	{
-		Label = "Complexity of Motor Fluctuations",
+    {
+        JsonCode = "FluctComplexity",
+        Label = "Complexity of Motor Fluctuations",
 		InstructionsForTheExaminer = "Determine the usual predictability of OFF function whether due to dose, time of day, food intake, or other factors. Use the information provided by the patients and caregivers and supplement with your own observations.",
 		InstructionsForThePatient = "For some patients, the low or “OFF” periods happen at certain times during the day or when they do activities like eating or exercising. Over the past week, do you usually know when your low periods will occur? In other words, do your low periods always come at a certain time? Do they mostly come at a certain time? Do they only sometimes come at a certain time? Are your low periods totally unpredictable?",
 		Options = new List<Option>
@@ -159,8 +170,9 @@ Words that patients often recognize include “good time”, “walking time”,
 				}
 	};
 	ComplexOptionsItem PainfulOffState { get; set; } = new ComplexOptionsItem
-	{
-		Label = "Painful OFF-State Dystonia",
+    {
+        JsonCode = "PainfulPerc",
+        Label = "Painful OFF-State Dystonia",
 		InstructionsForTheExaminer = "For patients who have motor fluctuations, determine what proportion of the OFF episodes usually includes painful dystonia? You have already determined the number of hours of “OFF” time (4.3). Of these hours, determine how many are associated with dystonia and calculate the percentage. If there is no OFF time, mark 0.",
 		InstructionsForThePatient = "In one of the questions I asked earlier, you said you generally have ____ hours of low or “OFF” time when your Parkinson's disease is under poor control. During these low or “OFF” periods, do you usually have painful cramps or spasms? Out of the total ____ hrs of this low time, if you add up all the time in a day when these painful cramps come, how many hours would this make?",
 		Options = new List<Option>
@@ -200,7 +212,7 @@ This completes my rating of your Parkinson’s disease. I know the questions and
 		if (maxValue == 0)
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 		if(TotalHoursAwake_off.Value != 0)
 			AutoOffTime.Value = (int)Math.Round((double)(((float)TotalHoursOff.Value / (float)TotalHoursAwake_off.Value)) * 100);
 
@@ -214,71 +226,7 @@ This completes my rating of your Parkinson’s disease. I know the questions and
 		Details.Add(ScoreRaw.ToString());
 	}
 
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-		var dbItems = ParseDbString(valuesInDb, 10);
-
-		TimeWithDysk.ForceOption(int.Parse(dbItems[0]));
-		TotalHoursAwake.StringValue = dbItems[1];
-		TotaHoursWithDisk.StringValue = dbItems[2];
-
-		FunctionalImpact.ForceOption(int.Parse(dbItems[3]));
-
-		TimeSpentOff.ForceOption(int.Parse(dbItems[4]));
-		TotalHoursAwake_off.StringValue = dbItems[5];
-		TotalHoursOff.StringValue = dbItems[6];
-
-		ImpactOfFluctuations.ForceOption(int.Parse(dbItems[7]));
-		ComplexityOfMotorFluctuations.ForceOption(int.Parse(dbItems[8]));
-		PainfulOffState.ForceOption(int.Parse(dbItems[9]));
-
-		FixItemsInternal();
-	}
-
 	protected override void ResetInternal()
 	{
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		labels.Add("TimeWithDyskOption");
-		values.Add(TimeWithDysk.SelectedOption?.Value.ToString() ?? "-1");
-		labels.Add("TotalHoursAwake");
-		values.Add(TotalHoursAwake.StringValue);
-		labels.Add("TotaHoursWithDisk");
-		values.Add(TotaHoursWithDisk.StringValue);
-
-		labels.Add("FunctionalImpactOption");
-		values.Add(FunctionalImpact.SelectedOption?.Value.ToString() ?? "-1");
-
-		labels.Add("TimeSpentOffOption");
-		values.Add(TimeSpentOff.SelectedOption?.Value.ToString() ?? "-1");
-		labels.Add("TotalHoursAwake_off");
-		values.Add(TotalHoursAwake_off.StringValue);
-		labels.Add("TotalHoursOff");
-		values.Add(TotalHoursOff.StringValue);
-
-		labels.Add("ImpactOfFluctuations");
-		values.Add(ImpactOfFluctuations.SelectedOption?.Value.ToString() ?? "-1");
-		labels.Add("ComplexityOfMotorFluctuations");
-		values.Add(ComplexityOfMotorFluctuations.SelectedOption?.Value.ToString() ?? "-1");
-		labels.Add("PainfulOffState");
-		values.Add(PainfulOffState.SelectedOption?.Value.ToString() ?? "-1");
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }
