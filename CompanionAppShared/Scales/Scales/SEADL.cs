@@ -35,9 +35,6 @@ public class SEADL : ScaleBase
 	{
 	}
 
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-	}
 
 	protected override void GenerateDetails()
 	{
@@ -46,33 +43,4 @@ public class SEADL : ScaleBase
 	{
 	}
 
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			if (item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "0");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
-	}
 }

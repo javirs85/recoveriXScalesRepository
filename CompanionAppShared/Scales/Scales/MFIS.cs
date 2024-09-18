@@ -39,8 +39,9 @@ Because of my fatigue during the past 4 weeks ...
 				DefaultOpen = true
 			},
 			new ComplexOptionsItem
-			{
-				Label = "1. I have been less alert",
+            {
+                JsonCode = "1",
+                Label = "1. I have been less alert",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -51,8 +52,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2. I have had difficulty paying attention for long periods of time",
+            {
+                JsonCode = "2",
+                Label = "2. I have had difficulty paying attention for long periods of time",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -63,8 +65,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3. I have been unable to think clearly",
+            {
+                JsonCode = "3",
+                Label = "3. I have been unable to think clearly",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -75,8 +78,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "4. I have been clumsy and uncoordinated",
+            {
+                JsonCode = "4",
+                Label = "4. I have been clumsy and uncoordinated",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -87,8 +91,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "5. I have been forgetful",
+            {
+                JsonCode = "5",
+                Label = "5. I have been forgetful",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -99,8 +104,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "6. I have had to pace myself in my physical activities",
+            {
+                JsonCode = "6",
+                Label = "6. I have had to pace myself in my physical activities",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -111,8 +117,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "7. I have been less motivated to do anything\r\nthat requires physical effort",
+            {
+                JsonCode = "7",
+                Label = "7. I have been less motivated to do anything\r\nthat requires physical effort",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -123,8 +130,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "8. I have been less motivated to participate in\r\nsocial activities.",
+            {
+                JsonCode = "8",
+                Label = "8. I have been less motivated to participate in\r\nsocial activities.",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -135,8 +143,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "9. I have been limited in my ability to do things away from home",
+            {
+                JsonCode = "9",
+                Label = "9. I have been limited in my ability to do things away from home",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -147,8 +156,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "10. I have trouble maintaining physical effort for long periods",
+            {
+                JsonCode = "10",
+                Label = "10. I have trouble maintaining physical effort for long periods",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -159,8 +169,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "11. I have had difficulty making decisions",
+            {
+                JsonCode = "11",
+                Label = "11. I have had difficulty making decisions",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -171,8 +182,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "12. I have been less motivated to do anything that requires thinking",
+            {
+                JsonCode = "12",
+                Label = "12. I have been less motivated to do anything that requires thinking",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -183,8 +195,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "13. My muscles have felt weak",
+            {
+                JsonCode = "13",
+                Label = "13. My muscles have felt weak",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -195,8 +208,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "14. I have been physically uncomfortable",
+            {
+                JsonCode = "14",
+                Label = "14. I have been physically uncomfortable",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -207,8 +221,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "15. I have had trouble finishing tasks that require thinking",
+            {
+                JsonCode = "15",
+                Label = "15. I have had trouble finishing tasks that require thinking",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -219,8 +234,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "16. I have had difficulty organizing my thought when doing things at home or at work",
+            {
+                JsonCode = "16",
+                Label = "16. I have had difficulty organizing my thought when doing things at home or at work",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -231,8 +247,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "17. I have been less able to complete tasks that require physical effort",
+            {
+                JsonCode = "17",
+                Label = "17. I have been less able to complete tasks that require physical effort",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -243,8 +260,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "18. My thinking has been slowed down",
+            {
+                JsonCode = "18",
+                Label = "18. My thinking has been slowed down",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -255,8 +273,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "19. I have had trouble concentrating",
+            {
+                JsonCode = "19",
+                Label = "19. I have had trouble concentrating",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -267,8 +286,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "20. I have limited my physical activities",
+            {
+                JsonCode = "20",
+                Label = "20. I have limited my physical activities",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -279,8 +299,9 @@ Because of my fatigue during the past 4 weeks ...
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "21. I have needed to rest more often or for longer periods.",
+            {
+                JsonCode = "21",
+                Label = "21. I have needed to rest more often or for longer periods.",
 				Options = new List<Option>
 				{
 					new Option { Value = 0, Name = "Never", Description = "Never." },
@@ -298,8 +319,6 @@ Because of my fatigue during the past 4 weeks ...
 
 	}
 
-
-	public override void LoadValuesFromDB(string valuesInDb) => FromDBStrinngToListOfComplexOptions(valuesInDb);
 
 	protected override void GenerateScoreInternal()
 	{
@@ -320,7 +339,7 @@ Because of my fatigue during the past 4 weeks ...
 		if (maxValue == 0)
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 	}
 	protected override void GenerateDetails()
 	{
@@ -329,35 +348,5 @@ Because of my fatigue during the past 4 weeks ...
 	}
 	protected override void ResetInternal()
 	{
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			if (item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "-1");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }

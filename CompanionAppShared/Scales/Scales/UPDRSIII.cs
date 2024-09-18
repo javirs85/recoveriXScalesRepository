@@ -50,8 +50,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				DefaultOpen = false
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.1 SPEECH",
+            {
+                JsonCode = "3.1",
+                Label = "3.1 SPEECH",
 				InstructionsForTheExaminer = "Listen to the patient’s free-flowing speech and engage in conversation if necessary. Suggested topics: ask about the patient’s work, hobbies, exercise, or how he got to the doctor’s office. Evaluate volume, modulation (prosody), and clarity, including slurring, palilalia (repetition of syllables), and tachyphemia (rapid speech, running syllables together).",
 				Options = new List<Option>
 				{
@@ -63,8 +64,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.2 FACIAL EXPRESSION",
+            {
+                JsonCode = "3.2",
+                Label = "3.2 FACIAL EXPRESSION",
 				InstructionsForTheExaminer = "Observe the patient sitting at rest for 10 seconds, without talking and also while talking. Observe eye-blink frequency, masked facies or loss of facial expression, spontaneous smiling, and parting of lips.",
 				Options = new List<Option>
 				{
@@ -76,8 +78,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.3 RIGIDITY",
+            {
+                JsonCode = "3.3",
+                Label = "3.3 RIGIDITY",
 				InstructionsForTheExaminer = "Rigidity is judged on slow passive movement of major joints with the patient in a relaxed position and the examiner manipulating the limbs and neck. First, test without an activation maneuver. Test and rate neck and each limb separately. For arms, test the wrist and elbow joints simultaneously. For legs, test the hip and knee joints simultaneously. If no rigidity is detected, use an activation maneuver such as tapping fingers, fist opening/closing, or heel tapping in a limb not being tested. Explain to the patient to go as limp as possible as you test for rigidity.",
 				Options = new List<Option>
 				{
@@ -89,8 +92,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.4 FINGER TAPPING",
+            {
+                JsonCode = "3.4",
+                Label = "3.4 FINGER TAPPING",
 				InstructionsForTheExaminer = "Each hand is tested separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to tap the index finger on the thumb 10 times as quickly AND as big as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -102,8 +106,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.5 HAND MOVEMENTS",
+            {
+                JsonCode = "3.5",
+                Label = "3.5 HAND MOVEMENTS",
 				InstructionsForTheExaminer = "Test each hand separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to make a tight fist with the arm bent at the elbow so that the palm faces the examiner. Have the patient open the hand 10 times as fully AND as quickly as possible. If the patient fails to make a tight fist or to open the hand fully, remind him/her to do so. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -115,8 +120,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.6 PRONATION-SUPINATION MOVEMENTS OF HANDS",
+            {
+                JsonCode = "3.6",
+                Label = "3.6 PRONATION-SUPINATION MOVEMENTS OF HANDS",
 				InstructionsForTheExaminer = "Test each hand separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to extend the arm out in front of his/her body with the palms down, and then to turn the palm up and down alternately 10 times as fast and as fully as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -128,8 +134,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.7 TOE TAPPING",
+            {
+                JsonCode = "3.7",
+                Label = "3.7 TOE TAPPING",
 				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms, both feet on the floor. Test each foot separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to place the heel on the ground in a comfortable position and then tap the toes 10 times as big and as fast as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -141,8 +148,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.8 LEG AGILITY",
+            {
+                JsonCode = "3.8",
+                Label = "3.8 LEG AGILITY",
 				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms. The patient should have both feet comfortably on the floor. Test each leg separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to place the foot on the ground in a comfortable position and then raise and stomp the foot on the ground 10 times as high and as fast as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -154,8 +162,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.9 ARISING FROM CHAIR",
+            {
+                JsonCode = "3.9",
+                Label = "3.9 ARISING FROM CHAIR",
 				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms, with both feet on the floor and sitting back in the chair (if the patient is not too short). Ask the patient to cross his/her arms across the chest and then to stand up. If the patient is not successful, repeat this attempt up to a maximum of two more times. If still unsuccessful, allow the patient to move forward in the chair to arise with arms folded across the chest. Allow only one attempt in this situation. If unsuccessful, allow the patient to push off using his/her hands on the arms of the chair. Allow a maximum of three trials of pushing off. If still not successful, assist the patient to arise. After the patient stands up, observe the posture for item 3.13.",
 				Options = new List<Option>
 				{
@@ -167,8 +176,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.10 GAIT",
+            {
+                JsonCode = "3.10",
+                Label = "3.10 GAIT",
 				InstructionsForTheExaminer = "Testing gait is best performed by having the patient walking away from and towards the examiner so that both right and left sides of the body can be easily observed simultaneously. The patient should walk at least 10 meters (30 feet), then turn around and return to the examiner. This item measures multiple behaviors: stride amplitude, stride speed, height of foot lift, heel strike during walking, turning, and arm swing, but not freezing. Assess also for 'freezing of gait' (next item 3.11) while patient is walking. Observe posture for item 3.13.",
 				Options = new List<Option>
 				{
@@ -180,8 +190,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.11 FREEZING OF GAIT",
+            {
+                JsonCode = "3.11",
+                Label = "3.11 FREEZING OF GAIT",
 				InstructionsForTheExaminer = "While assessing gait, also assess for the presence of any gait freezing episodes. Observe for start hesitation and stuttering movements especially when turning and reaching the end of the task. To the extent that safety permits, patients may NOT use sensory tricks during the assessment.",
 				Options = new List<Option>
 				{
@@ -193,8 +204,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.12 POSTURAL STABILITY",
+            {
+                JsonCode = "3.12",
+                Label = "3.12 POSTURAL STABILITY",
 				InstructionsForTheExaminer = "The test examines the response to sudden body displacement produced by a quick, forceful pull on the shoulders while the patient is standing erect with eyes open and feet comfortably apart and parallel to each other. Test retropulsion. Stand behind the patient and instruct the patient on what is about to happen. Explain that s/he is allowed to take a step backwards to avoid falling. There should be a solid wall behind the examiner, at least 1-2 meters away to allow for the observation of the number of retropulsive steps. The first pull is an instructional demonstration and is purposely milder and not rated. The second time the shoulders are pulled briskly and forcefully towards the examiner with enough force to displace the center of gravity so that patient MUST take a step backwards. The examiner needs to be ready to catch the patient, but must stand sufficiently back so as to allow enough room for the patient to take several steps to recover independently. Do not allow the patient to flex the body abnormally forward in anticipation of the pull. Observe for the number of steps backwards or falling. Up to and including two steps for recovery is considered normal, so abnormal ratings begin with three steps. If the patient fails to understand the test, the examiner can repeat the test so that the rating is based on an assessment that the examiner feels reflects the patient’s limitations rather than misunderstanding or lack of preparedness. Observe standing posture for item 3.13.",
 				Options = new List<Option>
 				{
@@ -206,8 +218,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.13 POSTURE",
+            {
+                JsonCode = "3.13",
+                Label = "3.13 POSTURE",
 				InstructionsForTheExaminer = "Posture is assessed with the patient standing erect after arising from a chair, during walking, and while being tested for postural reflexes. If you notice poor posture, tell the patient to stand up straight and see if the posture improves (see option 2 below). Rate the worst posture seen in these three observation points. Observe for flexion and side-to-side leaning.",
 				Options = new List<Option>
 				{
@@ -219,8 +232,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.14 GLOBAL SPONTANEITY OF MOVEMENT (BODY BRADYKINESIA)",
+            {
+                JsonCode = "3.14",
+                Label = "3.14 GLOBAL SPONTANEITY OF MOVEMENT (BODY BRADYKINESIA)",
 				InstructionsForTheExaminer = "This global rating combines all observations on slowness, hesitancy, and small amplitude and poverty of movement in general, including a reduction of gesturing and of crossing the legs. This assessment is based on the examiner’s global impression after observing for spontaneous gestures while sitting, and the nature of arising and walking.",
 				Options = new List<Option>
 				{
@@ -232,8 +246,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.15 POSTURAL TREMOR OF THE HANDS - RIGHT",
+            {
+                JsonCode = "3.15R",
+                Label = "3.15 POSTURAL TREMOR OF THE HANDS - RIGHT",
 				InstructionsForTheExaminer = "All tremor, including re-emergent rest tremor, that is present in this posture is to be included in this rating. Rate each hand separately. Rate the highest amplitude seen. Instruct the patient to stretch the arms out in front of the body with palms down. The wrist should be straight and the fingers comfortably separated so that they do not touch each other. Observe this posture for 10 seconds.",
 				Options = new List<Option>
 				{
@@ -245,8 +260,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.15 POSTURAL TREMOR OF THE HANDS - LEFT",
+            {
+                JsonCode = "3.15L",
+                Label = "3.15 POSTURAL TREMOR OF THE HANDS - LEFT",
 				InstructionsForTheExaminer = "All tremor, including re-emergent rest tremor, that is present in this posture is to be included in this rating. Rate each hand separately. Rate the highest amplitude seen. Instruct the patient to stretch the arms out in front of the body with palms down. The wrist should be straight and the fingers comfortably separated so that they do not touch each other. Observe this posture for 10 seconds.",
 				Options = new List<Option>
 				{
@@ -258,8 +274,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.16 KINETIC TREMOR OF THE HANDS - RIGHT",
+            {
+                JsonCode = "3.16R",
+                Label = "3.16 KINETIC TREMOR OF THE HANDS - RIGHT",
 				InstructionsForTheExaminer = "This is tested by the finger-to-nose maneuver. With the arm starting from the outstretched position, have the patient perform at least three finger-to-nose maneuvers with each hand reaching as far as possible to touch the examiner’s finger. The finger-to-nose maneuver should be performed slowly enough not to hide any tremor that could occur with very fast arm movements. Repeat with the other hand, rating each hand separately. The tremor can be present throughout the movement or as the tremor reaches either target (nose or finger). Rate the highest amplitude seen.",
 				Options = new List<Option>
 				{
@@ -271,8 +288,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.16 KINETIC TREMOR OF THE HANDS - LEFT",
+            {
+                JsonCode = "3.16L",
+                Label = "3.16 KINETIC TREMOR OF THE HANDS - LEFT",
 				InstructionsForTheExaminer = "This is tested by the finger-to-nose maneuver. With the arm starting from the outstretched position, have the patient perform at least three finger-to-nose maneuvers with each hand reaching as far as possible to touch the examiner’s finger. The finger-to-nose maneuver should be performed slowly enough not to hide any tremor that could occur with very fast arm movements. Repeat with the other hand, rating each hand separately. The tremor can be present throughout the movement or as the tremor reaches either target (nose or finger). Rate the highest amplitude seen.",
 				Options = new List<Option>
 				{
@@ -284,8 +302,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.17 REST TREMOR AMPLITUDE Right Upper Extremity",
+            {
+                JsonCode = "3.17RU",
+                Label = "3.17 REST TREMOR AMPLITUDE Right Upper Extremity",
 				InstructionsForTheExaminer = "This and the next item have been placed purposefully at the end of the examination to allow the rater to gather observations on rest tremor that may appear at any time during the exam, including when quietly sitting, during walking, and during activities when some body parts are moving but others are at rest. Score the maximum amplitude that is seen at any time as the final score. Rate only the amplitude and not the persistence or the intermittency of the tremor.\r\nAs part of this rating, the patient should sit quietly in a chair with the hands placed on the arms of the chair (not in the lap) and the feet comfortably supported on the floor for 10 seconds with no other directives. Rest tremor is assessed separately for all four limbs and also for the lip/jaw. Rate only the maximum amplitude that is seen at any time as the final rating.",
 				Options = new List<Option>
 				{
@@ -297,8 +316,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.17 REST TREMOR AMPLITUDE Left Upper Extremity",
+            {
+                JsonCode = "3.17LU",
+                Label = "3.17 REST TREMOR AMPLITUDE Left Upper Extremity",
 				InstructionsForTheExaminer = "This and the next item have been placed purposefully at the end of the examination to allow the rater to gather observations on rest tremor that may appear at any time during the exam, including when quietly sitting, during walking, and during activities when some body parts are moving but others are at rest. Score the maximum amplitude that is seen at any time as the final score. Rate only the amplitude and not the persistence or the intermittency of the tremor.\r\nAs part of this rating, the patient should sit quietly in a chair with the hands placed on the arms of the chair (not in the lap) and the feet comfortably supported on the floor for 10 seconds with no other directives. Rest tremor is assessed separately for all four limbs and also for the lip/jaw. Rate only the maximum amplitude that is seen at any time as the final rating.",
 				Options = new List<Option>
 				{
@@ -310,8 +330,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.17 REST TREMOR AMPLITUDE Right Lower Extremity",
+            {
+                JsonCode = "3.17RL",
+                Label = "3.17 REST TREMOR AMPLITUDE Right Lower Extremity",
 				InstructionsForTheExaminer = "This and the next item have been placed purposefully at the end of the examination to allow the rater to gather observations on rest tremor that may appear at any time during the exam, including when quietly sitting, during walking, and during activities when some body parts are moving but others are at rest. Score the maximum amplitude that is seen at any time as the final score. Rate only the amplitude and not the persistence or the intermittency of the tremor.\r\nAs part of this rating, the patient should sit quietly in a chair with the hands placed on the arms of the chair (not in the lap) and the feet comfortably supported on the floor for 10 seconds with no other directives. Rest tremor is assessed separately for all four limbs and also for the lip/jaw. Rate only the maximum amplitude that is seen at any time as the final rating.",
 				Options = new List<Option>
 				{
@@ -323,8 +344,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.17 REST TREMOR AMPLITUDE Left Lower Extremity",
+            {
+                JsonCode = "3.17LL",
+                Label = "3.17 REST TREMOR AMPLITUDE Left Lower Extremity",
 				InstructionsForTheExaminer = "This and the next item have been placed purposefully at the end of the examination to allow the rater to gather observations on rest tremor that may appear at any time during the exam, including when quietly sitting, during walking, and during activities when some body parts are moving but others are at rest. Score the maximum amplitude that is seen at any time as the final score. Rate only the amplitude and not the persistence or the intermittency of the tremor.\r\nAs part of this rating, the patient should sit quietly in a chair with the hands placed on the arms of the chair (not in the lap) and the feet comfortably supported on the floor for 10 seconds with no other directives. Rest tremor is assessed separately for all four limbs and also for the lip/jaw. Rate only the maximum amplitude that is seen at any time as the final rating.",
 				Options = new List<Option>
 				{
@@ -336,8 +358,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.17 REST TREMOR AMPLITUDE Lip/Jaw",
+            {
+                JsonCode = "3.17J",
+                Label = "3.17 REST TREMOR AMPLITUDE Lip/Jaw",
 				InstructionsForTheExaminer = "This and the next item have been placed purposefully at the end of the examination to allow the rater to gather observations on rest tremor that may appear at any time during the exam, including when quietly sitting, during walking, and during activities when some body parts are moving but others are at rest. Score the maximum amplitude that is seen at any time as the final score. Rate only the amplitude and not the persistence or the intermittency of the tremor.\r\nAs part of this rating, the patient should sit quietly in a chair with the hands placed on the arms of the chair (not in the lap) and the feet comfortably supported on the floor for 10 seconds with no other directives. Rest tremor is assessed separately for all four limbs and also for the lip/jaw. Rate only the maximum amplitude that is seen at any time as the final rating.",
 				Options = new List<Option>
 				{
@@ -349,8 +372,9 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3.18 CONSTANCY OF REST TREMOR",
+            {
+                JsonCode = "3.18",
+                Label = "3.18 CONSTANCY OF REST TREMOR",
 				InstructionsForTheExaminer = "This item receives one rating for all rest tremor and focuses on the constancy of rest tremor during the examination period when different body parts are variously at rest. It is rated purposefully at the end of the examination so that several minutes of information can be coalesced into the rating.",
 				Options = new List<Option>
 				{
@@ -362,14 +386,16 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new OptionsItem
-			{
-				InstructionsForThePatient = "Were dyskinesias (chorea or dystonia) present during examination?",
+            {
+                JsonCode = "DyskinesiasA",
+                InstructionsForThePatient = "Were dyskinesias (chorea or dystonia) present during examination?",
 				Options = new List<string> { "No", "Yes" },
 				Label = "DYSKINESIA IMPACT ON PART III RATINGS .A"
 			},
 			new OptionsItem
-			{
-				InstructionsForThePatient = "If yes, did these movements interfere with your ratings?",
+            {
+                JsonCode = "DiskinesiasB",
+                InstructionsForThePatient = "If yes, did these movements interfere with your ratings?",
 				Options = new List<string> { "No", "Yes" },
 				Label = "DYSKINESIA IMPACT ON PART III RATINGS .B"
 			}
@@ -381,8 +407,6 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 	{
 
 	}
-
-	public override void LoadValuesFromDB(string valuesInDb) => FromDBStrinngToListOfComplexOptions(valuesInDb);
 
 	protected override void GenerateScoreInternal()
 	{
@@ -403,7 +427,7 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 		if (maxValue == 0)
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 	}
 
 	protected override void GenerateDetails()
@@ -413,35 +437,5 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 	}
 	protected override void ResetInternal()
 	{
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			if (item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "-1");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }

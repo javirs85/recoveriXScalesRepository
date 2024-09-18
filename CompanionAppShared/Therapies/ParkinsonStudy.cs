@@ -49,7 +49,5 @@ public class ParkinsonStudy : Therapy
             ScalesIDs.FOGQ,
             ScalesIDs.MoCA
         };
-
-
     }
 }

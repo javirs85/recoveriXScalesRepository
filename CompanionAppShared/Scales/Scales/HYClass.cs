@@ -22,8 +22,9 @@ public class HYClass : ScaleBase
 	}
 
 	public ComplexOptionsItem HoenYahr = new ComplexOptionsItem
-	{
-		Label = "Hoehn and Yahr Stage",
+    {
+        JsonCode = "HYS",
+        Label = "Hoehn and Yahr Stage",
 		Options = new List<Option>
 		{
 			new Option { Value = 0, Name = "Asymptomatic", Description = string.Empty },
@@ -41,12 +42,6 @@ public class HYClass : ScaleBase
 		//Items.Add(HoenYahr);
 	}
 
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-		var db = JsonSerializer.Deserialize<List<List<string>>>(valuesInDb);
-
-		HoenYahr.ForceOption(int.Parse(db[1][0]));
-	}
 
 	protected override void GenerateScoreInternal()
 	{
@@ -67,7 +62,7 @@ public class HYClass : ScaleBase
 		if (maxValue == 0)
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 	}
 
 	protected override void GenerateDetails()
@@ -78,35 +73,5 @@ public class HYClass : ScaleBase
 	{
 		Details.Clear();
 		Details.Add(ScoreRaw.ToString());
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			if (item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "0");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }

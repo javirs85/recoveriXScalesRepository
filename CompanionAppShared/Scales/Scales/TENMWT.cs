@@ -9,7 +9,12 @@ public class TENMWT : ScaleBase
 {
     public TENMWT()
     {
-		
+		Items = new List<ScaleItem>
+		{
+			new TimeSpanItem { JsonCode="R1", Label = "Time for central 6 meters:" },
+            new TimeSpanItem { JsonCode = "R2", Label = "Time for central 6 meters:" },
+            new TimeSpanItem { JsonCode = "R3", Label = "Time for central 6 meters:" }
+		};
 	}
 
 	public override void Init()
@@ -25,15 +30,8 @@ public class TENMWT : ScaleBase
 
 	public override void FixItemsInternal()
 	{
-		Items.Clear();
-		Items.Add(MeasuredTimeExecution1);
-		Items.Add(MeasuredTimeExecution2);
-		Items.Add(MeasuredTimeExecution3);
 	}
 
-	public TimeSpanItem MeasuredTimeExecution1 { get; set; } = new TimeSpanItem { Label = "Time for central 6 meters:" };
-	public TimeSpanItem MeasuredTimeExecution2 { get; set; } = new TimeSpanItem { Label = "Time for central 6 meters:" };
-	public TimeSpanItem MeasuredTimeExecution3 { get; set; } = new TimeSpanItem { Label = "Time for central 6 meters:" };
 
 	protected override void GenerateScoreInternal()
 	{
@@ -43,51 +41,45 @@ public class TENMWT : ScaleBase
 		//score = mijana de valors no-zero
 
 		//TODO: Marc provide reference values
-		ScoreNormalized = 50;
+		ScoreRaw = 0;
+		int measures = 0;
+		foreach (var item in from i in Items
+							 where i is TimeSpanItem
+							 select i as TimeSpanItem)
+		{
+			if (item.Value.TotalSeconds != 0)
+			{
+				ScoreRaw += (int)item.Value.TotalMilliseconds;
+				measures++;
+			}
+		}
+		if (measures == 0)
+		{
+			ScoreRaw = 0;
+			ScoreNormalized = 0;
+		}
+		else
+		{
+            ScoreRaw /= measures;
+            var minTime = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
+            var maxTime = (int)TimeSpan.FromSeconds(300).TotalMilliseconds;
+            ScoreNormalized = (int)LinearInterpolation(maxTime, minTime, ScoreRaw);
+
+        }
+			
 	}
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
-		Details.Add(MeasuredTimeExecution1.StringValue);
-		Details.Add(MeasuredTimeExecution2.StringValue);
-		Details.Add(MeasuredTimeExecution3.StringValue);
+		foreach (var item in Items)
+		{
+			if (item is TimeSpanItem) {
+				if((item as TimeSpanItem).Value.TotalSeconds != 0)
+                    Details.Add(item.StringValue);
+            }
+		}
 	}
 	protected override void ResetInternal()
 	{
-	}
-
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-		var dbItems = ParseDbString(valuesInDb, 3);
-
-		MeasuredTimeExecution1.StringValue = dbItems[0];
-		MeasuredTimeExecution2.StringValue = dbItems[1];
-		MeasuredTimeExecution3.StringValue = dbItems[2];
-	}
-
-	public override string ToDBString()
-	{
-		return CreateDBItem(
-			new List<string>
-			{
-				"first run",
-				"second run",
-				"third run"
-			},
-			new List<string>
-			{
-				MeasuredTimeExecution1.StringValue,
-				MeasuredTimeExecution2.StringValue,
-				MeasuredTimeExecution3.StringValue
-			});
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, 2);
-
-		MeasuredTimeExecution1.StringValue = dbItems[0];
-		MeasuredTimeExecution2.StringValue = dbItems[1];
-		MeasuredTimeExecution3.StringValue = dbItems[2];
 	}
 }

@@ -267,6 +267,8 @@ public class DataBase
 
 			var SerializedData = CreateStorableVersionOftheSession(Current.SelectedSession);
 
+			//var SerializedData = System.Text.Json.JsonSerializer.Serialize(Current.SelectedSession.ToDBDictionary());
+
 			await db.SaveData("spMeasurement_InsertOrUpdate",
 			new
 			{
@@ -298,7 +300,7 @@ public class DataBase
 			{
 				ScaleID = sc.Id,
 				IsMeasured = sc.IsMeasured,
-				SerializedMeasurements = sc.ToDBString()
+				SimplifiedResults = sc.ToDBDictionary()
 			});
 		}
 		return JsonSerializer.Serialize(StorableScales);
@@ -308,7 +310,7 @@ public class DataBase
 	{
 		public ScalesIDs ScaleID { get; set; } = ScalesIDs.NotSet;
 		public bool IsMeasured { get; set; }
-		public string SerializedMeasurements { get; set; } = string.Empty;
+		public Dictionary<string,string> SimplifiedResults { get; set; } = new();
 	}
 
 	public async Task<Session> UpdateSessionInTherapyWithDetailsFromDB(SelectedItems Current)
@@ -333,6 +335,38 @@ public class DataBase
 		}
 	}
 
+	public async Task<Session> GetSessionFromDB(Guid id)
+	{
+		var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new
+		{
+			Id = id,
+		});
+		var r = results.FirstOrDefault();
+
+		var scalesInDB = System.Text.Json.JsonSerializer.Deserialize<List<StorableScale>>(r.SerializedData);
+		r.Scales.Clear();
+
+		foreach (var sca in scalesInDB ?? new List<StorableScale>())
+		{
+			var GeneratedScale = ScalesService.GenerateNewScale(sca.ScaleID);
+			if (GeneratedScale is not null)
+			{
+				if (!sca.IsMeasured)
+				{
+					//GeneratedScale.LoadValuesFromDB(sca.SimplifiedResults);
+					GeneratedScale.GenerateScore();
+				}
+				else
+				{
+
+				}
+
+				r.Scales.Add(GeneratedScale);
+			}
+		}
+		return r;
+	}
+
 	async Task<Session> LoadSession(SelectedItems Current)
 	{
 		Guid id = Current.SelectedSession.Id;
@@ -352,12 +386,12 @@ public class DataBase
 			{
 				if (sca.IsMeasured)
 				{
-					GeneratedScale.LoadValuesFromDB(sca.SerializedMeasurements);
+					GeneratedScale.LoadValuesFromDB(sca.SimplifiedResults);
 					GeneratedScale.GenerateScore();
 				}
 				else
 				{
-					GeneratedScale.IsMeasured = false;
+					
 				}
 
 				Current.SelectedSession.Scales.Add(GeneratedScale);

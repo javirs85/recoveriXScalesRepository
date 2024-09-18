@@ -143,7 +143,7 @@
                         Current.SelectedPatient = p;
                         Current.SelectedTherapy = therapy;
 
-                        var loadedSession = await DB.UpdateSessionInTherapyWithDetailsFromDB(Current);
+                        var loadedSession = await DB.GetSessionFromDB(s.Id);
                         nt.Sessions.Add(new SessionInJson
                             {
                                 Date = loadedSession.MeasurementDate,
@@ -167,6 +167,14 @@
         }
 
         json = System.Text.Json.JsonSerializer.Serialize(LoadedPatietns);
+        json = json.Replace("\\u0022", "\"");
+        json = json.Replace("\\", "");
+        json = json.Replace("\"Data\":\"[", "\"Data\":[");
+        json = json.Replace("\"]]\"},{", "\"]]},{");
+        json = json.Replace("]]\"}]\"},{", "]]}]\"},{");
+        json = json.Replace("]]}]\"},{\"Date\"", "]]}]},{\"Date\"");
+        json = json.Replace("SerializedMeasurements\":\"[", "SerializedMeasurements\":[");
+        json = json.Replace("]]\"}]\"}]}]}]", "]]}]}]}]}]");
     }
 
     private class PatientInJson

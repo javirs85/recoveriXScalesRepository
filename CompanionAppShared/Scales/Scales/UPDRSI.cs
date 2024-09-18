@@ -41,10 +41,11 @@ In administering Part IA, the examiner should use the following guidelines:
 ",
 				DefaultOpen = false
 			},
-		
+
 
 			new OptionsItem
 			{
+				JsonCode = "InfoSource",
 				InstructionsForThePatient = "I am going to ask you six questions about behaviors that you may or may not experience. Some questions concern common problems and some concern uncommon ones. If you have a problem in one of the areas, please choose the best response that describes how you have felt MOST OF THE TIME during the PAST WEEK. If you are not bothered by a problem, you can simply respond NO. I am trying to be thorough, so I may ask questions that have nothing to do with you.",
 				Options = new List<string> { "Patient", "Caregiver", "Patient and Caregiver in Equal Proportion" },
 				Label = "Primary source of information:"
@@ -52,7 +53,8 @@ In administering Part IA, the examiner should use the following guidelines:
 
 			new ComplexOptionsItem
 			{
-				Label = "1.1 COGNITIVE IMPAIRMENT",
+                JsonCode = "1.1",
+                Label = "1.1 COGNITIVE IMPAIRMENT",
 				InstructionsForTheExaminer = "Consider all types of altered level of cognitive function including cognitive slowing, impaired reasoning, memory loss, deficits in attention and orientation. Rate their impact on activities of daily living as perceived by the patient and/or caregiver.",
 				InstructionsForThePatient = "Over the past week have you had problems remembering things, following conversations, paying attention, thinking clearly, or finding your way around the house or in town? [If yes, examiner asks patient or caregiver to elaborate and probes for information.]",
 				Options = new List<ComplexOptionsItem.Option>
@@ -91,7 +93,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.2 HALLUCINATIONS AND PSYCHOSIS",
+                JsonCode = "1.2",
+                Label = "1.2 HALLUCINATIONS AND PSYCHOSIS",
 				InstructionsForTheExaminer = "Consider both illusions (misinterpretations of real stimuli) and hallucinations (spontaneous false sensations). Consider all major sensory domains (visual, auditory, tactile, olfactory, and gustatory). Determine presence of unformed (for example sense of presence or fleeting false impressions) as well as formed (fully developed and detailed) sensations. Rate the patient’s insight into hallucinations and identify delusions and psychotic thinking.",
 				InstructionsForThePatient = "Over the past week have you seen, heard, smelled, or felt things that were not really there? [If yes, examiner asks patient or caregiver to elaborate and probes for information.]",
 				Options = new List<ComplexOptionsItem.Option>
@@ -130,7 +133,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.3 DEPRESSED MOOD",
+                JsonCode = "1.3",
+                Label = "1.3 DEPRESSED MOOD",
 				InstructionsForTheExaminer = "Consider low mood, sadness, hopelessness, feelings of emptiness, or loss of enjoyment. Determine their presence and duration over the past week and rate their interference with the patient’s ability to carry out daily routines and engage in social interactions.",
 				InstructionsForThePatient = "Over the past week have you felt low, sad, hopeless, or unable to enjoy things? If yes, was this feeling for longer than one day at a time? Did it make it difficult for you to carry out your usual activities or to be with people? [If yes, examiner asks the patient or caregiver to elaborate and probes for information.]",
 				Options = new List<ComplexOptionsItem.Option>
@@ -169,7 +173,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.4 ANXIOUS MOOD",
+                JsonCode = "1.4",
+                Label = "1.4 ANXIOUS MOOD",
 				InstructionsForTheExaminer = "Determine nervous, tense, worried, or anxious feelings (including panic attacks) over the past week and rate their duration and interference with the patient’s ability to carry out daily routines and engage in social interactions.",
 				InstructionsForThePatient = "Over the past week have you felt nervous, worried, or tense? If yes, was this feeling for longer than one day at a time? Did it make it difficult for you to follow your usual activities or to be with other people? [If yes, examiner asks the patient or caregiver to elaborate and probes for information.]",
 				Options = new List<ComplexOptionsItem.Option>
@@ -208,7 +213,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.5 APATHY",
+                JsonCode = "1.5",
+                Label = "1.5 APATHY",
 				InstructionsForTheExaminer = "Consider level of spontaneous activity, assertiveness, motivation, and initiative and rate the impact of reduced levels on performance of daily routines and social interactions. Here the examiner should attempt to distinguish between apathy and similar symptoms that are best explained by depression.",
 				InstructionsForThePatient = "Over the past week, have you felt indifferent to doing activities or being with people? [If yes, examiner asks the patient or caregiver to elaborate and probes for information.]",
 				Options = new List<ComplexOptionsItem.Option>
@@ -247,7 +253,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.6 FEATURES OF DOPAMINE DYSREGULATION SYNDROME",
+                JsonCode = "1.6",
+                Label = "1.6 FEATURES OF DOPAMINE DYSREGULATION SYNDROME",
 				InstructionsForTheExaminer = "Consider involvement in a variety of activities including atypical or excessive gambling (e.g. casinos or lottery tickets), atypical or excessive sexual drive or interests (e.g., unusual interest in pornography, masturbation, sexual demands on partner), other repetitive activities (e.g. hobbies, dismantling objects, sorting or organizing), or taking extra non-prescribed medication for non-physical reasons (i.e., addictive behavior). Rate the impact of such abnormal activities/behaviors on the patient’s personal life and on his/her family and social relations (including need to borrow money or other financial difficulties like withdrawal of credit cards, major family conflicts, lost time from work, or missed meals or sleep because of the activity).",
 				InstructionsForThePatient = "Over the past week, have you had unusually strong urges that are hard to control? Do you feel driven to do or think about something and find it hard to stop? [Give patient examples such as gambling, cleaning, using the computer, taking extra medicine, obsessing about food or sex, all depending on the patient.]",
 				Options = new List<ComplexOptionsItem.Option>
@@ -288,7 +295,8 @@ In administering Part IA, the examiner should use the following guidelines:
 
 			new OptionsItem
 			{
-				InstructionsForThePatient = "This questionnaire will ask you about your experiences of daily living.\r\nThere are 20 questions. We are trying to be thorough, and some of these questions may therefore not apply to you now or ever. If you do not have the problem, simply mark 0 for NO.\r\nPlease read each one carefully and read all answers before selecting the one that best applies to you.\r\nWe are interested in your average or usual function over the past week including today. Some patients can do things better at one time of the day than at others. However, only one answer is allowed for each question, so please mark the answer that best describes what you can do most of the time.\r\nYou may have other medical conditions besides Parkinson’s disease. Do not worry about separating Parkinson’s disease from other conditions. Just answer the question with your best response.\r\nUse only 0, 1, 2, 3, 4 for answers, nothing else. Do not leave any blanks.\r\nYour doctor or nurse can review the questions with you, but this questionnaire is for patients to complete, either alone or with their caregivers.",
+                JsonCode = "WhoFills",
+                InstructionsForThePatient = "This questionnaire will ask you about your experiences of daily living.\r\nThere are 20 questions. We are trying to be thorough, and some of these questions may therefore not apply to you now or ever. If you do not have the problem, simply mark 0 for NO.\r\nPlease read each one carefully and read all answers before selecting the one that best applies to you.\r\nWe are interested in your average or usual function over the past week including today. Some patients can do things better at one time of the day than at others. However, only one answer is allowed for each question, so please mark the answer that best describes what you can do most of the time.\r\nYou may have other medical conditions besides Parkinson’s disease. Do not worry about separating Parkinson’s disease from other conditions. Just answer the question with your best response.\r\nUse only 0, 1, 2, 3, 4 for answers, nothing else. Do not leave any blanks.\r\nYour doctor or nurse can review the questions with you, but this questionnaire is for patients to complete, either alone or with their caregivers.",
 				Label = "Who is filling out this questionnaire (check the best answer):",
 				Options = new List<string> { "Patient", "Caregiver", "Patient and Caregiver in Equal Proportion" }
 			},
@@ -296,7 +304,8 @@ In administering Part IA, the examiner should use the following guidelines:
 
 			new ComplexOptionsItem
 			{
-				Label = "1.7 SLEEP PROBLEMS",
+                JsonCode = "1.7",
+                Label = "1.7 SLEEP PROBLEMS",
 				InstructionsForThePatient = "Over the past week, have you had trouble going to sleep at night or staying asleep through the night? Consider how rested you felt after waking up in the morning.",
 				Options = new List<ComplexOptionsItem.Option>
 						{
@@ -334,7 +343,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.8 DAYTIME SLEEPINESS",
+                JsonCode = "1.8",
+                Label = "1.8 DAYTIME SLEEPINESS",
 				InstructionsForThePatient = "Over the past week, have you had trouble staying awake during the daytime?",
 				Options = new List<ComplexOptionsItem.Option>
 					{
@@ -372,7 +382,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.9 PAIN AND OTHER SENSATIONS",
+                JsonCode = "1.9",
+                Label = "1.9 PAIN AND OTHER SENSATIONS",
 				InstructionsForThePatient = "Over the past week, have you had uncomfortable feelings in your body like pain, aches, tingling, or cramps?",
 				Options = new List<ComplexOptionsItem.Option>
 					{
@@ -410,7 +421,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.10 URINARY PROBLEMS",
+                JsonCode = "1.10",
+                Label = "1.10 URINARY PROBLEMS",
 				InstructionsForThePatient = "Over the past week, have you had trouble with urine control? For example, an urgent need to urinate, a need to urinate too often, or urine accidents?",
 				Options = new List<ComplexOptionsItem.Option>
 					{
@@ -448,7 +460,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.11 CONSTIPATION PROBLEMS",
+                JsonCode = "1.11",
+                Label = "1.11 CONSTIPATION PROBLEMS",
 				InstructionsForThePatient = "Over the past week have you had constipation troubles that cause you difficulty moving your bowels?",
 				Options = new List<ComplexOptionsItem.Option>
 					{
@@ -486,7 +499,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.12 LIGHT HEADEDNESS ON STANDING",
+                JsonCode = "1.12",
+                Label = "1.12 LIGHT HEADEDNESS ON STANDING",
 				InstructionsForThePatient = "Over the past week, have you felt faint, dizzy, or foggy when you stand up after sitting or lying down?",
 				Options = new List<ComplexOptionsItem.Option>
 					{
@@ -524,7 +538,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			},
 			new ComplexOptionsItem
 			{
-				Label = "1.13 FATIGUE",
+                JsonCode = "1.13",
+                Label = "1.13 FATIGUE",
 				InstructionsForThePatient = "Over the past week, have you usually felt fatigued? This feeling is not part of being sleepy or sad.",
 				Options = new List<ComplexOptionsItem.Option>
 						{
@@ -568,10 +583,6 @@ In administering Part IA, the examiner should use the following guidelines:
 	{
 		
 	}
-	public override void LoadValuesFromDB(string valuesInDb)
-	{
-		FromDBStrinngToListOfComplexOptions(valuesInDb);
-	}
 
 	protected override void GenerateScoreInternal()
 	{
@@ -592,7 +603,7 @@ In administering Part IA, the examiner should use the following guidelines:
 		if (maxValue == 0) 
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 	}
 
 
@@ -604,35 +615,5 @@ In administering Part IA, the examiner should use the following guidelines:
 
 	protected override void ResetInternal()
 	{
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach (var item in Items)
-		{
-			if (item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "-1");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach (var dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }

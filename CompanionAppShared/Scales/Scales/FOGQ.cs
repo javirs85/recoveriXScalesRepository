@@ -13,8 +13,6 @@ public class FOGQ : ScaleBase
 		ShortName = "FOGQ";
 		AreaOfStudy = "Freezing of gait";
 
-		DetailsHeaders.Add("Points");
-
 		Items = new List<ScaleItem>
 		{
 			new InfoItem
@@ -30,8 +28,9 @@ When choosing what option applies from the list always start with the worst one 
 				DefaultOpen = true
 			},
 			new ComplexOptionsItem
-			{
-				Label = "1.During your worst state—Do you walk:",
+            {
+                JsonCode = "1",
+                Label = "1.During your worst state—Do you walk:",
 				Options = new List<ComplexOptionsItem.Option>
 						{
 							new ComplexOptionsItem.Option
@@ -67,8 +66,9 @@ When choosing what option applies from the list always start with the worst one 
 						}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "2. Are your gait difficulties affecting your daily activities and independence?",
+            {
+                JsonCode = "2",
+                Label = "2. Are your gait difficulties affecting your daily activities and independence?",
 				Options = new List<ComplexOptionsItem.Option>
 						{
 							new ComplexOptionsItem.Option
@@ -104,8 +104,9 @@ When choosing what option applies from the list always start with the worst one 
 						}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "3. Do you feel that your feet get glued to the floor while walking, making a turn or when trying to initiate walking (freezing)?",
+            {
+                JsonCode = "3",
+                Label = "3. Do you feel that your feet get glued to the floor while walking, making a turn or when trying to initiate walking (freezing)?",
 				Options = new List<ComplexOptionsItem.Option>
 						{
 							new ComplexOptionsItem.Option
@@ -141,8 +142,9 @@ When choosing what option applies from the list always start with the worst one 
 						}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "4. How long is your longest freezing episode?",
+            {
+                JsonCode = "4",
+                Label = "4. How long is your longest freezing episode?",
 				Options = new List<ComplexOptionsItem.Option>
 						{
 							new ComplexOptionsItem.Option
@@ -178,8 +180,9 @@ When choosing what option applies from the list always start with the worst one 
 						}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "5. How long is your typical start hesitation episode (freezing when initiating the first step)?",
+            {
+                JsonCode = "5",
+                Label = "5. How long is your typical start hesitation episode (freezing when initiating the first step)?",
 				Options = new List<ComplexOptionsItem.Option>
 						{
 							new ComplexOptionsItem.Option
@@ -215,8 +218,9 @@ When choosing what option applies from the list always start with the worst one 
 						}
 			},
 			new ComplexOptionsItem
-			{
-				Label = "6. How long is your typical turning hesitation: (freezing when turning)",
+            {
+                JsonCode = "6",
+                Label = "6. How long is your typical turning hesitation: (freezing when turning)",
 				Options = new List<ComplexOptionsItem.Option>
 						{
 							new ComplexOptionsItem.Option
@@ -261,10 +265,10 @@ When choosing what option applies from the list always start with the worst one 
 		Name = "Freezing Of Gait Questionnaire";
 		ShortName = "FOGQ";
 		AreaOfStudy = "Freezing of gait";
+		DetailsHeaders.Clear();
+        DetailsHeaders.Add("Points");
 
-		DetailsHeaders.Add("Points");
-
-		Items = new List<ScaleItem>
+        Items = new List<ScaleItem>
 		{
 			new InfoItem
 			{
@@ -506,7 +510,6 @@ When choosing what option applies from the list always start with the worst one 
 	public override void FixItemsInternal()
 	{
 	}
-	public override void LoadValuesFromDB(string valuesInDb) => FromDBStrinngToListOfComplexOptions(valuesInDb);
 
 
 	protected override void GenerateScoreInternal()
@@ -528,7 +531,7 @@ When choosing what option applies from the list always start with the worst one 
 		if (maxValue == 0)
 			ScoreNormalized = 0;
 		else
-			ScoreNormalized = (int)LinearInterpolation(0, maxValue, ScoreRaw);
+			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 	}
 	protected override void GenerateDetails()
 	{
@@ -537,35 +540,5 @@ When choosing what option applies from the list always start with the worst one 
 	}
 	protected override void ResetInternal()
 	{
-	}
-
-	public override string ToDBString()
-	{
-		List<string> labels = new List<string>();
-		List<string> values = new List<string>();
-
-		int i = 0;
-		foreach(var item in Items)
-		{
-			if(item is ComplexOptionsItem)
-			{
-				labels.Add(i.ToString());
-				i = i + 1;
-				values.Add(((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "0");
-			}
-		}
-
-		return CreateDBItem(labels, values);
-	}
-
-	public override void FromDBString(string dbString)
-	{
-		var dbItems = ParseDbString(dbString, Items.Count);
-		int i = 0;
-		foreach(var  dbItem in dbItems)
-		{
-			Items[i].StringValue = dbItem;
-			i++;
-		}
 	}
 }

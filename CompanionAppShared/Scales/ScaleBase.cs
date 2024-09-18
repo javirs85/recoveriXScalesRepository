@@ -23,14 +23,12 @@ public abstract class ScaleBase : IScale
 	/// <param name="X100">the value you must enter t o get a 100</param>
 	/// <param name="xToInvestigate">the value you want to investigate</param>
 	/// <returns></returns>
-	public static double LinearInterpolation(double x100, double x0, double xToInvestigate)
+	public static double LinearInterpolation(double x0, double x100, double xToInvestigate)
 	{
-		// Perform linear interpolation
-		double slope = 100 / (x100 - x0);
-		double result = 100 - slope * (x100 - xToInvestigate);
+		double result = 100 * (xToInvestigate - x0) / (x100 - x0);
 
-		// Ensure the result is within the 0-100 range
-		return Math.Max(0, Math.Min(100, result));
+        // Ensure the result is within the 0-100 range
+        return Math.Max(0, Math.Min(100, result));
 	}
 
 	public void FixItems(Patient? patient = null)
@@ -42,7 +40,18 @@ public abstract class ScaleBase : IScale
 	public abstract void Init();
 
 	public abstract void FixItemsInternal();
-	public abstract void LoadValuesFromDB(string valuesInDb);
+	public virtual void LoadValuesFromDB(Dictionary<string, string> valuesInDb)
+	{
+        foreach (var (key, value) in valuesInDb)
+		{
+			var item = Items.Find(x => x.JsonCode == key);
+			if (item == null) 
+				throw new Exception($"the key {key} is not part of the {Name} scale");
+
+			item.StringValue = value;
+		}
+
+    }
 
 	public void FixEvents()
 	{
@@ -124,8 +133,47 @@ public abstract class ScaleBase : IScale
 	protected abstract void GenerateScoreInternal();
 	protected abstract void GenerateDetails();
 
-	public abstract string ToDBString();
-	public abstract void FromDBString(string dbString);
+
+	protected Dictionary<string, string> ToDB { get; set; } = new();
+
+	public virtual Dictionary<string, string> ToDBDictionary()
+	{
+        List<string> labels = new List<string>();
+        List<string> values = new List<string>();
+
+        ToDB.Clear();
+		try
+		{
+			int i = 0;
+			foreach (var item in Items)
+			{
+				if(item is InfoItem)
+				{
+					continue;
+				}
+				else if (item is OptionsItem)
+				{
+					ToDB.Add(item.JsonCode, ((OptionsItem)item).StringValue);
+				}
+				else if (item is ComplexOptionsItem)
+				{
+					ToDB.Add(
+						item.JsonCode,
+						((ComplexOptionsItem)item).SelectedOption?.Value.ToString() ?? "-1");
+					i++;
+				}
+				else
+				{
+					ToDB.Add(item.JsonCode, item.StringValue);
+				}
+			}
+		}catch (Exception ex)
+		{
+
+		}
+
+        return ToDB;
+    }
 
 	
 	public List<string> ParseDbString(string dbData, int expectedNumberOfItems)
@@ -140,32 +188,6 @@ public abstract class ScaleBase : IScale
 			throw new Exception("Invalida data 005");
 
 		else return data[1];
-	}
-
-	public string CreateDBItem(List<string> labels, List<string> values)
-	{
-		List<List<string>> tostore = new List<List<string>>();
-
-		tostore.Add(labels);
-		tostore.Add(values);
-
-		string json = System.Text.Json.JsonSerializer.Serialize(tostore);
-		return json;
-	}
-
-	public void FromDBStrinngToListOfComplexOptions(string valuesInDb)
-	{
-		int n = 0;
-		var db = JsonSerializer.Deserialize<List<List<string>>>(valuesInDb);
-		var a = from i in Items where i is ComplexOptionsItem select i as ComplexOptionsItem;
-
-		foreach (var item in from i in Items
-							 where i is ComplexOptionsItem
-							 select i as ComplexOptionsItem)
-		{
-			item.ForceOption(int.Parse(db[1][n]));
-			n++;
-		}
 	}
 
 }

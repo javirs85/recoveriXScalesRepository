@@ -47,9 +47,8 @@ namespace CompanionAppShared.Scales
 		ScaleIcon Icon { get; set; }
 		List<ScaleItem> Items { get; set; }
 
-		string ToDBString();
-		void FromDBString(string dbString);
-		void LoadValuesFromDB(string valuesInDb);
+        Dictionary<string, string> ToDBDictionary();
+		void LoadValuesFromDB(Dictionary<string,string> valuesInDb);
 
 	}
 
