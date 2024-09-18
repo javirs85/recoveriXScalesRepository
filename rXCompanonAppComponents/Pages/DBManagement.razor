@@ -1,4 +1,6 @@
-﻿@inject DataBase DB;
+﻿@page "/called from /db"
+
+@inject DataBase DB;
 @inject IToastService Toaster;
 
 <div class="fs-4">@Status</div>
@@ -125,7 +127,7 @@
     private async Task GenerateJsonAll()
     {
         List<PatientInJson> LoadedPatietns = new();
-        foreach(var p in MyPatients)
+        foreach (var p in MyPatients)
         {
             if (p.IsFullyLoadedFromDB)
             {
@@ -134,32 +136,41 @@
 
                 var therapy = p.GetParkinsonTherapy();
                 var nt = new TherapyInJson { ID = therapy.TherapyLabel };
-                foreach(var s in therapy.Sessions)
+                foreach (var s in therapy.Sessions)
                 {
-                    if(!s.IsFullyLoaded)
+                    Session sessionToDownload;
+                    if (!s.IsFullyLoaded)
                     {
                         var Current = new SelectedItems();
                         Current.SelectedSession = s;
                         Current.SelectedPatient = p;
                         Current.SelectedTherapy = therapy;
+                        Current.SelectedSession = s;
 
-                        var loadedSession = await DB.GetSessionFromDB(s.Id);
-                        nt.Sessions.Add(new SessionInJson
-                            {
-                                Date = loadedSession.MeasurementDate,
-                                Kind = loadedSession.SessionKind.ToString(),
-                                Data = loadedSession.SerializedData
-                            });
+                        sessionToDownload = await DB.LoadSession(Current);
                     }
                     else
                     {
-                        nt.Sessions.Add(new SessionInJson
+                        sessionToDownload = s;
+                    }
+                    var Scales = new List<DataBase.StorableScale>();
+                    foreach (var sc in sessionToDownload.Scales)
+                    {
+                        Scales.Add(new DataBase.StorableScale
                             {
-                                Date = s.MeasurementDate,
-                                Kind = s.SessionKind.ToString(),
-                                Data = s.SerializedData
+                                ScaleID = sc.Id,
+                                IsMeasured = sc.IsMeasured,
+                                SimplifiedResults = sc.ToDBDictionary()
                             });
-                    }                    
+                    }
+
+                    SessionInJson sij = new SessionInJson
+                        {
+                            Kind = s.SessionKind.ToString(),
+                            Date = s.MeasurementDate,
+                            Data = Scales
+                        };
+                    nt.Sessions.Add(sij);
                 }
                 np.Therapies.Add(nt);
                 LoadedPatietns.Add(np);
@@ -167,14 +178,7 @@
         }
 
         json = System.Text.Json.JsonSerializer.Serialize(LoadedPatietns);
-        json = json.Replace("\\u0022", "\"");
-        json = json.Replace("\\", "");
-        json = json.Replace("\"Data\":\"[", "\"Data\":[");
-        json = json.Replace("\"]]\"},{", "\"]]},{");
-        json = json.Replace("]]\"}]\"},{", "]]}]\"},{");
-        json = json.Replace("]]}]\"},{\"Date\"", "]]}]},{\"Date\"");
-        json = json.Replace("SerializedMeasurements\":\"[", "SerializedMeasurements\":[");
-        json = json.Replace("]]\"}]\"}]}]}]", "]]}]}]}]}]");
+
     }
 
     private class PatientInJson
@@ -191,6 +195,6 @@
     {
         public DateTime Date { get; set; }
         public string Kind { get; set; } = "";
-        public string Data { get; set; } = "";
+        public List<DataBase.StorableScale> Data { get; set; } = new();
     }
 }
