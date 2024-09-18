@@ -30,7 +30,7 @@ namespace CompanionAppShared.Scales
         ScalesIDs Id { get; set; }
         string ShortName { get; set; }
 		string AreaOfStudy { get; set; }
-
+		bool HasMissingItems { get; }
 		int ScoreNormalized { get; }
         int ScoreRaw { get; set; }
         List<string> DetailsHeaders { get; set; }
@@ -38,7 +38,9 @@ namespace CompanionAppShared.Scales
         int ScoreDelta { get; }
         bool IsMeasured { get; set; } 
         int ReferenceScoreNormalized { get; set; }
-        event EventHandler UpdateNeeded;
+		public string AutoScoreExplanation { get; set; }
+
+		event EventHandler UpdateNeeded;
 
         void GenerateScore();
 		void Reset();

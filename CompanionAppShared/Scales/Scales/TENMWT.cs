@@ -24,6 +24,7 @@ public class TENMWT : ScaleBase
 		ShortName = "10MWT";
 		AreaOfStudy = "Gait";
 		DetailsHeaders.Add("Attempts");
+		AutoScoreExplanation = "Score reaches 100% for values smaller than 7s and 0% for values larger than 60s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 	}
 
 
@@ -35,12 +36,9 @@ public class TENMWT : ScaleBase
 
 	protected override void GenerateScoreInternal()
 	{
-		//calculate velocity
-		//ignore values when equal to zero
-		//normalizat amb valors de referencia
-		//score = mijana de valors no-zero
+		int minRef = 7;
+		int maxRef = 60;
 
-		//TODO: Marc provide reference values
 		ScoreRaw = 0;
 		int measures = 0;
 		foreach (var item in from i in Items
@@ -61,8 +59,8 @@ public class TENMWT : ScaleBase
 		else
 		{
             ScoreRaw /= measures;
-            var minTime = (int)TimeSpan.FromSeconds(30).TotalMilliseconds;
-            var maxTime = (int)TimeSpan.FromSeconds(300).TotalMilliseconds;
+            var minTime = (int)TimeSpan.FromSeconds(minRef).TotalMilliseconds;
+            var maxTime = (int)TimeSpan.FromSeconds(maxRef).TotalMilliseconds;
             ScoreNormalized = (int)LinearInterpolation(maxTime, minTime, ScoreRaw);
 
         }

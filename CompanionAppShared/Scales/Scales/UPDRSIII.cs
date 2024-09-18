@@ -20,6 +20,7 @@ public class UPDRSIII : ScaleBase
 		Name = "Unified Parkinson's Disease Rating Scale - Section III";
 		ShortName = "UPDRS-III";
 		AreaOfStudy = "Motor examination";
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		DetailsHeaders = new List<string> { "Points" };
 

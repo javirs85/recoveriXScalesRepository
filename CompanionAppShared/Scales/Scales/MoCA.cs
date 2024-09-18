@@ -27,6 +27,7 @@ public class MoCA : ScaleBase
 		Name = "Montreal cognitive assessment";
 		ShortName = "MoCA";
 		AreaOfStudy = "Cognitive status";
+		AutoScoreExplanation = "With 0 points the score reaches 0%. The maximum of points leads to 100% score.";
 	}
 
 	public override void FixItemsInternal()

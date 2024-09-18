@@ -35,6 +35,11 @@
     border-right: 1px solid #79c7ff;
     opacity:0.5;
 }
+.OptionValueBoxWrong {
+    width: 40px;
+    border-right: 1px solid #dd8080;
+    opacity: 0.5;
+}
 
 .BorderJustDown {
     border: none !important;
@@ -44,4 +49,17 @@
 .SelectedOptionDetails {
     background: #0a4a79;
     color: #c9e8ff;
+}
+
+.IsWrong {
+    background: #ffb6b6;
+}
+    .IsWrong .Option {
+        background: #f19e9e;
+    }
+    .IsWrong .Option .Seleceted{
+        background: olive !important;
+    }
+.IsWrongBorder {
+    border: 1px solid #dd8080;
 }

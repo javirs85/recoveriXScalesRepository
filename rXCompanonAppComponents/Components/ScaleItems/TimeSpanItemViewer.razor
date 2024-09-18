@@ -5,22 +5,23 @@
 		<label>@Value.Label</label>
 		<div class="d-flex gap-2">
 			<InputText class="form-control" @bind-Value=Value.StringValue />
+			<button style="width:0px; display:none;"></button>
 			@if(!timerRunning)
 			{
-				<button class="btn btn-primary" style="width: 300px;" @onclick=StartTimer>Start</button>
+				<button type="button" class="btn btn-primary" style="width: 300px;" @onclick=StartTimer>Start</button>
 			}
 			else
 			{
-				<button class="btn btn-secondary" style="width: 300px;" disabled>Recording...</button>
+				<button type="button" class="btn btn-secondary" style="width: 300px;" disabled>Recording...</button>
 			}
 
 			@if (!timerRunning)
 			{
-				<button disabled class="btn btn-secondary" @onclick=StartTimer>Pause</button>
+				<button type="button" disabled class="btn btn-secondary" @onclick=StartTimer>Pause</button>
 			}
 			else
 			{
-				<button class="btn btn-primary" @onclick=StopTimer>Pause</button>
+				<button type="button" class="btn btn-primary" @onclick=StopTimer>Pause</button>
 			}
 			
 			<button class="btn btn-danger" @onclick=ResetTimer>Reset</button>
@@ -40,6 +41,7 @@
 		timer = new Timer(1000);
 		timer.Elapsed += TimerElapsed;
 	}
+
 
 	private void StartTimer()
 	{

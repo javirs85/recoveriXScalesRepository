@@ -17,6 +17,7 @@ public class HYClass : ScaleBase
 		AreaOfStudy = "PD disease classification";
 
 		DetailsHeaders.Add("Points");
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		Items.Add(HoenYahr);
 	}

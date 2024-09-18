@@ -1,4 +1,4 @@
-﻿<div class="d-flex flex-column gap-0 p-2 ScaleItemBox">
+﻿<div class="d-flex flex-column gap-0 p-2 ScaleItemBox @(Options.IsWrong?"IsWrong":"")">
 	<h4>@Options.Label</h4>
 	<InstructionsSpace Item="Options"/>
 	@if(false)
@@ -46,15 +46,15 @@
 	}
 	<div class="d-flex justify-content-center mt-2 mb-4">
 		<div class="ActionsPanel" style="width:80%">
-			<div class="d-flex flex-column LightBlueBorder">
+			<div class="d-flex flex-column @(Options.IsWrong?"IsWrongBorder":"LightBlueBorder")">
 				@foreach (var o in Options.Options)
 				{
-					<div class="Option PaleBlueBackground Selectable LightBlueBorder
+					<div class="Option PaleBlueBackground Selectable @(Options.IsWrong?"IsWrongBorder":"LightBlueBorder")
 						@(Options.SelectedOption is not null && Options.SelectedOption == o?"Selected":"")"
 						 @onclick=@(()=>{Options.SelectedOption = o;})>
 						<div class="d-flex">
-							<div class="OptionValueBox p-2 d-flex justify-content-center" 
-								style="@((Options.SelectedOption is not null && Options.SelectedOption == o)?"border:none; opacity:1;":"")">
+							<div class="@(Options.IsWrong?"OptionValueBoxWrong":"OptionValueBox") p-2 d-flex justify-content-center"
+								 style="@((Options.SelectedOption is not null && Options.SelectedOption == o)?"border:none; opacity:1;":"")">
 								@o.Value</div>
 							<div class="p-2">
 								@if(o.Description == "")

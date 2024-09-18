@@ -19,6 +19,7 @@ public class MFIS : ScaleBase
 		Name = "Modified Fatigue Impact Scale";
 		ShortName = "MFIS";
 		AreaOfStudy = "Fatigue";
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		DetailsHeaders = new List<string> { "Points" };
 

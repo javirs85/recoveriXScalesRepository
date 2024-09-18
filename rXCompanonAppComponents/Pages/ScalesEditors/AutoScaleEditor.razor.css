@@ -22,12 +22,53 @@
     padding: 20px;
 }
 
-.Score{
-    font-size:59px;
+.Score {
+    font-size: 59px;
+    line-height: 54px;
+    display:flex;
+    align-items: center;
 }
 .ScoreComment {
     font-size: 16px;
     opacity: 0.3;
-    width: 60px;
+    width: 97px;
     line-height: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.WarningMessage {
+    color: #f17a6d;
+    font-family: unset;
+    font-weight: 100;
+    font-size: 20px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    background: #1c1717;
+    border-radius: 14px;
+}
+
+.ErrorMessage {
+    color: #f3cac5;
+    gap: 1em;
+    align-items: flex-start;
+    font-size: 14px;
+    font-family: 'Roboto';
+    text-transform: capitalize;
+    padding-top: 1em;
+}
+
+.hoverable{
+    cursor:pointer;
+}
+
+.AutoScoreExplanation {
+    background: #f1f2f9;
+    padding: 1em;
+    border-radius: 10px;
+    color: #0000005e;
+    display:flex;
 }

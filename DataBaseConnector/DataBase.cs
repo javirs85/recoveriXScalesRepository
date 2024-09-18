@@ -306,7 +306,7 @@ public class DataBase
 		return JsonSerializer.Serialize(StorableScales);
 	}
 
-	private class StorableScale
+	public class StorableScale
 	{
 		public ScalesIDs ScaleID { get; set; } = ScalesIDs.NotSet;
 		public bool IsMeasured { get; set; }
@@ -367,7 +367,7 @@ public class DataBase
 		return r;
 	}
 
-	async Task<Session> LoadSession(SelectedItems Current)
+	public async Task<Session> LoadSession(SelectedItems Current)
 	{
 		Guid id = Current.SelectedSession.Id;
 		var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new
