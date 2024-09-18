@@ -22,53 +22,66 @@ public class TUG : ScaleBase
 		AreaOfStudy = "Balance and gait";
 
 		DetailsHeaders.Add("Time (m)");
+		AutoScoreExplanation = "Score reaches 100% for values smaller than 9s and 0% for values larger than 80s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 
 		Items = new List<ScaleItem>
 		{
-			TimedExecution
+			new TimeSpanItem { JsonCode="R1", Label = "Time for central 6 meters:" },
+			new TimeSpanItem { JsonCode = "R2", Label = "Time for central 6 meters:" },
+			new TimeSpanItem { JsonCode = "R3", Label = "Time for central 6 meters:" }
 		};
 	}
 
 	public override void FixItemsInternal()
 	{
-		Items.Clear();
-		Items.Add(TimedExecution);
 	}
-
-
-	public TimeSpanItem TimedExecution { get; set; } = new TimeSpanItem { JsonCode = "R1", Label = "Time to stand up and go" };
 
 	protected override void GenerateScoreInternal()
 	{
-		//This score assumes Average time up 45. Mas Time up 135s
-		//To change those values please update the ScoreNormalized function.
+		int minRef = 9;
+		int maxRef = 80;
 
-
-
-		ScoreRaw = (int)Math.Ceiling(TimedExecution.Value.TotalSeconds);
-
-		var externalized = ScaleBase.LinearInterpolation(135, 45, ScoreRaw);
-
-		if (ScoreRaw < 35) ScoreNormalized = 0;
-		else if (ScoreRaw > 135) ScoreNormalized = 100;
+		ScoreRaw = 0;
+		int measures = 0;
+		foreach (var item in from i in Items
+							 where i is TimeSpanItem
+							 select i as TimeSpanItem)
+		{
+			if (item.Value.TotalSeconds != 0)
+			{
+				ScoreRaw += (int)item.Value.TotalMilliseconds;
+				measures++;
+			}
+		}
+		if (measures == 0)
+		{
+			ScoreRaw = 0;
+			ScoreNormalized = 0;
+		}
 		else
-			ScoreNormalized = ((-10 / 9) * ScoreRaw) + 150;
+		{
+			ScoreRaw /= measures;
+			var minTime = (int)TimeSpan.FromSeconds(minRef).TotalMilliseconds;
+			var maxTime = (int)TimeSpan.FromSeconds(maxRef).TotalMilliseconds;
+			ScoreNormalized = (int)LinearInterpolation(maxTime, minTime, ScoreRaw);
 
-		//TODO: Marc provides refrence values
-		//9.0s pacients entre 60 i 69 anys
-		//10.2 70-79
-		//12.7 80-99
-
+		}
 	}
 
 	protected override void ResetInternal()
 	{
-		TimedExecution = new TimeSpanItem { Label = "Time to stand up and go" };
 	}
 
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
-		Details.Add(TimedExecution.StringValue);
+		foreach (var item in Items)
+		{
+			if (item is TimeSpanItem)
+			{
+				if ((item as TimeSpanItem).Value.TotalSeconds != 0)
+					Details.Add(item.StringValue);
+			}
+		}
 	}
 }

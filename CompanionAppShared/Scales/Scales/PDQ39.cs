@@ -23,6 +23,7 @@ public class PDQ39 : ScaleBase
 		AreaOfStudy = "Impact of the disease";
 
 		DetailsHeaders = new List<string> { "Points" };
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		Items = new List<ScaleItem>
 		{

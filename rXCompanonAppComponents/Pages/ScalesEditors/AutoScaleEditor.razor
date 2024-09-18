@@ -15,13 +15,42 @@
 		</div>
 		<div class="flex-grow-1 d-flex flex-column justify-content-center">
 			<div style="margin-bottom:50%; overflow:hidden; transition:margin-left linear 0.5s; @(IsDarkColumnMinified?"margin-left:20px;":"")">
-				<LeftMenuItem Title="@($"{Current.SelectedSession.MeasurementDate.ToShortDateString()} / {Current.SelectedScale.ShortName}")"
+				<LeftMenuItem Title="@($"{Current.SelectedSession.MeasurementDate.ToShortDateString()} / {Current.SelectedScale.ShortName} : {LifeCopy.ScoreNormalized}%")"
 							  Color="LeftMenuItem.AvailableColors.green"
 							  IsSingleItem="true"
 							  IsSelected="true" />
 			</div>
 		</div>
 		<div class="ButtonsSpace">
+			@if(LifeCopy.HasMissingItems)
+			{
+				<div class="WarningMessage">
+					<div class="d-flex align-items-center">
+						<div>
+							<i class="bi bi-exclamation-triangle fs-2"></i>
+						</div>
+						<div class="flex-grow-1 px-2">
+							Some questions are not yet answered
+						</div>
+					</div>
+					
+					<div class="d-flex flex-column ErrorMessage">
+						@foreach(var i in from ScaleItem it in LifeCopy.Items
+											where it is ComplexOptionsItem
+											select it as ComplexOptionsItem)
+						{
+							if(i.IsWrong)
+							{
+								<div class="d-flex align-items-center">
+									<i class="bi bi-x"></i>
+									<div class="flex-grow-1" style="text-align:left;">@i.Label.ToLowerInvariant()</div>
+								</div>
+							}
+						}
+					</div>
+				</div>
+			}
+			
 			<RoundButton ButtonColor="Colors.red" ButtonStyle="RoundButton.ButtonStyles.outlined"
 						 Icon="RXIcon.Icons.Cancel" Clicked="Cancel"
 						 Title="@(CurrentMode == Modes.NewScaleMode?"Delete data and exit":"Revert changes and exit")" />
@@ -44,9 +73,22 @@
 	<div class="MainContainer d-flex flex-grow-1 h-100">
 		<div class="FormPanel h-100">
 			<div class="FormPanelDiv d-flex flex-column gap-3">
-				<div class=" d-flex align-items-center">
+				<div class="d-flex" style="height:80px;">
 					<div class="Score">@(LifeCopy.ScoreNormalized)%</div>
 					<div class="ScoreComment">score calculated automatically</div>
+					@if(IsShowingAutoScoreDetails)
+					{
+						<div class="AutoScoreExplanation  hoverable" @onclick=@(_ => IsShowingAutoScoreDetails = false)>
+							<div>
+								@((MarkupString)LifeCopy.AutoScoreExplanation)
+							</div>
+							<i class="bi bi-x ms-3 hoverable" style="color:black;"></i>
+						</div>
+					}
+					else
+					{
+						<i class="bi bi-info-circle opacity-25 hoverable" @onclick=@(_ => IsShowingAutoScoreDetails = true)></i>
+					}
 				</div>
 				@foreach (var item in LifeCopy.Items)
 				{
@@ -61,6 +103,8 @@
 @code {
 	[Parameter] public SelectedItems Current { get; set; }
 	[Parameter] public EventCallback ExitAutoScale { get; set; }
+
+	bool IsShowingAutoScoreDetails = false;
 
 	bool IsDarkColumnMinified;
 

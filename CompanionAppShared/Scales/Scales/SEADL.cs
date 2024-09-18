@@ -17,6 +17,7 @@ public class SEADL : ScaleBase
 		Name = "UPDRS - VI (Schwab and England ADL Scale)";
 		ShortName = "SEADL";
 		AreaOfStudy = "Activities in Daily Living";
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 	}
 
 	public override void FixItemsInternal()

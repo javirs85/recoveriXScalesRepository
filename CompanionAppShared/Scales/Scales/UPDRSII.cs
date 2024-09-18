@@ -20,6 +20,7 @@ public class UPDRSII : ScaleBase
 		Name = "Unified Parkinson's Disease Rating Scale - Section II";
 		ShortName = "UPDRS-II";
 		AreaOfStudy = "Activities in Daily Living";
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		DetailsHeaders = new List<string> { "Points" };
 

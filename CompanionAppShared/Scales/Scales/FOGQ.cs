@@ -12,6 +12,7 @@ public class FOGQ : ScaleBase
 		Name = "Freezing Of Gait Questionnaire";
 		ShortName = "FOGQ";
 		AreaOfStudy = "Freezing of gait";
+		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		Items = new List<ScaleItem>
 		{

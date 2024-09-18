@@ -19,7 +19,7 @@ public class NineHolePegTest : ScaleBase
 		Name = "Nine hole peg test";
 		ShortName = "9HPT";
 		AreaOfStudy = "Fine motor skills";
-
+		AutoScoreExplanation = "When both hands take similar amounts of time the score reaches 100%. When one hand uses twice as much time as the other hand score reaches 0%";
 		DetailsHeaders.Add("Healthy hand");
 		DetailsHeaders.Add("Paretic hand");
 

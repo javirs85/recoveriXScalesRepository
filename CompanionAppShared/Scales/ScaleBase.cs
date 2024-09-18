@@ -30,6 +30,33 @@ public abstract class ScaleBase : IScale
         // Ensure the result is within the 0-100 range
         return Math.Max(0, Math.Min(100, result));
 	}
+	public string AutoScoreExplanation { get; set; }
+	public bool HasMissingItems { get { return CheckMissingItems(); } }
+	public virtual bool CheckMissingItems()
+	{
+		var Boxes = (from i in Items
+					where i is ComplexOptionsItem
+					select i as ComplexOptionsItem).ToList();
+
+		var lastOne = Boxes.FindLastIndex(i => i.StringValue != "-1");
+		if(lastOne == -1) return false;
+
+		bool AnyMarkedAsSkipped = false;
+		for (int i = 0; i <= lastOne; i++)
+		{
+			if (Boxes[i].StringValue == "-1")
+			{
+				Boxes[i].IsWrong = true;
+				AnyMarkedAsSkipped = true; // At least one item was marked
+			}
+			else
+			{
+				Boxes[i].IsWrong = false;
+			}
+		}
+
+		return AnyMarkedAsSkipped;
+	}
 
 	public void FixItems(Patient? patient = null)
 	{
@@ -85,6 +112,7 @@ public abstract class ScaleBase : IScale
 	private void Update(object? sender, EventArgs e)
 	{
 		GenerateScore();
+		CheckMissingItems();
 		UpdateNeeded?.Invoke(this, EventArgs.Empty);
 	}
 	private void Invalidate(object? sender, string e)

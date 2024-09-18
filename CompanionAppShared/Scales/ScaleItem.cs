@@ -306,7 +306,11 @@ public class ComplexOptionsItem : ScaleItem
         ItemType = ScaleItemType.ComplexOptionsItem;
     }
 
-    public int Value => SelectedOption?.Value ?? -1;
+    public bool IsWrong { get; set; } = false;
+    public void ShowAsWrong() => IsWrong = true;
+
+
+	public int Value => SelectedOption?.Value ?? -1;
 
     public List<Option> Options { get; set; } = new();
 
