@@ -189,13 +189,11 @@ public class TimeSpanItem : ScaleItem
 
 	private TimeSpan? ParseTimeString(string timeString)
 	{
-		// Primero tratamos de ver si es un número puro que representa segundos (incluso decimales)
 		if (float.TryParse(timeString.Replace(".",","), out float rawNumber))
 		{
 			return TimeSpan.FromSeconds(rawNumber);
 		}
 
-		// Ajustamos el regex para permitir decimales en los segundos
 		Regex regex = new Regex(@"\s*(?:(\d+)h\s*)?(?:(\d+)m\s*)?(?:(\d+\.?\d*)s)?");
 		Match match = regex.Match(timeString);
 
@@ -203,9 +201,9 @@ public class TimeSpanItem : ScaleItem
 		{
 			int hours = match.Groups[1].Success ? int.Parse(match.Groups[1].Value) : 0;
 			int minutes = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 0;
-			double seconds = match.Groups[3].Success ? double.Parse(match.Groups[3].Value) : 0;
 
-			// Se utiliza TimeSpan.FromSeconds para manejar los decimales correctamente
+			double seconds = match.Groups[3].Success ? double.Parse(match.Groups[3].Value, System.Globalization.CultureInfo.InvariantCulture) : 0;
+
 			return new TimeSpan(hours, minutes, 0).Add(TimeSpan.FromSeconds(seconds));
 		}
 		else
