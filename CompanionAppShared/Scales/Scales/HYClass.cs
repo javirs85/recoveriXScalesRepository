@@ -12,7 +12,7 @@ public class HYClass : ScaleBase
 	public override void Init()
 	{
 		Id = ScalesIDs.HYClass;
-		Name = "UPDRS - V (Hoehn and Yahr Scale)";
+		Name = "UPDRS (Hoehn and Yahr Scale)";
 		ShortName = "HYClass";
 		AreaOfStudy = "PD disease classification";
 

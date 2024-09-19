@@ -26,9 +26,9 @@ public class TUG : ScaleBase
 
 		Items = new List<ScaleItem>
 		{
-			new TimeSpanItem { JsonCode="R1", Label = "Time for central 6 meters:" },
-			new TimeSpanItem { JsonCode = "R2", Label = "Time for central 6 meters:" },
-			new TimeSpanItem { JsonCode = "R3", Label = "Time for central 6 meters:" }
+			new TimeSpanItem { JsonCode="R1", Label = "Time:" },
+			new TimeSpanItem { JsonCode = "R2", Label = "Time:" },
+			new TimeSpanItem { JsonCode = "R3", Label = "Time:" }
 		};
 	}
 
