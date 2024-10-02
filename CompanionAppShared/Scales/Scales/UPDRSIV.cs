@@ -204,19 +204,24 @@ This completes my rating of your Parkinson’s disease. I know the questions and
 		else
 			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
 
-        IntItem TotalHoursAwake_off = (Items.Find(x=> x.JsonCode == "AwakeHOff") as IntItem);
-        IntItem TotalHoursOff = (Items.Find(x=> x.JsonCode == "HoursOff") as IntItem);        
-        IntItem AutoOffTime = Items.Find(x => x.JsonCode == "AutoOff") as IntItem;
+        IntItem AwakeHOff = (Items.Find(x=> x.JsonCode == "AwakeHOff") as IntItem);
+        IntItem HoursOff = (Items.Find(x=> x.JsonCode == "HoursOff") as IntItem);        
+        IntItem AutoOff = Items.Find(x => x.JsonCode == "AutoOff") as IntItem;
 
-        IntItem TotalHoursAwake = (Items.Find(x => x.JsonCode == "AwakeH") as IntItem);
-        IntItem DiskAutoUpdate = Items.Find(x => x.JsonCode == "AutoDisk") as IntItem;
-        IntItem TotaHoursWithDisk = Items.Find(x => x.JsonCode == "DiskH") as IntItem;
+        IntItem AwakeH = (Items.Find(x => x.JsonCode == "AwakeH") as IntItem);
+        IntItem AutoDisk = Items.Find(x => x.JsonCode == "AutoDisk") as IntItem;
+        IntItem DiskH = Items.Find(x => x.JsonCode == "DiskH") as IntItem;
 
-        if (TotalHoursAwake_off.Value != 0)
-			AutoOffTime.Value = (int)Math.Round((double)(((float)TotalHoursOff.Value / (float)TotalHoursAwake_off.Value)) * 100);
+        if(AwakeH.Value > 24) AwakeH.Value = 24;
+        if(AwakeHOff.Value > 24) AwakeHOff.Value = 24;  
+        if(DiskH.Value > AwakeH.Value) DiskH.Value = AwakeH.Value;
+        if(HoursOff.Value > AwakeHOff.Value) HoursOff.Value = AwakeHOff.Value;
 
-		if(TotalHoursAwake.Value != 0)
-			DiskAutoUpdate.Value = (int)Math.Round((double)(((float)TotaHoursWithDisk.Value / (float)TotalHoursAwake.Value)) * 100);
+        if (AwakeHOff.Value != 0)
+			AutoOff.Value = (int)Math.Round((double)(((float)HoursOff.Value / (float)AwakeHOff.Value)) * 100);
+
+		if(AwakeH.Value != 0)
+			AutoDisk.Value = (int)Math.Round((double)(((float)DiskH.Value / (float)AwakeH.Value)) * 100);
 	}
 
 	protected override void GenerateDetails()

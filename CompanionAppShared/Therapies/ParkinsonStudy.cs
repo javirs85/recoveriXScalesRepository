@@ -45,7 +45,8 @@ public class ParkinsonStudy : Therapy
             ScalesIDs.MFIS,
             ScalesIDs.NineHPT,
             ScalesIDs.TUG,
-            ScalesIDs.TENMWT,
+            ScalesIDs.TENMWT_FV,
+            ScalesIDs.TENMWT_SSV,
             ScalesIDs.FOGQ,
             ScalesIDs.MoCA
         };

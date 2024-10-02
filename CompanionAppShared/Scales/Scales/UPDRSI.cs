@@ -605,6 +605,8 @@ In administering Part IA, the examiner should use the following guidelines:
 			ScoreNormalized = 0;
 		else
 			ScoreNormalized = (int)LinearInterpolation(maxValue, 0, ScoreRaw);
+
+
 	}
 
 

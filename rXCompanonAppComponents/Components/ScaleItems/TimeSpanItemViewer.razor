@@ -3,8 +3,9 @@
 <EditForm Model="this">
 	<div class="d-flex flex-column gap-0">
 		<label>@Value.Label</label>
+		<InstructionsSpace Item="Value"  />
 		<div class="d-flex gap-2">
-			<InputText class="form-control" @bind-Value=Value.StringValue />
+			<InputText class="form-control" @bind-Value=Value.StringValue  style="max-width: 200px;"/>
 			<button style="width:0px; display:none;"></button>
 			@if(!timerRunning)
 			{

@@ -34,12 +34,19 @@ public abstract class ScaleBase : IScale
 	public bool HasMissingItems { get { return CheckMissingItems(); } }
 	public virtual bool CheckMissingItems()
 	{
+		return CheckMissingItemsForComplexOptions();
+	}
+
+	protected bool CheckMissingItemsForComplexOptions()
+	{
 		var Boxes = (from i in Items
-					where i is ComplexOptionsItem
-					select i as ComplexOptionsItem).ToList();
+					 where i is ComplexOptionsItem
+					 select i as ComplexOptionsItem).ToList();
 
 		var lastOne = Boxes.FindLastIndex(i => i.StringValue != "-1");
-		if(lastOne == -1) return false;
+		if (lastOne == -1) return false;
+		MissingItems.Clear();
+		MissingItemsText = "Some questions are not yet answered";
 
 		bool AnyMarkedAsSkipped = false;
 		for (int i = 0; i <= lastOne; i++)
@@ -47,6 +54,7 @@ public abstract class ScaleBase : IScale
 			if (Boxes[i].StringValue == "-1")
 			{
 				Boxes[i].IsWrong = true;
+				MissingItems.Add(Boxes[i].Label);
 				AnyMarkedAsSkipped = true; // At least one item was marked
 			}
 			else
@@ -157,6 +165,10 @@ public abstract class ScaleBase : IScale
 		ResetInternal();
 	}
 
+
+	public string MissingItemsText { get; set; } = string.Empty;
+	public List<string> MissingItems { get; } = new();
+
 	protected abstract void ResetInternal();
 	protected abstract void GenerateScoreInternal();
 	protected abstract void GenerateDetails();
@@ -217,5 +229,7 @@ public abstract class ScaleBase : IScale
 
 		else return data[1];
 	}
+
+
 
 }

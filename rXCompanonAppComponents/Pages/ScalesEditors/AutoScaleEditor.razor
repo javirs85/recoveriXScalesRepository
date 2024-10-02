@@ -30,23 +30,19 @@
 							<i class="bi bi-exclamation-triangle fs-2"></i>
 						</div>
 						<div class="flex-grow-1 px-2">
-							Some questions are not yet answered
+							@LifeCopy.MissingItemsText
 						</div>
 					</div>
 					
 					<div class="d-flex flex-column ErrorMessage">
-						@foreach(var i in from ScaleItem it in LifeCopy.Items
-											where it is ComplexOptionsItem
-											select it as ComplexOptionsItem)
+						@foreach(var i in LifeCopy.MissingItems)
 						{
-							if(i.IsWrong)
-							{
-								<div class="d-flex align-items-center">
-									<i class="bi bi-x"></i>
-									<div class="flex-grow-1" style="text-align:left;">@i.Label.ToLowerInvariant()</div>
-								</div>
-							}
+							<div class="d-flex align-items-center">
+								<i class="bi bi-x"></i>
+								<div class="flex-grow-1" style="text-align:left;">@i.ToLowerInvariant()</div>
+							</div>
 						}
+
 					</div>
 				</div>
 			}

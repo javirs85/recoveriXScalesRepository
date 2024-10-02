@@ -8,7 +8,7 @@ namespace CompanionAppShared.Scales;
 
 public class ScalesService
 {
-	//When registering a new Scale here, don't forget to add the JsonDerive at the ScaleBase
+	//When registering a new Scale here, don't forget to add the JsonDerive at the ScaleBase (IScale)
 	public IScale GenerateScale(ScalesIDs scalesIDs)
 	{
 		return scalesIDs switch
@@ -22,7 +22,8 @@ public class ScalesService
 			ScalesIDs.NineHPT => new NineHolePegTest(),
 			ScalesIDs.PDQ39 => new PDQ39(),
 			ScalesIDs.SEADL => new SEADL(),
-			ScalesIDs.TENMWT => new TENMWT(),
+			ScalesIDs.TENMWT_SSV => new TENMWT_SSV(),
+			ScalesIDs.TENMWT_FV => new TENMWT_FV(),
 			ScalesIDs.TUG => new TUG(),
 			ScalesIDs.UPDRSI => new UPDRSI(),
 			ScalesIDs.UPDRSII => new UPDRSII(),
@@ -47,7 +48,8 @@ public class ScalesService
 			ScalesIDs.NineHPT => new NineHolePegTest(),
 			ScalesIDs.PDQ39 => new PDQ39(),
 			ScalesIDs.SEADL => new SEADL(),
-			ScalesIDs.TENMWT => new TENMWT(),
+			ScalesIDs.TENMWT_SSV => new TENMWT_SSV(),
+			ScalesIDs.TENMWT_FV => new TENMWT_FV(),
 			ScalesIDs.TUG => new TUG(),
 			ScalesIDs.UPDRSI => new UPDRSI(),
 			ScalesIDs.UPDRSII => new UPDRSII(),

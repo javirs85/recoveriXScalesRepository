@@ -13,7 +13,8 @@ namespace CompanionAppShared.Scales
 	[JsonDerivedType(typeof(miniBESTest), typeDiscriminator: "miniBESTest")]
 	[JsonDerivedType(typeof(PDQ39), typeDiscriminator: "PDQ39")]
 	[JsonDerivedType(typeof(SEADL), typeDiscriminator: "SEADL")]
-	[JsonDerivedType(typeof(TENMWT), typeDiscriminator: "TENMWT")]
+	[JsonDerivedType(typeof(TENMWT_FV), typeDiscriminator: "TENMWT_FV")]
+	[JsonDerivedType(typeof(TENMWT_SSV), typeDiscriminator: "TENMWT_SSV")]
 	[JsonDerivedType(typeof(TUG), typeDiscriminator: "TUG")]
 	[JsonDerivedType(typeof(UPDRSI), typeDiscriminator: "UPDRSI")]
 	[JsonDerivedType(typeof(UPDRSII), typeDiscriminator: "UPDRSII")]
@@ -31,6 +32,8 @@ namespace CompanionAppShared.Scales
         string ShortName { get; set; }
 		string AreaOfStudy { get; set; }
 		bool HasMissingItems { get; }
+		string MissingItemsText { get; set; }
+		List<string> MissingItems { get; }
 		int ScoreNormalized { get; }
         int ScoreRaw { get; set; }
         List<string> DetailsHeaders { get; set; }
