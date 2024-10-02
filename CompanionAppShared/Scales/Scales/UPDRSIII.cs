@@ -50,6 +50,33 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 ",
 				DefaultOpen = false
 			},
+			new OptionsItem
+			{
+				JsonCode = "3a_PatientOnMedication",
+				InstructionsForThePatient = "-",
+				Options = new List<string> { "No", "Yes" },
+				Label = "Is the patient on medication for treating the symptoms of Parkinson’s disease?"
+			},
+			new OptionsItem
+			{
+				JsonCode = "3b_PatientMedicalState",
+				InstructionsForThePatient = "-",
+				Options = new List<string> { "ON: On is the typical functional state when patients are receiving medication and have a good response.", "OFF: Off is the typical functional state when patients have a poor response in spite of taking medications" },
+				Label = "If the patient is receiving medication for treating the symptoms of Parkinson’s disease, mark the patient’s clinical state using the following definitions"
+			},
+			new OptionsItem
+			{
+				JsonCode = "3c_PatientOnLevodopa",
+				InstructionsForThePatient = "-",
+				Options = new List<string> { "No", "Yes" },
+				Label = "Is the patient on levodopa ?"
+			},
+			new IntItem
+			{
+				JsonCode = "3c1_Minutessince",
+				InstructionsForThePatient = "-",
+				Label = "If yes, minutes since last levodopa dose"
+			},
 			new ComplexOptionsItem
             {
                 JsonCode = "3.1",
@@ -80,7 +107,7 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 			},
 			new ComplexOptionsItem
             {
-                JsonCode = "3.3",
+                JsonCode = "3.3_Neck",
                 Label = "3.3 RIGIDITY",
 				InstructionsForTheExaminer = "Rigidity is judged on slow passive movement of major joints with the patient in a relaxed position and the examiner manipulating the limbs and neck. First, test without an activation maneuver. Test and rate neck and each limb separately. For arms, test the wrist and elbow joints simultaneously. For legs, test the hip and knee joints simultaneously. If no rigidity is detected, use an activation maneuver such as tapping fingers, fist opening/closing, or heel tapping in a limb not being tested. Explain to the patient to go as limp as possible as you test for rigidity.",
 				Options = new List<Option>
@@ -93,9 +120,65 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
+			{
+				JsonCode = "3.3_RUE",
+				Label = "3.3 RIGIDITY RIGHT UPPER EXTREMITY",
+				InstructionsForTheExaminer = "Rigidity is judged on slow passive movement of major joints with the patient in a relaxed position and the examiner manipulating the limbs and neck. First, test without an activation maneuver. Test and rate neck and each limb separately. For arms, test the wrist and elbow joints simultaneously. For legs, test the hip and knee joints simultaneously. If no rigidity is detected, use an activation maneuver such as tapping fingers, fist opening/closing, or heel tapping in a limb not being tested. Explain to the patient to go as limp as possible as you test for rigidity.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No rigidity." },
+					new Option { Value = 1, Name = "Slight", Description = "Rigidity only detected with activation maneuver." },
+					new Option { Value = 2, Name = "Mild", Description = "Rigidity detected without the activation maneuver, but full range of motion is easily achieved." },
+					new Option { Value = 3, Name = "Moderate", Description = "Rigidity detected without the activation maneuver; full range of motion is achieved with effort." },
+					new Option { Value = 4, Name = "Severe", Description = "Rigidity detected without the activation maneuver and full range of motion not achieved." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.3_LUE",
+				Label = "3.3 RIGIDITY LEFT UPPER EXTREMITY",
+				InstructionsForTheExaminer = "Rigidity is judged on slow passive movement of major joints with the patient in a relaxed position and the examiner manipulating the limbs and neck. First, test without an activation maneuver. Test and rate neck and each limb separately. For arms, test the wrist and elbow joints simultaneously. For legs, test the hip and knee joints simultaneously. If no rigidity is detected, use an activation maneuver such as tapping fingers, fist opening/closing, or heel tapping in a limb not being tested. Explain to the patient to go as limp as possible as you test for rigidity.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No rigidity." },
+					new Option { Value = 1, Name = "Slight", Description = "Rigidity only detected with activation maneuver." },
+					new Option { Value = 2, Name = "Mild", Description = "Rigidity detected without the activation maneuver, but full range of motion is easily achieved." },
+					new Option { Value = 3, Name = "Moderate", Description = "Rigidity detected without the activation maneuver; full range of motion is achieved with effort." },
+					new Option { Value = 4, Name = "Severe", Description = "Rigidity detected without the activation maneuver and full range of motion not achieved." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.3_RLE",
+				Label = "3.3 RIGIDITY RIGHT LOWER EXTREMITY",
+				InstructionsForTheExaminer = "Rigidity is judged on slow passive movement of major joints with the patient in a relaxed position and the examiner manipulating the limbs and neck. First, test without an activation maneuver. Test and rate neck and each limb separately. For arms, test the wrist and elbow joints simultaneously. For legs, test the hip and knee joints simultaneously. If no rigidity is detected, use an activation maneuver such as tapping fingers, fist opening/closing, or heel tapping in a limb not being tested. Explain to the patient to go as limp as possible as you test for rigidity.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No rigidity." },
+					new Option { Value = 1, Name = "Slight", Description = "Rigidity only detected with activation maneuver." },
+					new Option { Value = 2, Name = "Mild", Description = "Rigidity detected without the activation maneuver, but full range of motion is easily achieved." },
+					new Option { Value = 3, Name = "Moderate", Description = "Rigidity detected without the activation maneuver; full range of motion is achieved with effort." },
+					new Option { Value = 4, Name = "Severe", Description = "Rigidity detected without the activation maneuver and full range of motion not achieved." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.3_LLE",
+				Label = "3.3 RIGIDITY LEFT LOWER EXTREMITY",
+				InstructionsForTheExaminer = "Rigidity is judged on slow passive movement of major joints with the patient in a relaxed position and the examiner manipulating the limbs and neck. First, test without an activation maneuver. Test and rate neck and each limb separately. For arms, test the wrist and elbow joints simultaneously. For legs, test the hip and knee joints simultaneously. If no rigidity is detected, use an activation maneuver such as tapping fingers, fist opening/closing, or heel tapping in a limb not being tested. Explain to the patient to go as limp as possible as you test for rigidity.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No rigidity." },
+					new Option { Value = 1, Name = "Slight", Description = "Rigidity only detected with activation maneuver." },
+					new Option { Value = 2, Name = "Mild", Description = "Rigidity detected without the activation maneuver, but full range of motion is easily achieved." },
+					new Option { Value = 3, Name = "Moderate", Description = "Rigidity detected without the activation maneuver; full range of motion is achieved with effort." },
+					new Option { Value = 4, Name = "Severe", Description = "Rigidity detected without the activation maneuver and full range of motion not achieved." }
+				}
+			},
+			new ComplexOptionsItem
             {
-                JsonCode = "3.4",
-                Label = "3.4 FINGER TAPPING",
+                JsonCode = "3.4_R",
+                Label = "3.4 RIGHT FINGER TAPPING",
 				InstructionsForTheExaminer = "Each hand is tested separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to tap the index finger on the thumb 10 times as quickly AND as big as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -107,9 +190,23 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-            {
-                JsonCode = "3.5",
-                Label = "3.5 HAND MOVEMENTS",
+			{
+				JsonCode = "3.4_L",
+				Label = "3.4 LEFT FINGER TAPPING",
+				InstructionsForTheExaminer = "Each hand is tested separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to tap the index finger on the thumb 10 times as quickly AND as big as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No problems." },
+					new Option { Value = 1, Name = "Slight", Description = "Any of the following: a) the regular rhythm is broken with one or two interruptions or hesitations of the tapping movement; b) slight slowing; c) the amplitude decrements near the end of the 10 taps." },
+					new Option { Value = 2, Name = "Mild", Description = "Any of the following: a) 3 to 5 interruptions during tapping; b) mild slowing; c) the amplitude decrements midway in the 10-tap sequence." },
+					new Option { Value = 3, Name = "Moderate", Description = "Any of the following: a) more than 5 interruptions during tapping or at least one longer arrest (freeze) in ongoing movement; b) moderate slowing; c) the amplitude decrements starting after the 1st tap." },
+					new Option { Value = 4, Name = "Severe", Description = "Cannot or can only barely perform the task because of slowing, interruptions, or decrements." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.5_R",
+				Label = "3.5 RIGHT HAND MOVEMENT",
 				InstructionsForTheExaminer = "Test each hand separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to make a tight fist with the arm bent at the elbow so that the palm faces the examiner. Have the patient open the hand 10 times as fully AND as quickly as possible. If the patient fails to make a tight fist or to open the hand fully, remind him/her to do so. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -121,9 +218,23 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-            {
-                JsonCode = "3.6",
-                Label = "3.6 PRONATION-SUPINATION MOVEMENTS OF HANDS",
+			{
+				JsonCode = "3.5_L",
+				Label = "3.5 LEFT HAND MOVEMENT",
+				InstructionsForTheExaminer = "Test each hand separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to make a tight fist with the arm bent at the elbow so that the palm faces the examiner. Have the patient open the hand 10 times as fully AND as quickly as possible. If the patient fails to make a tight fist or to open the hand fully, remind him/her to do so. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No problems." },
+					new Option { Value = 1, Name = "Slight", Description = "Any of the following: a) the regular rhythm is broken with one or two interruptions or hesitations of the movement; b) slight slowing; c) the amplitude decrements near the end of the task." },
+					new Option { Value = 2, Name = "Mild", Description = "Any of the following: a) 3 to 5 interruptions during the movements; b) mild slowing; c) the amplitude decrements midway in the task." },
+					new Option { Value = 3, Name = "Moderate", Description = "Any of the following: a) more than 5 interruptions during the movement or at least one longer arrest (freeze) in ongoing movement; b) moderate slowing; c) the amplitude decrements starting after the 1st open-and-close sequence." },
+					new Option { Value = 4, Name = "Severe", Description = "Cannot or can only barely perform the task because of slowing, interruptions, or decrements." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.6_R",
+				Label = "3.6 PRONATION-SUPINATION MOVEMENTS OF RIGHT HAND",
 				InstructionsForTheExaminer = "Test each hand separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to extend the arm out in front of his/her body with the palms down, and then to turn the palm up and down alternately 10 times as fast and as fully as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -135,9 +246,23 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-            {
-                JsonCode = "3.7",
-                Label = "3.7 TOE TAPPING",
+			{
+				JsonCode = "3.6_L",
+				Label = "3.6 PRONATION-SUPINATION MOVEMENTS OF LEFT HAND",
+				InstructionsForTheExaminer = "Test each hand separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to extend the arm out in front of his/her body with the palms down, and then to turn the palm up and down alternately 10 times as fast and as fully as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No problems." },
+					new Option { Value = 1, Name = "Slight", Description = "Any of the following: a) the regular rhythm is broken with one or two interruptions or hesitations of the movement; b) slight slowing; c) the amplitude decrements near the end of the sequence." },
+					new Option { Value = 2, Name = "Mild", Description = "Any of the following: a) 3 to 5 interruptions during the movements; b) mild slowing; c) the amplitude decrements midway in the sequence." },
+					new Option { Value = 3, Name = "Moderate", Description = "Any of the following: a) more than 5 interruptions during the movement or at least one longer arrest (freeze) in ongoing movement; b) moderate slowing; c) the amplitude decrements starting after the 1st supination-pronation sequence." },
+					new Option { Value = 4, Name = "Severe", Description = "Cannot or can only barely perform the task because of slowing, interruptions, or decrements." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.7_R",
+				Label = "3.7 RIGHT TOE TAPPING",
 				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms, both feet on the floor. Test each foot separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to place the heel on the ground in a comfortable position and then tap the toes 10 times as big and as fast as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
 				Options = new List<Option>
 				{
@@ -149,9 +274,37 @@ At the end of the rating, indicate if dyskinesia (chorea or dystonia) was presen
 				}
 			},
 			new ComplexOptionsItem
-            {
-                JsonCode = "3.8",
-                Label = "3.8 LEG AGILITY",
+			{
+				JsonCode = "3.7_L",
+				Label = "3.7 LEFT TOE TAPPING",
+				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms, both feet on the floor. Test each foot separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to place the heel on the ground in a comfortable position and then tap the toes 10 times as big and as fast as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts, and decrementing amplitude.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No problems." },
+					new Option { Value = 1, Name = "Slight", Description = "Any of the following: a) the regular rhythm is broken with one or two interruptions or hesitations of the tapping movement; b) slight slowing; c) amplitude decrements near the end of the ten taps." },
+					new Option { Value = 2, Name = "Mild", Description = "Any of the following: a) 3 to 5 interruptions during the tapping movements; b) mild slowing; c) amplitude decrements midway in the task." },
+					new Option { Value = 3, Name = "Moderate", Description = "Any of the following: a) more than 5 interruptions during the tapping movements or at least one longer arrest (freeze) in ongoing movement; b) moderate slowing; c) amplitude decrements after the 1st tap." },
+					new Option { Value = 4, Name = "Severe", Description = "Cannot or can only barely perform the task because of slowing, interruptions or decrements." }
+				}
+			},
+			new ComplexOptionsItem
+			{	
+				JsonCode = "3.8_R",
+				Label = "3.8 RIGHT LEG AGILITY",
+				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms. The patient should have both feet comfortably on the floor. Test each leg separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to place the foot on the ground in a comfortable position and then raise and stomp the foot on the ground 10 times as high and as fast as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts and decrementing amplitude.",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Normal", Description = "No problems." },
+					new Option { Value = 1, Name = "Slight", Description = "Any of the following: a) the regular rhythm is broken with one or two interruptions or hesitations of the movement; b) slight slowing; c) amplitude decrements near the end of the task." },
+					new Option { Value = 2, Name = "Mild", Description = "Any of the following: a) 3 to 5 interruptions during the movements; b) mild slowness; c) amplitude decrements midway in the task." },
+					new Option { Value = 3, Name = "Moderate", Description = "Any of the following: a) more than 5 interruptions during the movement or at least one longer arrest (freeze) in ongoing movement; b) moderate slowing in speed; c) amplitude decrements after the 1st tap." },
+					new Option { Value = 4, Name = "Severe", Description = "Cannot or can only barely perform the task because of slowing, interruptions, or decrements." }
+				}
+			},
+			new ComplexOptionsItem
+			{
+				JsonCode = "3.8_L",
+				Label = "3.8 LEFT LEG AGILITY",
 				InstructionsForTheExaminer = "Have the patient sit in a straight-backed chair with arms. The patient should have both feet comfortably on the floor. Test each leg separately. Demonstrate the task, but do not continue to perform the task while the patient is being tested. Instruct the patient to place the foot on the ground in a comfortable position and then raise and stomp the foot on the ground 10 times as high and as fast as possible. Rate each side separately, evaluating speed, amplitude, hesitations, halts and decrementing amplitude.",
 				Options = new List<Option>
 				{
