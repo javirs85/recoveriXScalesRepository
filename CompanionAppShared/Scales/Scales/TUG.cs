@@ -21,20 +21,31 @@ public class TUG : ScaleBase
 		ShortName = "TUG";
 		AreaOfStudy = "Balance and gait";
 
-		DetailsHeaders.Add("Time (m)");
+		DetailsHeaders.Add("Times");
 		AutoScoreExplanation = "Score reaches 100% for values smaller than 9s and 0% for values larger than 80s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 
 		Items = new List<ScaleItem>
 		{
+			new OptionsItem
+			{
+				JsonCode = "Device",
+				Label = "Assistance device",
+				InstructionsForTheExaminer="What type of device does the patient use for mobility assistance? (Select the most similar)",
+				Options = new List<string>
+				{
+					"None",
+                    "Single cane",
+					"Crutch",
+					"Quad cane",
+					"Walker"
+				}
+			},
 			new TimeSpanItem { JsonCode="R1", Label = "Time:" },
 			new TimeSpanItem { JsonCode = "R2", Label = "Time:" },
 			new TimeSpanItem { JsonCode = "R3", Label = "Time:" }
 		};
 	}
 
-	public override void FixItemsInternal()
-	{
-	}
 
 	protected override void GenerateScoreInternal()
 	{
@@ -68,9 +79,6 @@ public class TUG : ScaleBase
 		}
 	}
 
-	protected override void ResetInternal()
-	{
-	}
 
 	protected override void GenerateDetails()
 	{
@@ -83,5 +91,5 @@ public class TUG : ScaleBase
 					Details.Add(item.StringValue);
 			}
 		}
-	}
+    }
 }

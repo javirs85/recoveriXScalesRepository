@@ -17,7 +17,7 @@ public class UPDRSI : ScaleBase
 	{Id = ScalesIDs.UPDRSI;
 		Name = "Unified Parkinson's Disease Rating Scale - Section I";
 		ShortName = "UPDRS-I";
-		AreaOfStudy = "Mentation, Behavior Mood";
+		AreaOfStudy = "Mentation, Behavior, Mood";
 		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
 		DetailsHeaders = new List<string> { "Points" };

@@ -62,7 +62,7 @@ This version of the 10 meter walk test: Fast velocity requests the user to attem
 		Name = "10 Meter Walk Test: Fast velocity";
 		ShortName = "10MWT_FV";
 		AreaOfStudy = "Gait";
-		DetailsHeaders.Add("Attempts");
+		DetailsHeaders.Add("Time");
 		AutoScoreExplanation = "Score reaches 100% for values smaller than 7s and 0% for values larger than 60s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 	}
 

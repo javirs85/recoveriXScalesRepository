@@ -74,7 +74,7 @@ public abstract class ScaleBase : IScale
 
 	public abstract void Init();
 
-	public abstract void FixItemsInternal();
+	public virtual void FixItemsInternal() { }
 	public virtual void LoadValuesFromDB(Dictionary<string, string> valuesInDb)
 	{
         foreach (var (key, value) in valuesInDb)
@@ -169,7 +169,13 @@ public abstract class ScaleBase : IScale
 	public string MissingItemsText { get; set; } = string.Empty;
 	public List<string> MissingItems { get; } = new();
 
-	protected abstract void ResetInternal();
+	protected virtual void ResetInternal()
+	{
+		foreach(var item in Items) { 
+			if(item is TimeSpanItem)
+				(item as TimeSpanItem).Value = TimeSpan.Zero;
+		}
+	}
 	protected abstract void GenerateScoreInternal();
 	protected abstract void GenerateDetails();
 

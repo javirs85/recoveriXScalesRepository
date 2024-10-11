@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -187,30 +188,33 @@ public class TimeSpanItem : ScaleItem
 		}
     }
 
-	private TimeSpan? ParseTimeString(string timeString)
+	private TimeSpan? ParseTimeString(string input)
 	{
-		if (float.TryParse(timeString.Replace(".",","), out float rawNumber))
-		{
-			return TimeSpan.FromSeconds(rawNumber);
-		}
+        // Normalize the input by replacing commas with dots and trimming whitespace
+        string normalizedInput = input.Replace(",", ".").Trim();
 
-		Regex regex = new Regex(@"\s*(?:(\d+)h\s*)?(?:(\d+)m\s*)?(?:(\d+\.?\d*)s)?");
-		Match match = regex.Match(timeString);
+        // Define regex pattern for minutes and seconds with optional whitespace
+        string pattern = @"^(?:(\d+\.?\d*)m\s*)?(?:(\d+\.?\d*)s)?$";
+        Regex regex = new Regex(pattern);
+        var match = regex.Match(normalizedInput);
 
-		if (match.Success)
-		{
-			int hours = match.Groups[1].Success ? int.Parse(match.Groups[1].Value) : 0;
-			int minutes = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 0;
+        // If the input is a number without any 'm' or 's', treat it as seconds
+        if (!match.Success)
+        {
+            if (double.TryParse(normalizedInput, NumberStyles.Float, CultureInfo.InvariantCulture, out double secondsOnly))
+            {
+                return TimeSpan.FromSeconds(secondsOnly);
+            }
+            return null;
+        }
 
-			double seconds = match.Groups[3].Success ? double.Parse(match.Groups[3].Value, System.Globalization.CultureInfo.InvariantCulture) : 0;
+        // Try parsing minutes and seconds, default to zero if not present
+        double minutes = match.Groups[1].Success ? double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) : 0;
+        double seconds = match.Groups[2].Success ? double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture) : 0;
 
-			return new TimeSpan(hours, minutes, 0).Add(TimeSpan.FromSeconds(seconds));
-		}
-		else
-		{
-			return null;
-		}
-	}
+        // Return the TimeSpan representing the parsed time
+        return TimeSpan.FromMinutes(minutes) + TimeSpan.FromSeconds(seconds);
+    }
 }
 
 public class OptionsItem : ScaleItem
