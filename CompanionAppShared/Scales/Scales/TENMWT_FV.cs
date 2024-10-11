@@ -77,7 +77,7 @@ This version of the 10 meter walk test: Fast velocity requests the user to attem
 		ShortName = "10MWT_FV";
 		AreaOfStudy = "Gait";
 		DetailsHeaders.Add("Time");
-		AutoScoreExplanation = "Score reaches 100% for values smaller than 7s and 0% for values larger than 60s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
+		AutoScoreExplanation = "Score reaches 100% for values smaller than 3s and 0% for values larger than 13s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 	}
 
 
@@ -89,8 +89,8 @@ This version of the 10 meter walk test: Fast velocity requests the user to attem
 
 	protected override void GenerateScoreInternal()
 	{
-		int minRef = 7;
-		int maxRef = 60;
+		int minRef = 3;
+		int maxRef = 13;
 
 		ScoreRaw = 0;
 		int measures = 0;
