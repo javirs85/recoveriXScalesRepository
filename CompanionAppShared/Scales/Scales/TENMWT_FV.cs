@@ -20,7 +20,21 @@ This version of the 10 meter walk test: Fast velocity requests the user to attem
 ",
 				DefaultOpen = false
 			},
-			new TimeSpanItem {
+            new OptionsItem
+            {
+                JsonCode = "Device",
+                Label = "Assistance device",
+                InstructionsForTheExaminer="What type of device does the patient use for mobility assistance? (Select the most similar)",
+                Options = new List<string>
+                {
+                    "None",
+                    "Single cane",
+                    "Crutch",
+                    "Quad cane",
+                    "Walker"
+                }
+            },
+            new TimeSpanItem {
 				JsonCode = "FV_1",
 				Label = "Time for central 6 meters in FV",
 				InstructionsForThePatient="Walk as fast as you can safely walk and stop when you reach the far mark" ,
@@ -45,7 +59,7 @@ This version of the 10 meter walk test: Fast velocity requests the user to attem
 	{
 		//we check that at least one run has been measured
 
-		MissingItemsText = "At least one measure must be permormed";
+		MissingItemsText = "At least one measure must be performed";
 
 		foreach (var item in from i in Items
 							 where i is TimeSpanItem

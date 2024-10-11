@@ -15,11 +15,25 @@ public class TENMWT_SSV : ScaleBase
 				Label = "Overview",
 				Text = @"
 # Overview
-This version of the 10 meter walk test: self set velocty requests the user to attempt to reach the 10m mark as fast at a velocity that makes them feel confortable.
+This version of the 10 meter walk test: self set velocity requests the user to attempt to reach the 10m mark as fast at a velocity that makes them feel confortable.
 ",
 				DefaultOpen = false
 			},
-			new TimeSpanItem { 
+            new OptionsItem
+            {
+                JsonCode = "Device",
+                Label = "Assistance device",
+                InstructionsForTheExaminer="What type of device does the patient use for mobility assistance? (Select the most similar)",
+                Options = new List<string>
+                {
+                    "None",
+                    "Single cane",
+                    "Crutch",
+                    "Quad cane",
+                    "Walker"
+                }
+            },
+            new TimeSpanItem { 
 				JsonCode="SSV_1", 
 				Label = "Time for central 6 meters in SSV", 
 				InstructionsForThePatient="Walk at your own comfortable walking pace and stop when you reach the far mark",
@@ -44,7 +58,7 @@ This version of the 10 meter walk test: self set velocty requests the user to at
 	{
 		//we check that at least one run has been measured
 
-		MissingItemsText = "At least one measure must be permormed";
+		MissingItemsText = "At least one measure must be performed";
 
 		foreach (var item in from i in Items
 							 where i is TimeSpanItem
