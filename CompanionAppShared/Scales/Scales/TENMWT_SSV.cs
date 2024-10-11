@@ -61,7 +61,7 @@ This version of the 10 meter walk test: self set velocty requests the user to at
 		Name = "10 Meter Walk Test: Selft set velocity";
 		ShortName = "10MWT_SSV";
 		AreaOfStudy = "Gait";
-		DetailsHeaders.Add("Time");
+		DetailsHeaders.Add("Times");
 		AutoScoreExplanation = "Score reaches 100% for values smaller than 7s and 0% for values larger than 60s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 	}
 
