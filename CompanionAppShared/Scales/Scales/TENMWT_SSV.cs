@@ -7,6 +7,10 @@ namespace CompanionAppShared.Scales;
 
 public class TENMWT_SSV : ScaleBase
 {
+	double minRef = 5.0;
+    double maxRef = 25.0;
+
+
     public TENMWT_SSV()
     {
 		Items = new List<ScaleItem>
@@ -76,21 +80,12 @@ This version of the 10 meter walk test: self set velocity requests the user to a
 		ShortName = "10MWT_SSV";
 		AreaOfStudy = "Gait";
 		DetailsHeaders.Add("Times");
-		AutoScoreExplanation = "Score reaches 100% for values smaller than 7s and 0% for values larger than 60s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
-	}
-
-
-
-	public override void FixItemsInternal()
-	{
+		AutoScoreExplanation = $"Score reaches 100% for values smaller than {minRef}s and 0% for values larger than {maxRef}s.<br/>Multiple measures are not mandatory. Untaken measures won't affect averages";
 	}
 
 
 	protected override void GenerateScoreInternal()
 	{
-		int minRef = 7;
-		int maxRef = 60;
-
 		ScoreRaw = 0;
 		int measures = 0;
 		foreach (var item in from i in Items
@@ -128,8 +123,5 @@ This version of the 10 meter walk test: self set velocity requests the user to a
                     Details.Add(item.StringValue);
             }
 		}
-	}
-	protected override void ResetInternal()
-	{
 	}
 }
