@@ -35,7 +35,7 @@ public class TUG : ScaleBase
 				{
 					"None",
 					"One Crutch",
-					"two Crutches",
+					"Two Crutches",
 					"Single cane",
 					"Two canes",
 					"Quad cane",

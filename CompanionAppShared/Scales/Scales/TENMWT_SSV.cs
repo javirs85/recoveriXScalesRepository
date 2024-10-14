@@ -32,7 +32,7 @@ This version of the 10 meter walk test: self set velocity requests the user to a
                 {
                     "None",                    
                     "One Crutch",
-                    "two Crutches",
+                    "Two Crutches",
 					"Single cane",
 					"Two canes",
 					"Quad cane",
