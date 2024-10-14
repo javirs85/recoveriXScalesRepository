@@ -34,8 +34,10 @@ public class TUG : ScaleBase
 				Options = new List<string>
 				{
 					"None",
-                    "Single cane",
-					"Crutch",
+					"One Crutch",
+					"two Crutches",
+					"Single cane",
+					"Two canes",
 					"Quad cane",
 					"Walker"
 				}

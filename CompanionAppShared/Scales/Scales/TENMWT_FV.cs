@@ -27,12 +27,14 @@ This version of the 10 meter walk test: Fast velocity requests the user to attem
                 InstructionsForTheExaminer="What type of device does the patient use for mobility assistance? (Select the most similar)",
                 Options = new List<string>
                 {
-                    "None",
-                    "Single cane",
-                    "Crutch",
-                    "Quad cane",
-                    "Walker"
-                }
+					"None",
+					"One Crutch",
+					"two Crutches",
+					"Single cane",
+					"Two canes",
+					"Quad cane",
+					"Walker"
+				}
             },
             new TimeSpanItem {
 				JsonCode = "FV_1",
