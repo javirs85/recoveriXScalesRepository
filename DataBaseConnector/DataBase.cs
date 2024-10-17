@@ -335,6 +335,17 @@ public class DataBase
 		}
 	}
 
+	public async Task<string> GetSummarizedSessionResultsForAPI(Guid id)
+	{
+		var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new
+		{
+			Id = id,
+		});
+		var r = results.FirstOrDefault();
+
+		return r.SerializedData;
+	}
+
 	public async Task<Session> GetSessionFromDB(Guid id)
 	{
 		var results = await db.LoadData<Session, dynamic>("dbo.spMeasurement_GetWithData", new
