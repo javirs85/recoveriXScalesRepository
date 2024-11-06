@@ -19,23 +19,24 @@ public class HYClass : ScaleBase
 		DetailsHeaders.Add("Points");
 		AutoScoreExplanation = "With 0 points the score reaches 100%. The maximum of points leads to 0% score.";
 
-		Items.Add(HoenYahr);
-	}
-
-	public ComplexOptionsItem HoenYahr = new ComplexOptionsItem
-    {
-        JsonCode = "HYS",
-        Label = "Hoehn and Yahr Stage",
-		Options = new List<Option>
+		Items = new List<ScaleItem>
 		{
-			new Option { Value = 0, Name = "Asymptomatic", Description = string.Empty },
-			new Option { Value = 1, Name = "Unilateral involvement only", Description = string.Empty },
-			new Option { Value = 2, Name = "Bilateral involvement without impairment of balance", Description = string.Empty },
-			new Option { Value = 3, Name = "Mild to moderate involvement; some postural instability but physically independent; needs assistance to recover from pull test", Description = string.Empty },
-			new Option { Value = 4, Name = "Severe disability; still able to walk or stand unassisted", Description = string.Empty },
-			new Option { Value = 5, Name = "Wheelchair bound or bedridden unless aided", Description = string.Empty }
-		}
-	};
+			new ComplexOptionsItem
+			{
+				JsonCode = "HYS",
+				Label = "Hoehn and Yahr Stage",
+				Options = new List<Option>
+				{
+					new Option { Value = 0, Name = "Asymptomatic", Description = string.Empty },
+					new Option { Value = 1, Name = "Unilateral involvement only", Description = string.Empty },
+					new Option { Value = 2, Name = "Bilateral involvement without impairment of balance", Description = string.Empty },
+					new Option { Value = 3, Name = "Mild to moderate involvement; some postural instability but physically independent; needs assistance to recover from pull test", Description = string.Empty },
+					new Option { Value = 4, Name = "Severe disability; still able to walk or stand unassisted", Description = string.Empty },
+					new Option { Value = 5, Name = "Wheelchair bound or bedridden unless aided", Description = string.Empty }
+				}
+			}
+		};
+	}
 
 	public override void FixItemsInternal()
 	{
@@ -69,6 +70,14 @@ public class HYClass : ScaleBase
 	protected override void GenerateDetails()
 	{
 		Details.Clear();
+		foreach (var item in Items)
+		{
+			if (item is ComplexOptionsItem)
+			{
+				if ((item as ComplexOptionsItem).Value != -1)
+					Details.Add(item.StringValue);
+			}
+		}
 	}
 	protected override void ResetInternal()
 	{
